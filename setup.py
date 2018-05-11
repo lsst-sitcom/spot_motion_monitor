@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+#------------------------------------------------------------------------------
+# Copyright (c) 2018 LSST Systems Engineering
+# Distributed under the MIT License. See LICENSE for more information.
+#------------------------------------------------------------------------------
 import os
 import sys
 
@@ -7,6 +11,15 @@ try:
 except ImportError:
     from distutils.core import setup
 
+from distutils.command.build import build
+from distutils_ui import build_ui
+
+cmdclass = {
+    'build_ui': build_ui.build_ui,
+}
+
+# Inject ui specific build into standard build process
+build.sub_commands.insert(0, ('build_ui', None))
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
@@ -62,6 +75,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
+    cmdclass=cmdclass,
     test_suite='tests',
     tests_require=test_requirements
 

@@ -1,5 +1,8 @@
+# Program
 *.py[cod]
 __pycache__
+spot_motion_monitor.qrc
+spot_motion_monitor_rc.py
 
 # C extensions
 *.so
