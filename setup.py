@@ -47,21 +47,27 @@ test_requirements = [
     "coverage",
     "Sphinx",
     "cryptography",
-    "PyYAML"
+    "PyYAML",
+    "pytest",
+    "pytest-qt",
+    "distutils_ui"
 ]
 
 setup(
     name='spot_motion_monitor',
     version='0.1.0',
-    description='User interface for Dome Seeing Monitor.',
+    description='User interface for Spot Seeing Monitor.',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Michael Reuter',
     author_email='mareuter@lsst.org',
     url='https://github.com/lsst-com/spot_motion_monitor',
     packages=[
         'spot_motion_monitor',
+        'spot_motion_monitor.views',
     ],
-    package_dir={'spot_motion_monitor': 'spot_motion_monitor'},
+    package_dir={'spot_motion_monitor': 'spot_motion_monitor',
+                 'spot_motion_monitor.views': 'spot_motion_monitor/views'},
+    scripts=["scripts/smm_ui.py"],
     include_package_data=True,
     install_requires=requirements,
     license='MIT',
@@ -69,7 +75,7 @@ setup(
     keywords='spot_motion_monitor',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
@@ -78,5 +84,4 @@ setup(
     cmdclass=cmdclass,
     test_suite='tests',
     tests_require=test_requirements
-
 )

@@ -1,6 +1,9 @@
+#!/usr/bin/env python
 #------------------------------------------------------------------------------
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from .ui_main_window import Ui_MainWindow
-from .main_window import main
+import spot_motion_monitor.views as smmViews
+
+if __name__ == '__main__':
+    smmViews.main_window.main()

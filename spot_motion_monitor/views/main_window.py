@@ -6,13 +6,16 @@ import sys
 
 from PyQt5 import QtWidgets
 
-from views import ui_main_window
+from spot_motion_monitor.views import Ui_MainWindow
 
-class SpotMotionMonitor(QtWidgets.QMainWindow, ui_main_window.Ui_MainWindow):
+__all__ = ['main']
+
+class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         super(SpotMotionMonitor, self).__init__(parent)
         self.setupUi(self)
+        self.setWindowTitle("Spot Motion Monitor")
 
         self.actionExit.triggered.connect(self.close)
 
