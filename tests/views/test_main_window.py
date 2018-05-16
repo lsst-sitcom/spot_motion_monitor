@@ -17,3 +17,11 @@ class TestMainWindow():
             qtbot.addWidget(mw)
             mw.actionExit.trigger()
             assert mock_method.call_count == 1
+
+    def test_main_window_about(self, qtbot):
+        with mock.patch.object(SpotMotionMonitor, 'about') as mock_method:
+            mw = SpotMotionMonitor()
+            mw.show()
+            qtbot.addWidget(mw)
+            mw.actionAbout.trigger()
+            assert mock_method.call_count == 1
