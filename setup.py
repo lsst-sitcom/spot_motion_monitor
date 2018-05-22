@@ -40,16 +40,11 @@ requirements = [
 ]
 
 test_requirements = [
-    "wheel>=0.22",
-    "bumpversion",
     "flake8",
-    "tox",
     "coverage",
-    "Sphinx",
-    "cryptography",
-    "PyYAML",
     "pytest",
     "pytest-qt",
+    "pytest-flake8",
     "distutils_ui"
 ]
 
