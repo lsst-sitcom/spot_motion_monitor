@@ -40,9 +40,8 @@ coverage:
 	open htmlcov/index.html
 
 docs:
-	rm -f docs/spot_motion_monitor.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ spot_motion_monitor
+	#rm -f docs/api/*.rst
+	#sphinx-apidoc -E -M -o docs/api spot_motion_monitor
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html

@@ -70,11 +70,11 @@ local development.
 Now you can make your changes locally.
 
 4. When you're done making changes, check that your changes pass style and unit
-   tests, including testing other Python versions with tox::
+   tests, including testing other Python versions with pytest::
 
-    $ tox
+    $ py.test
 
-To get tox, just pip install it.
+To get the proper testing packages, pip install -r requirements/test.txt.
 
 5. Commit your changes and push your branch to GitHub::
 
@@ -95,8 +95,8 @@ Before you submit a pull request, check that it meets these guidelines:
    feature to the list in README.rst.
 3. The pull request should work for Python 3.6.
    Check https://travis-ci.org/lsst-com/spot_motion_monitor 
-   under pull requests for active pull requests or run the ``tox`` command and
-   make sure that the tests pass for all supported Python versions.
+   under pull requests for active pull requests or run the ``py.test`` command
+   and make sure that the tests pass for all supported Python versions.
 
 
 Tips
@@ -104,4 +104,4 @@ Tips
 
 To run a subset of tests::
 
-	 $ py.test tests/test_spot_motion_monitor.py
+	 $ py.test tests/test_xxx.py
