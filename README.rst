@@ -2,14 +2,23 @@
 Spot Motion Monitor
 =============================
 
-.. image:: https://badge.fury.io/py/spot_motion_monitor.png
-    :target: http://badge.fury.io/py/spot_motion_monitor
+.. |license| image:: https://img.shields.io/badge/license-MIT-blue.svg
+   :target: http://opensource.org/licenses/MIT
+   :alt: MIT License
 
-.. image:: https://travis-ci.org/lsst-com/spot_motion_monitor.png?branch=master
-    :target: https://travis-ci.org/lsst-com/spot_motion_monitor
+.. |version| image:: http://img.shields.io/pypi/v/spot_motion_monitor.svg
+   :target: https://pypi.python.org/pypi/spot_motion_monitor
+   :alt: Software Version
 
-.. image:: https://pypip.in/d/spot_motion_monitor/badge.png
-    :target: https://pypi.python.org/pypi/spot_motion_monitor
+.. |travis| image:: https://img.shields.io/travis/lsst-com/spot_motion_monitor/master.svg
+  :target: https://travis-ci.org/mareuter/spot_motion_monitor
+  :alt: Travis build status
+
+.. |python| image:: https://img.shields.io/pypi/pyversions/spot_motion_monitor.svg
+  :target: https://pypi.python.org/pypi/spot_motion_monitor
+  :alt: Supported Python
+
+|license| |python| |version| |travis|
 
 
 User interface for Dome Seeing Monitor.
