@@ -19,6 +19,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("Spot Motion Monitor")
 
+        self.set_action_icon(self.actionExit, "exit.svg", True)
+
         self.actionExit.triggered.connect(self.close)
         self.actionAbout.triggered.connect(self.about)
 
@@ -39,6 +41,22 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
                                  Copyright 2018 LSST Systems Engineering
                                  '''.format(__version__))
         about.exec_()
+
+    def set_action_icon(self, action, icon_name, icon_in_menu=False):
+        """Setup the icon for the given action.
+
+        Parameters
+        ----------
+        action : QAction
+          A specific program action.
+        icon_name : str
+          Name of the icon in the QRC file.
+        icon_in_menu : bool, optional
+          Make the icon visible in the program menu.
+        """
+        action.setIcon(QtGui.QIcon(QtGui.QPixmap(':{}'.format(icon_name))))
+        action.setIconVisibleInMenu(icon_in_menu)
+
 
 def main():
     """

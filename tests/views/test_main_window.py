@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 from unittest import mock
 
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QAction, QMainWindow
 
 from spot_motion_monitor.views.main_window import SpotMotionMonitor
 
@@ -25,3 +25,11 @@ class TestMainWindow():
             qtbot.addWidget(mw)
             mw.actionAbout.trigger()
             assert mock_method.call_count == 1
+
+    def test_set_action_icon(self, qtbot):
+        mw = SpotMotionMonitor()
+        qtbot.addWidget(mw)
+        action = QAction()
+        mw.set_action_icon(action, "test.png", True)
+        assert action.icon() is not None
+        assert action.isIconVisibleInMenu() is True
