@@ -1,10 +1,10 @@
 -r prod.txt
+-r test.txt
 wheel>=0.22
 bumpversion
 flake8
-tox
 coverage
 Sphinx
-pytest
+sphinx_rtd_theme
 cryptography
 PyYAML

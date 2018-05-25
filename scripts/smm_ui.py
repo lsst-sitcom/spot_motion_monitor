@@ -1,11 +1,9 @@
+#!/usr/bin/env python
 #------------------------------------------------------------------------------
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-__author__ = 'Michael Reuter'
-__email__ = 'mareuter@lsst.org'
-__version__ = '0.1.0'
+import spot_motion_monitor.views as smmViews
 
-__all__ = ['views']
-
-from .spot_motion_monitor_rc import *
+if __name__ == '__main__':
+    smmViews.main_window.main()

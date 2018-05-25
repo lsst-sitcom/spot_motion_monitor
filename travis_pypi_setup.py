@@ -14,7 +14,7 @@ from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from urllib.request import urlopen
 
 
-GITHUB_REPO = 'mareuter/spot_motion_monitor'
+GITHUB_REPO = 'lsst-com/spot_motion_monitor'
 TRAVIS_CONFIG_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), '.travis.yml')
 
