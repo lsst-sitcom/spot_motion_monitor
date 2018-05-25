@@ -7,3 +7,5 @@ __email__ = 'mareuter@lsst.org'
 __version__ = '0.1.0'
 
 __all__ = ['views']
+
+from .spot_motion_monitor_rc import *

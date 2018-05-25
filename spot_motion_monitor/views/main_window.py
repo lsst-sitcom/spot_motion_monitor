@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import sys
 
+from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 
 from spot_motion_monitor.views import Ui_MainWindow
@@ -24,16 +25,20 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
     def about(self):
         """This function presents the about dialog box.
         """
-        QtWidgets.QMessageBox.about(self, "About the Spot Motion Monitor",
-                                    '''
-                                    <b>Spot Motion Monitor</b> v{}
-                                    <p>
-                                    This application is the front-end for a systems that
-                                    monitors seeing within a telescope dome.
-                                    </p>
-                                    <br><br>
-                                    Copyright 2018 LSST Systems Engineering
-                                    '''.format(__version__))
+        about = QtWidgets.QMessageBox()
+        about.setIconPixmap(QtGui.QPixmap(":smm_logo_sm.png"))
+        about.setWindowTitle("About the Spot Motion Monitor")
+        about.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        about.setInformativeText('''
+                                 <b>Spot Motion Monitor</b> v{}
+                                 <p>
+                                 This application is the front-end for a systems that
+                                 monitors seeing within a telescope dome.
+                                 </p>
+                                 <br><br>
+                                 Copyright 2018 LSST Systems Engineering
+                                 '''.format(__version__))
+        about.exec_()
 
 def main():
     """
