@@ -78,5 +78,10 @@ setup(
     ],
     cmdclass=cmdclass,
     test_suite='tests',
-    tests_require=test_requirements
+    tests_require=test_requirements,
+    entry_points={
+        'gui_scripts': [
+            'smm2 = spot_motion_monitor.views.main_window:main'
+        ]
+    },
 )
