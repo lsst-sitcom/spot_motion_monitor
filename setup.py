@@ -50,7 +50,7 @@ test_requirements = [
 
 setup(
     name='spot_motion_monitor',
-    version='0.1.0',
+    version='0.1.1',
     description='User interface for Spot Seeing Monitor.',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Michael Reuter',
