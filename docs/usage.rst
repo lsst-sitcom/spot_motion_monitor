@@ -7,4 +7,4 @@ does not have any useful module imports.
 
 To run the user interface, do::
 
-    smm_ui.py
+    smm_ui
