@@ -62,7 +62,6 @@ setup(
     ],
     package_dir={'spot_motion_monitor': 'spot_motion_monitor',
                  'spot_motion_monitor.views': 'spot_motion_monitor/views'},
-    scripts=["scripts/smm_ui.py"],
     include_package_data=True,
     install_requires=requirements,
     license='MIT',
@@ -81,7 +80,7 @@ setup(
     tests_require=test_requirements,
     entry_points={
         'gui_scripts': [
-            'smm2 = spot_motion_monitor.views.main_window:main'
+            'smm_ui = spot_motion_monitor.views.main_window:main'
         ]
     },
 )
