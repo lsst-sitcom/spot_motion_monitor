@@ -3,6 +3,12 @@
 History
 -------
 
+0.2.0 (2018-06-29)
+~~~~~~~~~~~~~~~~~~
+
+* Created Gaussian camera and controls
+* Integrated camera CCD frame plot
+
 0.1.2 (2018-05-30)
 ~~~~~~~~~~~~~~~~~~
 
