@@ -2,3 +2,4 @@ distutils_ui
 pytest
 pytest-qt
 pytest-flake8
+pytest-mock

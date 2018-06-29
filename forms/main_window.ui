@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
-    <height>401</height>
+    <width>962</width>
+    <height>685</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,32 +21,22 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QWidget" name="cameraPlot" native="true">
+       <widget class="CameraPlotWidget" name="cameraPlot">
         <property name="minimumSize">
          <size>
-          <width>100</width>
-          <height>100</height>
+          <width>400</width>
+          <height>300</height>
          </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="scatterPlot" native="true">
+       <widget class="QGraphicsView" name="scatterPlot">
         <property name="minimumSize">
          <size>
-          <width>100</width>
-          <height>100</height>
+          <width>400</width>
+          <height>300</height>
          </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
         </property>
        </widget>
       </item>
@@ -57,32 +47,22 @@ border-style: solid;</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QWidget" name="centroidXPlot" native="true">
+         <widget class="QGraphicsView" name="fftXPlot">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>100</height>
+            <width>250</width>
+            <height>200</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="centroidYPlot" native="true">
+         <widget class="QGraphicsView" name="fftYPlot">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>100</height>
+            <width>250</width>
+            <height>200</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
           </property>
          </widget>
         </item>
@@ -91,32 +71,22 @@ border-style: solid;</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QWidget" name="fftXPlot" native="true">
+         <widget class="QGraphicsView" name="centroidXPlot">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>100</height>
+            <width>250</width>
+            <height>200</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="fftYPlot" native="true">
+         <widget class="QGraphicsView" name="centroidYPlot">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>100</height>
+            <width>250</width>
+            <height>200</height>
            </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
           </property>
          </widget>
         </item>
@@ -125,17 +95,15 @@ border-style: solid;</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QWidget" name="cameraControl" native="true">
+         <widget class="CameraControlWidget" name="cameraControl" native="true">
           <property name="minimumSize">
            <size>
-            <width>100</width>
-            <height>100</height>
+            <width>0</width>
+            <height>0</height>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
@@ -165,7 +133,7 @@ border-style: solid;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>350</width>
+     <width>962</width>
      <height>22</height>
     </rect>
    </property>
@@ -202,6 +170,19 @@ border-style: solid;</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CameraControlWidget</class>
+   <extends>QWidget</extends>
+   <header>spot_motion_monitor.views.camera_control_widget</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CameraPlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>spot_motion_monitor.views.camera_plot_widget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

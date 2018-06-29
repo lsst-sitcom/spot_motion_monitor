@@ -36,7 +36,8 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 requirements = [
     "numpy",
     "PyQt5",
-    "scipy"
+    "scipy",
+    "pyqtgraph"
 ]
 
 test_requirements = [
@@ -45,6 +46,7 @@ test_requirements = [
     "pytest",
     "pytest-qt",
     "pytest-flake8",
+    "pytest-mock",
     "distutils_ui"
 ]
 
@@ -58,9 +60,15 @@ setup(
     url='https://github.com/lsst-com/spot_motion_monitor',
     packages=[
         'spot_motion_monitor',
+        'spot_motion_monitor.camera',
+        'spot_motion_monitor.controller',
+        'spot_motion_monitor.utils',
         'spot_motion_monitor.views',
     ],
     package_dir={'spot_motion_monitor': 'spot_motion_monitor',
+                 'spot_motion_monitor.camera': 'spot_motion_monitor/camera',
+                 'spot_motion_monitor.controller': 'spot_motion_monitor/controller',
+                 'spot_motion_monitor.utils': 'spot_motion_monitor/utils',
                  'spot_motion_monitor.views': 'spot_motion_monitor/views'},
     include_package_data=True,
     install_requires=requirements,
