@@ -44,5 +44,5 @@ class DataController():
         """
         genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
         fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX), int(genericFrameInfo.centerY),
-                                             genericFrameInfo.flux, genericFrameInfo.index)
+                                             genericFrameInfo.flux, genericFrameInfo.maxAdc)
         self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
