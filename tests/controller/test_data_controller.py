@@ -5,7 +5,7 @@
 import numpy as np
 
 from spot_motion_monitor.controller import DataController
-from spot_motion_monitor.utils import GenericFrameInformation
+from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation
 from spot_motion_monitor.views import CameraDataWidget
 
 class TestDataController():
@@ -32,3 +32,13 @@ class TestDataController():
         frame = np.ones((3, 5))
         dc.passFrame(frame)
         assert dc.cameraDataWidget.updateFullFrameData.call_count == 1
+
+    def test_failedFrame(self, qtbot, mocker):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        mocker.patch('spot_motion_monitor.views.camera_data_widget.CameraDataWidget.updateFullFrameData')
+        dc.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected)
+        frame = np.ones((3, 5))
+        dc.passFrame(frame)
+        assert dc.cameraDataWidget.updateFullFrameData.call_count == 0

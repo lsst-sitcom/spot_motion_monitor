@@ -2,10 +2,12 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import numpy as np
+
 #from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMainWindow
 
-from spot_motion_monitor.utils import ONE_SECOND_IN_MILLISECONDS
+from spot_motion_monitor.utils import FrameRejected, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.main_window import SpotMotionMonitor
 
 class TestMainWindow():
@@ -50,6 +52,20 @@ class TestMainWindow():
         message3 = "See you later!"
         mw.dataController.updateStatusBar.displayStatus.emit(message3, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message3
+
+    def test_statusForFrameRejection(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        qtbot.addWidget(mw)
+        mockCamCont = mocker.patch('spot_motion_monitor.views.main_window.CameraController',
+                                   spec=True)
+        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFrame')
+        mockCamCont.getFrame = mocker.MagicMock(return_value=np.ones((3, 5)))
+        emessage = "Frame failed!"
+        mw.dataController.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected(emessage))
+        mw.plotController.passFrame = mocker.Mock(return_value=None)
+        mw.acquireFrame()
+        assert mw.statusbar.currentMessage() == emessage
+        assert mw.plotController.passFrame.call_count == 1
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()

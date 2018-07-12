@@ -3,7 +3,8 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from spot_motion_monitor.models import FullFrameModel
-from spot_motion_monitor.utils import FullFrameInformation, StatusBarUpdater
+from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
+from spot_motion_monitor.utils import STATUSBAR_FAST_TIMEOUT, StatusBarUpdater
 
 __all__ = ["DataController"]
 
@@ -42,7 +43,10 @@ class DataController():
         frame : numpy.array
             A frame from a camera CCD.
         """
-        genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
-        fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX), int(genericFrameInfo.centerY),
-                                             genericFrameInfo.flux, genericFrameInfo.maxAdc)
-        self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
+        try:
+            genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
+            fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX), int(genericFrameInfo.centerY),
+                                                 genericFrameInfo.flux, genericFrameInfo.maxAdc)
+            self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
+        except FrameRejected as err:
+            self.updateStatusBar.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)

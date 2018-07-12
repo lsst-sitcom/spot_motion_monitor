@@ -78,7 +78,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
     def acquireFrame(self):
         """Handle a camera CCD frame.
         """
-        frame = self.cameraController.camera.getFrame()
+        frame = self.cameraController.getFrame()
         self.dataController.passFrame(frame)
         self.plotController.passFrame(frame)
 
