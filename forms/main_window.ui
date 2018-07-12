@@ -108,7 +108,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="statusInfo" native="true">
+         <widget class="CameraDataWidget" name="cameraData" native="true">
           <property name="minimumSize">
            <size>
             <width>100</width>
@@ -116,9 +116,7 @@
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">border-color: black;
-border-width: 2px;
-border-style: solid;</string>
+           <string notr="true"/>
           </property>
          </widget>
         </item>
@@ -181,6 +179,12 @@ border-style: solid;</string>
    <class>CameraPlotWidget</class>
    <extends>QGraphicsView</extends>
    <header>spot_motion_monitor.views.camera_plot_widget</header>
+  </customwidget>
+  <customwidget>
+   <class>CameraDataWidget</class>
+   <extends>QWidget</extends>
+   <header>spot_motion_monitor.views.camera_data_widget</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

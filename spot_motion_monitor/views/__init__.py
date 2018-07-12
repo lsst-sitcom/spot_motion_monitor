@@ -4,4 +4,5 @@
 #------------------------------------------------------------------------------
 from .ui_main_window import Ui_MainWindow
 from .main_window import main
+from .camera_data_widget import CameraDataWidget
 from .camera_plot_widget import CameraPlotWidget
