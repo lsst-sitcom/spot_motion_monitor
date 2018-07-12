@@ -47,6 +47,9 @@ class TestMainWindow():
         message2 = "Have a nice evening!"
         mw.plotController.updateStatusBar.displayStatus.emit(message2, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message2
+        message3 = "See you later!"
+        mw.dataController.updateStatusBar.displayStatus.emit(message3, ONE_SECOND_IN_MILLISECONDS)
+        assert mw.statusbar.currentMessage() == message3
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()
