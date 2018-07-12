@@ -9,6 +9,7 @@ from PyQt5 import QtWidgets
 #from pyqtgraph import ImageView, PlotItem
 
 from spot_motion_monitor.controller.camera_controller import CameraController
+from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_controller import PlotController
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
@@ -45,11 +46,14 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         # FIXME: Make this dynamic
         self.cameraController.setupCamera('GaussianCamera')
 
+        self.dataController = DataController(self.cameraData)
+
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
         self.cameraController.frameTimer.timeout.connect(self.acquireFrame)
         self.cameraController.updateStatusBar.displayStatus.connect(self.updateStatusBar)
         self.plotController.updateStatusBar.displayStatus.connect(self.updateStatusBar)
+        self.dataController.updateStatusBar.displayStatus.connect(self.updateStatusBar)
         self.actionExit.triggered.connect(self.close)
         self.actionAbout.triggered.connect(self.about)
 
@@ -74,7 +78,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
     def acquireFrame(self):
         """Handle a camera CCD frame.
         """
-        frame = self.cameraController.camera.getFrame()
+        frame = self.cameraController.getFrame()
+        self.dataController.passFrame(frame)
         self.plotController.passFrame(frame)
 
     def setActionIcon(self, action, iconName, iconInMenu=False):

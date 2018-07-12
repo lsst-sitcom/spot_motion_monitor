@@ -51,6 +51,16 @@ class CameraController():
                                                     smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.frameTimer.stop()
 
+    def getFrame(self):
+        """Get the frame from the camera.
+
+        Returns
+        -------
+        numpy.array
+            A frame from a camera CCD.
+        """
+        return self.camera.getFrame()
+
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.
 
@@ -62,7 +72,7 @@ class CameraController():
         self.camera = getattr(spot_motion_monitor.camera, cameraStr)()
 
     def startStopCamera(self, state):
-        """Summary
+        """Start or stop the camera.
 
         Parameters
         ----------
