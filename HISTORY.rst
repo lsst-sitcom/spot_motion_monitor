@@ -3,6 +3,12 @@
 History
 -------
 
+0.3.0 (2018-07-12)
+~~~~~~~~~~~~~~~~~~
+
+* Create full frame processing
+* Added camera status widget 
+
 0.2.0 (2018-06-29)
 ~~~~~~~~~~~~~~~~~~
 
