@@ -60,7 +60,7 @@ class CameraController():
             Get the current camera FPS based on the acquisition mode.
         """
         if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
-            return 0
+            return self.camera.fpsRoiFrame
         else:
             return self.camera.fpsFullFrame
 

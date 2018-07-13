@@ -60,3 +60,6 @@ class TestCameraController():
         cc.startStopCamera(True)
         fps = cc.currentCameraFps()
         assert fps == 24
+        qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        fps = cc.currentCameraFps()
+        assert fps == 40
