@@ -24,15 +24,6 @@ class TestGaussianCamera():
         assert self.camera.fpsRoiFrame == 40
         assert self.camera.roiSize == 50
 
-    def test_getFrame(self):
-        self.camera.seed = 1000
-        self.camera.startup()
-        frame = self.camera.getFrame()
-        assert frame.shape == (480, 640)
-        max_point1, max_point2 = np.where(frame == np.max(frame))
-        assert max_point1[0] == 225
-        assert max_point2[0] == 288
-
     def test_getFullFrame(self):
         self.camera.seed = 1000
         self.camera.startup()

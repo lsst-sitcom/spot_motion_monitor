@@ -58,7 +58,7 @@ class TestMainWindow():
         qtbot.addWidget(mw)
         mockCamCont = mocker.patch('spot_motion_monitor.views.main_window.CameraController',
                                    spec=True)
-        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFrame')
+        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFullFrame')
         mockCamCont.getFrame = mocker.MagicMock(return_value=np.ones((3, 5)))
         emessage = "Frame failed!"
         mw.dataController.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected(emessage))

@@ -57,13 +57,13 @@ class GaussianCamera(BaseCamera):
         self.xPoint = np.random.randint(xHalfwidth - xRange, xHalfwidth + xRange + 1)
         self.yPoint = np.random.randint(yHalfwidth - yRange, yHalfwidth + yRange + 1)
 
-    def getFrame(self):
-        """Get the frame from the CCD.
+    def getFullFrame(self):
+        """Get the full frame from the CCD.
 
         Returns
         -------
         numpy.array
-            The current CCD frame.
+            The current full CCD frame.
         """
         # Create base CCD frame
         ccd = np.random.poisson(20.0, (self.height, self.width))
@@ -73,16 +73,6 @@ class GaussianCamera(BaseCamera):
             self.xPoint:self.xPoint + self.postageStamp.shape[1]] += self.postageStamp
 
         return ccd
-
-    def getFullFrame(self):
-        """Get the full frame from the CCD.
-
-        Returns
-        -------
-        numpy.array
-            The current full CCD frame.
-        """
-        return self.getFrame()
 
     def getRoiFrame(self):
         """Get the ROI frame from the CCD.

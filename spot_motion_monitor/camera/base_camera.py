@@ -32,15 +32,6 @@ class BaseCamera():
         """
         pass
 
-    def getFrame(self):
-        """Return a CCD frame from the camera.
-
-        Raises
-        ------
-        NotImplementedError
-        """
-        raise NotImplementedError
-
     def getFullFrame(self):
         """Return a full CCD frame from the camera.
 

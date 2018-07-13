@@ -26,9 +26,6 @@ class TestBaseCamera(object):
             self.baseCamera.shutdown()
 
         with pytest.raises(NotImplementedError):
-            self.baseCamera.getFrame()
-
-        with pytest.raises(NotImplementedError):
             self.baseCamera.getFullFrame()
 
         with pytest.raises(NotImplementedError):
