@@ -51,6 +51,19 @@ class CameraController():
                                                     smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.frameTimer.stop()
 
+    def currentCameraFps(self):
+        """Get the current camera FPS.
+
+        Returns
+        -------
+        int
+            Get the current camera FPS based on the acquisition mode.
+        """
+        if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
+            return 0
+        else:
+            return self.camera.fpsFullFrame
+
     def getFrame(self):
         """Get the frame from the camera.
 

@@ -35,18 +35,21 @@ class DataController():
         self.fullFrameModel = FullFrameModel()
         self.updateStatusBar = StatusBarUpdater()
 
-    def passFrame(self, frame):
+    def passFrame(self, frame, currentFps):
         """Get a frame, do calculations and update information.
 
         Parameters
         ----------
         frame : numpy.array
             A frame from a camera CCD.
+        currentFps : int
+            The most recent FPS setting.
         """
         try:
             genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
             fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX), int(genericFrameInfo.centerY),
                                                  genericFrameInfo.flux, genericFrameInfo.maxAdc)
+            self.cameraDataWidget.updateFps(currentFps)
             self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
         except FrameRejected as err:
             self.updateStatusBar.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)

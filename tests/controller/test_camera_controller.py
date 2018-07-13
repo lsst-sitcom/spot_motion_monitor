@@ -50,3 +50,13 @@ class TestCameraController():
         assert cc.frameTimer.isActive()
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         assert not cc.frameTimer.isActive()
+
+    def test_cameraCurrentFps(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.startStopCamera(True)
+        fps = cc.currentCameraFps()
+        assert fps == 24

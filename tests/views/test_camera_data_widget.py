@@ -42,3 +42,13 @@ class TestCameraDataWidget():
         assert cdw.maxAdcValueLabel.text() == self.formatFloatText(ffi.maxAdc)
         assert cdw.rmsXLabel.text() == NO_DATA_VALUE
         assert cdw.rmsYLabel.text() == NO_DATA_VALUE
+
+    def test_PassedFpsValue(self, qtbot):
+        cdw = CameraDataWidget()
+        cdw.show()
+        qtbot.addWidget(cdw)
+
+        fps = 30
+        cdw.updateFps(fps)
+
+        assert cdw.fpsValueLabel.text() == str(fps)

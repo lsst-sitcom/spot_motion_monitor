@@ -79,7 +79,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """Handle a camera CCD frame.
         """
         frame = self.cameraController.getFrame()
-        self.dataController.passFrame(frame)
+        currentFps = self.cameraController.currentCameraFps()
+        self.dataController.passFrame(frame, currentFps)
         self.plotController.passFrame(frame)
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
