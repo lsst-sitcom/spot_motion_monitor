@@ -97,8 +97,6 @@ class GaussianCamera(BaseCamera):
         offset = (self.roiSize - self.spotSize) // 2
         xStart = self.xPoint - offset
         yStart = self.yPoint - offset
-        print(self.xPoint, self.yPoint)
-        print(xStart, yStart)
         roi = ccd[yStart:yStart + self.roiSize, xStart:xStart + self.roiSize]
         return roi
 

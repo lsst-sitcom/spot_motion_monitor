@@ -104,7 +104,10 @@ class CameraController():
         numpy.array
             A frame from a camera CCD.
         """
-        return self.camera.getFrame()
+        if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
+            return self.camera.getRoiFrame()
+        else:
+            return self.camera.getFullFrame()
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.

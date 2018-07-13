@@ -82,3 +82,16 @@ class TestCameraController():
         interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
         assert cc.frameTimer.interval() == interval
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+
+    def test_cameraAcquireExpectedFrame(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.startStopCamera(True)
+        frame = cc.getFrame()
+        assert frame.shape == (480, 640)
+        qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        frame = cc.getFrame()
+        assert frame.shape == (50, 50)
