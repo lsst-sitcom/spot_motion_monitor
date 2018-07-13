@@ -5,6 +5,7 @@
 from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.controller.camera_controller import CameraController
+from spot_motion_monitor.utils import ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.camera_control_widget import CameraControlWidget
 
 class TestCameraController():
@@ -48,6 +49,8 @@ class TestCameraController():
         cc.startStopCamera(True)
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         assert cc.frameTimer.isActive()
+        interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
+        assert cc.frameTimer.interval() == interval
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         assert not cc.frameTimer.isActive()
 
@@ -63,3 +66,19 @@ class TestCameraController():
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
         fps = cc.currentCameraFps()
         assert fps == 40
+
+    def test_cameraAcquireRoiFrames(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+        qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
+        assert cc.frameTimer.interval() == interval
+        qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
+        assert cc.frameTimer.interval() == interval
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)

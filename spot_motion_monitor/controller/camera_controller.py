@@ -37,19 +37,51 @@ class CameraController():
 
         self.cameraControlWidget.cameraState.connect(self.startStopCamera)
         self.cameraControlWidget.acquireFramesState.connect(self.acquireFrame)
+        self.cameraControlWidget.acquireRoiState.connect(self.acquireRoiFrame)
 
     def acquireFrame(self, state):
+        """Start or stop the timer for full frame acquisition.
+
+        Parameters
+        ----------
+        state : bool
+            The current state of the Start Frame Acquisition button.
+        """
         if state:
             self.updateStatusBar.displayStatus.emit('Starting Frame Acquisition',
                                                     smmUtils.ONE_SECOND_IN_MILLISECONDS)
             if self.frameTimer.isActive():
                 self.frameTimer.stop()
-            fps = self.camera.fpsFullFrame if self.camera.fpsFullFrame is not None else smmUtils.DEFAULT_FPS
+            current_fps = self.currentCameraFps()
+            fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
             self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
         else:
             self.updateStatusBar.displayStatus.emit('Stopping Frame Acquistion',
                                                     smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.frameTimer.stop()
+
+    def acquireRoiFrame(self, state):
+        """Start or stop the timer for ROI frame acquisition.
+
+        Parameters
+        ----------
+        state : bool
+            The current state of the Acquire ROI checkbox.
+        """
+        if state:
+            if self.frameTimer.isActive():
+                self.frameTimer.stop()
+            self.updateStatusBar.displayStatus.emit('Starting ROI Frame Acquistion',
+                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            current_fps = self.currentCameraFps()
+            fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
+            self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
+        else:
+            self.frameTimer.stop()
+            self.updateStatusBar.displayStatus.emit('Stopping ROI Frame Acquistion',
+                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            if self.cameraControlWidget.acquireFramesButton.isChecked():
+                self.acquireFrame(True)
 
     def currentCameraFps(self):
         """Get the current camera FPS.
