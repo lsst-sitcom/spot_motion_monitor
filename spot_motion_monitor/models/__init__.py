@@ -3,3 +3,4 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from .full_frame_model import *
+from .roi_frame_model import *
