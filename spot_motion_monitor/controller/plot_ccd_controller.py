@@ -4,9 +4,9 @@
 #------------------------------------------------------------------------------
 import spot_motion_monitor.utils as smmUtils
 
-__all__ = ['PlotController']
+__all__ = ['PlotCcdController']
 
-class PlotController():
+class PlotCcdController():
 
     """This class manages the interactions between the all of the plot widgets
        and calculation data models.

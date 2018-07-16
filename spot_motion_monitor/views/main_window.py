@@ -10,7 +10,7 @@ from PyQt5 import QtWidgets
 
 from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.controller.data_controller import DataController
-from spot_motion_monitor.controller.plot_ccd_controller import PlotController
+from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
 
@@ -24,7 +24,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
     ----------
     cameraController : .CameraController
         An instance of the camera controller.
-    plotController : .PlotController
+    plotController : .PlotCcdController
         An instance of the plot controller.
     """
 
@@ -40,7 +40,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("Spot Motion Monitor")
 
-        self.plotController = PlotController(self.cameraPlot)
+        self.plotController = PlotCcdController(self.cameraPlot)
 
         self.cameraController = CameraController(self.cameraControl)
         # FIXME: Make this dynamic
