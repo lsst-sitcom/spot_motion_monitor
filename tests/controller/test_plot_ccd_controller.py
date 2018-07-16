@@ -5,7 +5,7 @@
 import numpy as np
 #from pyqtgraph import ImageView, PlotItem
 
-from spot_motion_monitor.controller.plot_controller import PlotController
+from spot_motion_monitor.controller.plot_ccd_controller import PlotController
 from spot_motion_monitor.views.camera_plot_widget import CameraPlotWidget
 
 class TestPlotController():

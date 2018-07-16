@@ -4,4 +4,4 @@
 #------------------------------------------------------------------------------
 from .camera_controller import CameraController
 from .data_controller import DataController
-from .plot_controller import PlotController
+from .plot_ccd_controller import PlotController
