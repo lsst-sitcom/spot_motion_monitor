@@ -69,3 +69,13 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         self.numFramesAcqValueLabel.setText(NO_DATA_VALUE)
         self.rmsXLabel.setText(NO_DATA_VALUE)
         self.rmsYLabel.setText(NO_DATA_VALUE)
+
+    def updateRoiFrameData(self, roiFrameInfo):
+        self.numFramesAcqValueLabel.setText(str(roiFrameInfo.validFrames[0]))
+        self.accumPeriodValueLabel.setText(self.formatFloat(roiFrameInfo.validFrames[1]))
+        self.centroidXLabel.setText(self.formatFloat(roiFrameInfo.centerX))
+        self.centroidYLabel.setText(self.formatFloat(roiFrameInfo.centerY))
+        self.rmsXLabel.setText(self.formatFloat(roiFrameInfo.rmsX))
+        self.rmsYLabel.setText(self.formatFloat(roiFrameInfo.rmsY))
+        self.fluxValueLabel.setText(self.formatFloat(roiFrameInfo.flux))
+        self.maxAdcValueLabel.setText(self.formatFloat(roiFrameInfo.maxAdc))

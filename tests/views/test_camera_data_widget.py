@@ -2,7 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.utils import FullFrameInformation, NO_DATA_VALUE
+from spot_motion_monitor.utils import FullFrameInformation, NO_DATA_VALUE, RoiFrameInformation
 from spot_motion_monitor.views import CameraDataWidget
 
 class TestCameraDataWidget():
@@ -52,3 +52,20 @@ class TestCameraDataWidget():
         cdw.updateFps(fps)
 
         assert cdw.fpsValueLabel.text() == str(fps)
+
+    def test_RoiFramePassedValues(self, qtbot):
+        cdw = CameraDataWidget()
+        cdw.show()
+        qtbot.addWidget(cdw)
+
+        rfi = RoiFrameInformation(243.23, 354.97, 2763.58328, 103.53245, 1.4335, 1.97533, (1000, 25.0))
+        cdw.updateRoiFrameData(rfi)
+
+        assert cdw.accumPeriodValueLabel.text() == self.formatFloatText(rfi.validFrames[1])
+        assert cdw.numFramesAcqValueLabel.text() == str(rfi.validFrames[0])
+        assert cdw.centroidXLabel.text() == self.formatFloatText(rfi.centerX)
+        assert cdw.centroidYLabel.text() == self.formatFloatText(rfi.centerY)
+        assert cdw.fluxValueLabel.text() == self.formatFloatText(rfi.flux)
+        assert cdw.maxAdcValueLabel.text() == self.formatFloatText(rfi.maxAdc)
+        assert cdw.rmsXLabel.text() == self.formatFloatText(rfi.rmsX)
+        assert cdw.rmsYLabel.text() == self.formatFloatText(rfi.rmsY)
