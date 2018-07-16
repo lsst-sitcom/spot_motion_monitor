@@ -52,7 +52,7 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         self.fpsValueLabel.setText(str(fps))
 
     def updateFullFrameData(self, fullFrameInfo):
-        """Update the labels with full frame infomation.
+        """Update the labels with full frame information.
 
         Parameters
         ----------
@@ -71,6 +71,13 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         self.rmsYLabel.setText(NO_DATA_VALUE)
 
     def updateRoiFrameData(self, roiFrameInfo):
+        """Update the labels with ROI frame information,
+
+        Parameters
+        ----------
+        roiFrameInfo : .RoiFrameInformation
+            The instance containing the ROI frame information.
+        """
         self.numFramesAcqValueLabel.setText(str(roiFrameInfo.validFrames[0]))
         self.accumPeriodValueLabel.setText(self.formatFloat(roiFrameInfo.validFrames[1]))
         self.centroidXLabel.setText(self.formatFloat(roiFrameInfo.centerX))
