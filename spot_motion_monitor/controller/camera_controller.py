@@ -109,6 +109,16 @@ class CameraController():
         else:
             return self.camera.getFullFrame()
 
+    def isRoiMode(self):
+        """The current acquisition mode.
+
+        Returns
+        -------
+        bool
+            True if in ROI mode, False if in full frame mode.
+        """
+        return self.cameraControlWidget.acquireRoiCheckBox.isChecked()
+
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.
 

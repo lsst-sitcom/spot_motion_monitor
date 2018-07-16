@@ -95,3 +95,16 @@ class TestCameraController():
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
         frame = cc.getFrame()
         assert frame.shape == (50, 50)
+
+    def test_isRoiMode(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.startStopCamera(True)
+        isRoiMode = cc.isRoiMode()
+        assert isRoiMode is False
+        qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        isRoiMode = cc.isRoiMode()
+        assert isRoiMode is True
