@@ -25,7 +25,7 @@ class TestCameraDataWidget():
         assert cdw.rmsXLabel.text() == NO_DATA_VALUE
         assert cdw.rmsYLabel.text() == NO_DATA_VALUE
 
-    def test_PassedTextValues(self, qtbot):
+    def test_FullFramePassedValues(self, qtbot):
         cdw = CameraDataWidget()
         cdw.show()
         qtbot.addWidget(cdw)
@@ -34,7 +34,6 @@ class TestCameraDataWidget():
         cdw.updateFullFrameData(ffi)
 
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
-        assert cdw.fpsValueLabel.text() == NO_DATA_VALUE
         assert cdw.numFramesAcqValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == str(ffi.centerX)
         assert cdw.centroidYLabel.text() == str(ffi.centerY)
