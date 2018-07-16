@@ -17,7 +17,7 @@ class TestCameraDataWidget():
 
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
         assert cdw.fpsValueLabel.text() == NO_DATA_VALUE
-        assert cdw.numFramesAcqValueLabel.text() == NO_DATA_VALUE
+        assert cdw.bufferSizeValueLabel.text() == NO_DATA_VALUE
         assert cdw.fluxValueLabel.text() == NO_DATA_VALUE
         assert cdw.maxAdcValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == NO_DATA_VALUE
@@ -34,7 +34,7 @@ class TestCameraDataWidget():
         cdw.updateFullFrameData(ffi)
 
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
-        assert cdw.numFramesAcqValueLabel.text() == NO_DATA_VALUE
+        assert cdw.bufferSizeValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == str(ffi.centerX)
         assert cdw.centroidYLabel.text() == str(ffi.centerY)
         assert cdw.fluxValueLabel.text() == self.formatFloatText(ffi.flux)
@@ -61,7 +61,7 @@ class TestCameraDataWidget():
         cdw.updateRoiFrameData(rfi)
 
         assert cdw.accumPeriodValueLabel.text() == self.formatFloatText(rfi.validFrames[1])
-        assert cdw.numFramesAcqValueLabel.text() == str(rfi.validFrames[0])
+        assert cdw.bufferSizeValueLabel.text() == str(rfi.validFrames[0])
         assert cdw.centroidXLabel.text() == self.formatFloatText(rfi.centerX)
         assert cdw.centroidYLabel.text() == self.formatFloatText(rfi.centerY)
         assert cdw.fluxValueLabel.text() == self.formatFloatText(rfi.flux)

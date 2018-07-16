@@ -66,7 +66,7 @@ class CameraDataWidget(QWidget, Ui_CameraData):
 
         # Full frames do not set any of this information
         self.accumPeriodValueLabel.setText(NO_DATA_VALUE)
-        self.numFramesAcqValueLabel.setText(NO_DATA_VALUE)
+        self.bufferSizeValueLabel.setText(NO_DATA_VALUE)
         self.rmsXLabel.setText(NO_DATA_VALUE)
         self.rmsYLabel.setText(NO_DATA_VALUE)
 
@@ -78,7 +78,7 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         roiFrameInfo : .RoiFrameInformation
             The instance containing the ROI frame information.
         """
-        self.numFramesAcqValueLabel.setText(str(roiFrameInfo.validFrames[0]))
+        self.bufferSizeValueLabel.setText(str(roiFrameInfo.validFrames[0]))
         self.accumPeriodValueLabel.setText(self.formatFloat(roiFrameInfo.validFrames[1]))
         self.centroidXLabel.setText(self.formatFloat(roiFrameInfo.centerX))
         self.centroidYLabel.setText(self.formatFloat(roiFrameInfo.centerY))
