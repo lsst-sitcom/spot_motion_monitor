@@ -17,6 +17,7 @@ class TestDataController():
         assert dc.cameraDataWidget is not None
         assert dc.updateStatusBar is not None
         assert dc.fullFrameModel is not None
+        assert dc.roiFrameModel is not None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()

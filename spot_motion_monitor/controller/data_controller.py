@@ -2,7 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.models import FullFrameModel
+from spot_motion_monitor.models import FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
 from spot_motion_monitor.utils import STATUSBAR_FAST_TIMEOUT, StatusBarUpdater
 
@@ -19,6 +19,8 @@ class DataController():
         An instance of the camera data widget.
     fullFrameModel : .FullFrameModel
         An instance of the full frame calculation model.
+    roiFrameModel : .RoiFrameModel
+        An instance of the ROI frame calculation model.
     updateStatusBar : .StatusBarUpdater
         An instance of the status bar updater.
     """
@@ -33,6 +35,7 @@ class DataController():
         """
         self.cameraDataWidget = cdw
         self.fullFrameModel = FullFrameModel()
+        self.roiFrameModel = RoiFrameModel()
         self.updateStatusBar = StatusBarUpdater()
 
     def passFrame(self, frame, currentFps):
