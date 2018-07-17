@@ -2,7 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.models import FullFrameModel, RoiFrameModel
+from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
 from spot_motion_monitor.utils import STATUSBAR_FAST_TIMEOUT, StatusBarUpdater
 
@@ -36,6 +36,7 @@ class DataController():
         self.cameraDataWidget = cdw
         self.fullFrameModel = FullFrameModel()
         self.roiFrameModel = RoiFrameModel()
+        self.bufferModel = BufferModel()
         self.updateStatusBar = StatusBarUpdater()
 
     def passFrame(self, frame, currentFps, isRoiMode):
@@ -50,7 +51,11 @@ class DataController():
         """
         try:
             if isRoiMode:
-                pass
+                genericFrameInfo = self.roiFrameModel.calculateCentroid(frame)
+                self.cameraDataWidget.updateFps(currentFps)
+                self.bufferModel.updateInformation(genericFrameInfo)
+                roiFrameInfo = self.bufferModel.getInformation(1.0 / currentFps)
+                self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
             else:
                 genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
                 fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX),

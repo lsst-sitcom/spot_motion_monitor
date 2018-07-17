@@ -78,6 +78,9 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         roiFrameInfo : .RoiFrameInformation
             The instance containing the ROI frame information.
         """
+        if roiFrameInfo is None:
+            return
+
         self.bufferSizeValueLabel.setText(str(roiFrameInfo.validFrames[0]))
         self.accumPeriodValueLabel.setText(self.formatFloat(roiFrameInfo.validFrames[1]))
         self.centroidXLabel.setText(self.formatFloat(roiFrameInfo.centerX))

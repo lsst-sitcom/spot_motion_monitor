@@ -68,3 +68,21 @@ class TestCameraDataWidget():
         assert cdw.maxAdcValueLabel.text() == self.formatFloatText(rfi.maxAdc)
         assert cdw.rmsXLabel.text() == self.formatFloatText(rfi.rmsX)
         assert cdw.rmsYLabel.text() == self.formatFloatText(rfi.rmsY)
+
+    def test_NoneForRoiFramePassedValues(self, qtbot):
+        cdw = CameraDataWidget()
+        cdw.show()
+        qtbot.addWidget(cdw)
+
+        rfi = None
+        cdw.updateRoiFrameData(rfi)
+
+        assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
+        assert cdw.fpsValueLabel.text() == NO_DATA_VALUE
+        assert cdw.bufferSizeValueLabel.text() == NO_DATA_VALUE
+        assert cdw.fluxValueLabel.text() == NO_DATA_VALUE
+        assert cdw.maxAdcValueLabel.text() == NO_DATA_VALUE
+        assert cdw.centroidXLabel.text() == NO_DATA_VALUE
+        assert cdw.centroidYLabel.text() == NO_DATA_VALUE
+        assert cdw.rmsXLabel.text() == NO_DATA_VALUE
+        assert cdw.rmsYLabel.text() == NO_DATA_VALUE
