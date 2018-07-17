@@ -80,7 +80,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         frame = self.cameraController.getFrame()
         currentFps = self.cameraController.currentCameraFps()
-        self.dataController.passFrame(frame, currentFps)
+        isRoiMode = self.cameraController.isRoiMode()
+        self.dataController.passFrame(frame, currentFps, isRoiMode)
         self.plotController.passFrame(frame)
 
     def setActionIcon(self, action, iconName, iconInMenu=False):

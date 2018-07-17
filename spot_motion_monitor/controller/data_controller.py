@@ -38,7 +38,7 @@ class DataController():
         self.roiFrameModel = RoiFrameModel()
         self.updateStatusBar = StatusBarUpdater()
 
-    def passFrame(self, frame, currentFps):
+    def passFrame(self, frame, currentFps, isRoiMode):
         """Get a frame, do calculations and update information.
 
         Parameters
@@ -49,10 +49,14 @@ class DataController():
             The most recent FPS setting.
         """
         try:
-            genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
-            fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX), int(genericFrameInfo.centerY),
-                                                 genericFrameInfo.flux, genericFrameInfo.maxAdc)
-            self.cameraDataWidget.updateFps(currentFps)
-            self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
+            if isRoiMode:
+                pass
+            else:
+                genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
+                fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX),
+                                                     int(genericFrameInfo.centerY),
+                                                     genericFrameInfo.flux, genericFrameInfo.maxAdc)
+                self.cameraDataWidget.updateFps(currentFps)
+                self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
         except FrameRejected as err:
             self.updateStatusBar.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)

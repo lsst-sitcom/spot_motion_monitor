@@ -32,7 +32,7 @@ class TestDataController():
                                                                                                None))
         frame = np.ones((3, 5))
         fps = 24
-        dc.passFrame(frame, fps)
+        dc.passFrame(frame, fps, False)
         assert dc.cameraDataWidget.updateFullFrameData.call_count == 1
 
     def test_failedFrame(self, qtbot, mocker):
@@ -43,5 +43,5 @@ class TestDataController():
         dc.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected)
         frame = np.ones((3, 5))
         fps = 24
-        dc.passFrame(frame, fps)
+        dc.passFrame(frame, fps, False)
         assert dc.cameraDataWidget.updateFullFrameData.call_count == 0
