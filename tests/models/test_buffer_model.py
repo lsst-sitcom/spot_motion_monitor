@@ -11,6 +11,7 @@ class TestBufferModel():
 
     def setup_class(cls):
         cls.model = BufferModel()
+        cls.offset = (264, 200)
 
     def test_parametersAfterConstruction(self):
         assert self.model.bufferSize == 1000
@@ -24,12 +25,12 @@ class TestBufferModel():
         assert self.model.stdMax is not None
 
     def test_listsAfterPassingGenericFrameInfo(self):
-        info = GenericFrameInformation(200.42, 302.42, 3245.32543, 119.24245, 60, 1.432435)
-        self.model.updateInformation(info)
+        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        self.model.updateInformation(info, self.offset)
         assert self.model.maxAdc == [info.maxAdc]
         assert self.model.flux == [info.flux]
-        assert self.model.centerX == [info.centerX]
-        assert self.model.centerY == [info.centerY]
+        assert self.model.centerX == [info.centerX + self.offset[0]]
+        assert self.model.centerY == [info.centerY + self.offset[1]]
         assert self.model.objectSize == [info.objectSize]
         assert self.model.stdMax == [info.stdNoObjects]
         assert self.model.rollBuffer is False
@@ -37,22 +38,22 @@ class TestBufferModel():
     def test_listSizesAfterBufferSizeReached(self):
         bufferSize = 3
         self.model.bufferSize = bufferSize
-        info = GenericFrameInformation(200.42, 302.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
         for i in range(bufferSize):
-            self.model.updateInformation(info)
+            self.model.updateInformation(info, self.offset)
         assert self.model.rollBuffer is True
         assert len(self.model.flux) == bufferSize
         # Update one more time, buffer size should be fixed
-        self.model.updateInformation(info)
+        self.model.updateInformation(info, self.offset)
         assert self.model.rollBuffer is True
         assert len(self.model.flux) == bufferSize
 
     def test_reset(self):
         bufferSize = 3
         self.model.bufferSize = bufferSize
-        info = GenericFrameInformation(200.42, 302.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
         for i in range(bufferSize):
-            self.model.updateInformation(info)
+            self.model.updateInformation(info, self.offset)
         self.model.reset()
         assert len(self.model.maxAdc) == 0
         assert len(self.model.flux) == 0

@@ -85,13 +85,15 @@ class BufferModel():
         self.objectSize = []
         self.stdMax = []
 
-    def updateInformation(self, info):
+    def updateInformation(self, info, offset):
         """Add current information into the buffer.
 
         Parameters
         ----------
         info : .GenericInformation
             The instance containing the ROI frame information.
+        offset : (float, float)
+            The x, y pixel coordinates of the frame offset.
         """
         if self.rollBuffer:
             self.maxAdc.pop(0)
@@ -103,8 +105,8 @@ class BufferModel():
 
         self.maxAdc.append(info.maxAdc)
         self.flux.append(info.flux)
-        self.centerX.append(info.centerX)
-        self.centerY.append(info.centerY)
+        self.centerX.append(info.centerX + offset[0])
+        self.centerY.append(info.centerY + offset[1])
         self.objectSize.append(info.objectSize)
         self.stdMax.append(info.stdNoObjects)
 
