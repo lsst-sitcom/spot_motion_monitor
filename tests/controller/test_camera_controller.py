@@ -108,3 +108,32 @@ class TestCameraController():
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
         isRoiMode = cc.isRoiMode()
         assert isRoiMode is True
+
+    def test_currentOffset(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.camera.seed = 1000
+        cc.startStopCamera(True)
+        offset = cc.currentOffset()
+        assert offset == (264, 200)
+
+    def test_currentStatus(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.camera.seed = 1000
+        cc.startStopCamera(True)
+        status = cc.currentStatus()
+        assert status.currentFps == 24
+        assert status.isRoiMode is False
+        assert status.frameOffset == (264, 200)
+        qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        status = cc.currentStatus()
+        assert status.currentFps == 40
+        assert status.isRoiMode is True
+        assert status.frameOffset == (264, 200)

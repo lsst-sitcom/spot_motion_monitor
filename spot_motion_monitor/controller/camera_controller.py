@@ -96,6 +96,29 @@ class CameraController():
         else:
             return self.camera.fpsFullFrame
 
+    def currentOffset(self):
+        """The current frame offset for the CCD.
+
+        Returns
+        -------
+        (float, float)
+            The x, y pixel coordinated of the current frame offset.
+        """
+        return self.camera.getOffset()
+
+    def currentStatus(self):
+        """The current status of the camera.
+
+        Returns
+        -------
+        .CameraStatus
+            The instance containing all of the current camera status.
+        """
+        fps = self.currentCameraFps()
+        mode = self.isRoiMode()
+        offset = self.currentOffset()
+        return spot_motion_monitor.camera.CameraStatus(fps, mode, offset)
+
     def getFrame(self):
         """Get the frame from the camera.
 
