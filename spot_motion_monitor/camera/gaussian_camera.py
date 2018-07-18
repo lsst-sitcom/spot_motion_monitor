@@ -74,6 +74,20 @@ class GaussianCamera(BaseCamera):
 
         return ccd
 
+    def getOffset(self):
+        """Get the offset for ROI mode.
+
+        Returns
+        -------
+        (float, float)
+            The x, y pixel positions of the offset for ROI mode.
+        """
+        # Offset is same for both axes since spot and ROI are square.
+        offset = (self.roiSize - self.spotSize) // 2
+        xStart = self.xPoint - offset
+        yStart = self.yPoint - offset
+        return (xStart, yStart)
+
     def getRoiFrame(self):
         """Get the ROI frame from the CCD.
 
@@ -83,11 +97,8 @@ class GaussianCamera(BaseCamera):
             The current ROI CCD frame.
         """
         ccd = self.getFullFrame()
-        # Offset is same for both axes since spot and ROI are square.
-        offset = (self.roiSize - self.spotSize) // 2
-        xStart = self.xPoint - offset
-        yStart = self.yPoint - offset
-        roi = ccd[yStart:yStart + self.roiSize, xStart:xStart + self.roiSize]
+        xOffset, yOffset = self.getOffset()
+        roi = ccd[yOffset:yOffset + self.roiSize, xOffset:xOffset + self.roiSize]
         return roi
 
     def makePostageStamp(self):

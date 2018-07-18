@@ -41,3 +41,9 @@ class TestGaussianCamera():
         max_point1, max_point2 = np.where(frame == np.max(frame))
         assert max_point1[0] == 25
         assert max_point2[0] == 24
+
+    def test_getOffset(self):
+        self.camera.seed = 1000
+        self.camera.startup()
+        offset = self.camera.getOffset()
+        assert offset == (264, 200)
