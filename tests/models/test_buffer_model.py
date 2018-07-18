@@ -64,11 +64,12 @@ class TestBufferModel():
 
     def test_getRoiFrameInformation(self):
         bufferSize = 3
-        duration = 25.0
+        currentFps = 40
+        duration = bufferSize / currentFps
         self.model.bufferSize = bufferSize
         self.model.pixelScale = 0.35
 
-        info = self.model.getInformation(duration)
+        info = self.model.getInformation(currentFps)
         assert info is None
 
         np.random.seed(2000)
@@ -81,7 +82,7 @@ class TestBufferModel():
         self.model.objectSize = np.random.randint(60, 65)
         self.model.stdMax = 1.42 + x
 
-        info = self.model.getInformation(duration)
+        info = self.model.getInformation(currentFps)
         assert info.flux == 2434.8911626243757
         assert info.maxAdc == 120.07116262437593
         assert info.centerX == 200.54116262437594

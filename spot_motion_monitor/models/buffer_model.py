@@ -47,13 +47,13 @@ class BufferModel():
         self.objectSize = []
         self.stdMax = []
 
-    def getInformation(self, duration):
+    def getInformation(self, currentFps):
         """Retrieve the current information from the accumulated buffer.
 
         Parameters
         ----------
-        duration : float
-            The total time to accumulate the buffer.
+        currentFps : float
+            The current Frames per Second rate from the camera.
 
         Returns
         -------
@@ -70,7 +70,7 @@ class BufferModel():
             # meanObjectSize = np.mean(self.objectSize)
             # meanStdMax = np.nanmean(self.stdMax)
             return RoiFrameInformation(meanCenterX, meanCenterY, meanFlux, meanMaxAdc,
-                                       rmsX, rmsY, (self.bufferSize, duration))
+                                       rmsX, rmsY, (self.bufferSize, self.bufferSize / currentFps))
         else:
             return None
 
