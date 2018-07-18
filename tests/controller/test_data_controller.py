@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
+from spot_motion_monitor.camera import CameraStatus
 from spot_motion_monitor.controller import DataController
 from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, RoiFrameInformation
 from spot_motion_monitor.views import CameraDataWidget
@@ -12,6 +13,8 @@ class TestDataController():
 
     def setup_class(cls):
         cls.frame = np.ones((3, 5))
+        cls.fullFrameStatus = CameraStatus(24, False, (0, 0))
+        cls.roiFrameStatus = CameraStatus(40, True, (264, 200))
 
     def test_parametersAfterConstruction(self, qtbot):
         cdw = CameraDataWidget()
@@ -34,9 +37,7 @@ class TestDataController():
                                                                                                145.422,
                                                                                                70,
                                                                                                None))
-        frame = np.ones((3, 5))
-        fps = 24
-        dc.passFrame(frame, fps, False)
+        dc.passFrame(self.frame, self.fullFrameStatus)
         assert dc.cameraDataWidget.updateFullFrameData.call_count == 1
 
     def test_failedFrame(self, qtbot, mocker):
@@ -45,9 +46,7 @@ class TestDataController():
         dc = DataController(cdw)
         mocker.patch('spot_motion_monitor.views.camera_data_widget.CameraDataWidget.updateFullFrameData')
         dc.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected)
-        frame = np.ones((3, 5))
-        fps = 24
-        dc.passFrame(frame, fps, False)
+        dc.passFrame(self.frame, self.fullFrameStatus)
         assert dc.cameraDataWidget.updateFullFrameData.call_count == 0
 
     def test_updateRoiFrameData(self, qtbot, mocker):
@@ -68,6 +67,5 @@ class TestDataController():
                                                                                      2.5432,
                                                                                      2.2353,
                                                                                      (1000, 25)))
-        fps = 40
-        dc.passFrame(self.frame, fps, True)
+        dc.passFrame(self.frame, self.roiFrameStatus)
         assert dc.cameraDataWidget.updateRoiFrameData.call_count == 1
