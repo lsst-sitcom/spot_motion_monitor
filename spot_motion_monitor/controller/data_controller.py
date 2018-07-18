@@ -54,7 +54,7 @@ class DataController():
                 genericFrameInfo = self.roiFrameModel.calculateCentroid(frame)
                 self.cameraDataWidget.updateFps(currentStatus.currentFps)
                 self.bufferModel.updateInformation(genericFrameInfo, currentStatus.frameOffset)
-                roiFrameInfo = self.bufferModel.getInformation(1.0 / currentStatus.currentFps)
+                roiFrameInfo = self.bufferModel.getInformation(currentStatus.currentFps)
                 self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
             else:
                 genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
