@@ -47,6 +47,20 @@ class BufferModel():
         self.objectSize = []
         self.stdMax = []
 
+    def getCentroids(self):
+        """Return the current pair of centroid values.
+
+        Returns
+        -------
+        (float, float)
+            A tuple containing the current pair of centroid values. If no
+            values in buffer, return (None, None)
+        """
+        try:
+            return (self.centerX[-1], self.centerY[-1])
+        except IndexError:
+            return (None, None)
+
     def getInformation(self, currentFps):
         """Retrieve the current information from the accumulated buffer.
 

@@ -69,3 +69,21 @@ class TestDataController():
                                                                                      (1000, 25)))
         dc.passFrame(self.frame, self.roiFrameStatus)
         assert dc.cameraDataWidget.updateRoiFrameData.call_count == 1
+
+    def test_getBufferSize(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        bufferSize = dc.getBufferSize()
+        assert bufferSize == 1000
+
+    def test_getCentroids(self, qtbot, mocker):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        truth_centroids = (241.542, 346.931)
+        centroids = dc.getCentroids(False)
+        assert centroids == (None, None)
+        dc.bufferModel.getCentroids = mocker.Mock(return_value=truth_centroids)
+        centroids = dc.getCentroids(True)
+        assert centroids == truth_centroids

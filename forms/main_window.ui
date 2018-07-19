@@ -45,6 +45,30 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="Centroid1dPlotWidget" name="centroidXPlot">
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>200</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="Centroid1dPlotWidget" name="centroidYPlot">
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>200</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QGraphicsView" name="fftXPlot">
@@ -58,30 +82,6 @@
         </item>
         <item>
          <widget class="QGraphicsView" name="fftYPlot">
-          <property name="minimumSize">
-           <size>
-            <width>250</width>
-            <height>200</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QGraphicsView" name="centroidXPlot">
-          <property name="minimumSize">
-           <size>
-            <width>250</width>
-            <height>200</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGraphicsView" name="centroidYPlot">
           <property name="minimumSize">
            <size>
             <width>250</width>
@@ -185,6 +185,11 @@
    <extends>QWidget</extends>
    <header>spot_motion_monitor.views.camera_data_widget</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Centroid1dPlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>spot_motion_monitor.views.centroid_1d_plot_widget</header>
   </customwidget>
  </customwidgets>
  <resources/>

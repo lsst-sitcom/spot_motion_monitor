@@ -97,3 +97,16 @@ class TestBufferModel():
         # self.model.stdMax[1] = np.nan
         # info = self.model.getInformation(duration)
         # assert info.stdNoObjects == 1.9494795589614855
+
+    def test_getCentroids(self):
+        self.model.reset()
+        bufferSize = 3
+        self.model.bufferSize = bufferSize
+        centroids = self.model.getCentroids()
+        assert centroids == (None, None)
+        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        self.model.updateInformation(info, self.offset)
+        centroidX = info.centerX + self.offset[0]
+        centroidY = info.centerY + self.offset[1]
+        centroids = self.model.getCentroids()
+        assert centroids == (centroidX, centroidY)

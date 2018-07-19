@@ -10,6 +10,7 @@ from PyQt5 import QtWidgets
 
 from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.controller.data_controller import DataController
+from spot_motion_monitor.controller.plot_1d_centroid_controller import Plot1dCentroidController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
@@ -48,6 +49,11 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.dataController = DataController(self.cameraData)
 
+        bufferSize = self.dataController.getBufferSize()
+        self.centroidXPlot.setup(bufferSize)
+        self.centroidYPlot.setup(bufferSize)
+        self.plot1dCentroidController = Plot1dCentroidController(self.centroidXPlot, self.centroidYPlot)
+
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
         self.cameraController.frameTimer.timeout.connect(self.acquireFrame)
@@ -82,6 +88,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         cameraStatus = self.cameraController.currentStatus()
         self.dataController.passFrame(frame, cameraStatus)
         self.plotController.passFrame(frame)
+        centroids = self.dataController.getCentroids(cameraStatus.isRoiMode)
+        self.plot1dCentroidController.update(centroids[0], centroids[1])
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.

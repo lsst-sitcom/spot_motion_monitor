@@ -23,7 +23,6 @@ class TestCentroid1dPlotWidget():
         assert c1dpw.curve is not None
         assert c1dpw.dataSize is arraySize
         assert c1dpw.data is not None
-        assert c1dpw.data.size == arraySize
         assert c1dpw.rollArray is False
 
     def test_updatePlot(self, qtbot, mocker):
@@ -35,7 +34,7 @@ class TestCentroid1dPlotWidget():
         mockSetData = mocker.patch.object(c1dpw.curve, 'setData')
         values = [254.43, 254.86, 253.91, 254.21]
         c1dpw.updatePlot(values[0])
-        assert c1dpw.data.tolist() == [values[0], 0.0, 0.0]
+        assert c1dpw.data.tolist() == [values[0]]
         assert c1dpw.dataCounter == 1
         c1dpw.updatePlot(values[1])
         c1dpw.updatePlot(values[2])

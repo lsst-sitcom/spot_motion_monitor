@@ -50,7 +50,7 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
             The size for the plot data array.
         """
         self.dataSize = arraySize
-        self.data = np.zeros(self.dataSize)
+        self.data = np.array([])
         p1 = self.addPlot()
         self.curve = p1.plot(self.data)
 
@@ -66,8 +66,8 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
             self.data[:-1] = self.data[1:]
             self.data[-1] = centroid
         else:
-            print(self.dataCounter)
-            self.data[self.dataCounter] = centroid
+            # This does create copies of arrays, so watch performance.
+            self.data = np.append(self.data, centroid)
 
         self.curve.setData(self.data)
 

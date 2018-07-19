@@ -15,6 +15,8 @@ class DataController():
 
     Attributes
     ----------
+    bufferModel : TYPE
+        Description
     cameraDataWidget : .CameraDataWidget
         An instance of the camera data widget.
     fullFrameModel : .FullFrameModel
@@ -38,6 +40,34 @@ class DataController():
         self.roiFrameModel = RoiFrameModel()
         self.bufferModel = BufferModel()
         self.updateStatusBar = StatusBarUpdater()
+
+    def getBufferSize(self):
+        """Get the buffer size of the buffer data model.
+
+        Returns
+        -------
+        int
+            The buffer size that the buffer model holds.
+        """
+        return self.bufferModel.bufferSize
+
+    def getCentroids(self, isRoiMode):
+        """Summary
+
+        Parameters
+        ----------
+        isRoiMode : TYPE
+            Description
+
+        Returns
+        -------
+        TYPE
+            Description
+        """
+        if isRoiMode:
+            return self.bufferModel.getCentroids()
+        else:
+            return (None, None)
 
     def passFrame(self, frame, currentStatus):
         """Get a frame, do calculations and update information.
