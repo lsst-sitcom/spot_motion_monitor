@@ -2,9 +2,9 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-__all__ = ['Plot1dCentroidController']
+__all__ = ['PlotCentroidController']
 
-class Plot1dCentroidController():
+class PlotCentroidController():
 
     """This class handles the interactions between the main program and the
        1D centroid plots.

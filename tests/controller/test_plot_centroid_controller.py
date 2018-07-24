@@ -2,10 +2,10 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.controller import Plot1dCentroidController
+from spot_motion_monitor.controller import PlotCentroidController
 from spot_motion_monitor.views import Centroid1dPlotWidget
 
-class TestPlot1dCentroidController:
+class TestPlotCentroidController:
 
     def setup_class(cls):
         cls.bufferSize = 3
@@ -18,7 +18,7 @@ class TestPlot1dCentroidController:
         cxp.setup(self.bufferSize)
         cyp.setup(self.bufferSize)
 
-        p1cc = Plot1dCentroidController(cxp, cyp)
+        p1cc = PlotCentroidController(cxp, cyp)
         assert p1cc.xplot is not None
         assert p1cc.yplot is not None
 
@@ -30,7 +30,7 @@ class TestPlot1dCentroidController:
         cxp.setup(self.bufferSize)
         cyp.setup(self.bufferSize)
 
-        p1cc = Plot1dCentroidController(cxp, cyp)
+        p1cc = PlotCentroidController(cxp, cyp)
         centroidX = 253.543
         centroidY = 313.683
         p1cc.update(centroidX, centroidY)
@@ -47,7 +47,7 @@ class TestPlot1dCentroidController:
         cyp.setup(self.bufferSize)
         mocker.patch('spot_motion_monitor.views.centroid_1d_plot_widget.Centroid1dPlotWidget.updatePlot')
 
-        p1cc = Plot1dCentroidController(cxp, cyp)
+        p1cc = PlotCentroidController(cxp, cyp)
         p1cc.update(None, None)
         assert p1cc.xplot.updatePlot.call_count == 0
         assert p1cc.yplot.updatePlot.call_count == 0
