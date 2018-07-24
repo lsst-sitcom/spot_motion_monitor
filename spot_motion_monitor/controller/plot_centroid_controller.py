@@ -11,13 +11,15 @@ class PlotCentroidController():
 
     Attributes
     ----------
-    xplot : .GraphicsLayoutWidget
+    scatterPlot : .GraphicsLayoutWidget
+        The scatter plot of the x,y pixel coordinate of the centroid.
+    x1dPlot : .GraphicsLayoutWidget
         The 1D plot of the x pixel coordinate of the centroid.
-    yplot : .GraphicsLayoutWidget
+    y1dPlot : .GraphicsLayoutWidget
         The 1D plot of the y pixel coordinate of the centroid.
     """
 
-    def __init__(self, cxp, cyp):
+    def __init__(self, cxp, cyp, csp):
         """Initialize the class.
 
         Parameters
@@ -26,9 +28,24 @@ class PlotCentroidController():
             The instance of the x centroid plot.
         cyp : .GraphicsLayoutWidget
             The instance of the y centroid plot.
+        csp : .GraphicsLayoutWidget
+            The instance of the centroid scatter plot.
         """
-        self.xplot = cxp
-        self.yplot = cyp
+        self.x1dPlot = cxp
+        self.y1dPlot = cyp
+        self.scatterPlot = csp
+
+    def setup(self, arraySize):
+        """Pass along the requested array size to the contained plot widgets.
+
+        Parameters
+        ----------
+        arraySize : int
+            The size for the plot data array.
+        """
+        self.x1dPlot.setup(arraySize)
+        self.y1dPlot.setup(arraySize)
+        self.scatterPlot.setup(arraySize)
 
     def update(self, cx, cy):
         """Update the x and y centroid plots with current values.
@@ -42,5 +59,6 @@ class PlotCentroidController():
         """
         if cx is None or cy is None:
             return
-        self.xplot.updatePlot(cx)
-        self.yplot.updatePlot(cy)
+        self.x1dPlot.updatePlot(cx)
+        self.y1dPlot.updatePlot(cy)
+        self.scatterPlot.updatePlot(cx, cy)

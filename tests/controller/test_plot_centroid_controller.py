@@ -3,7 +3,7 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from spot_motion_monitor.controller import PlotCentroidController
-from spot_motion_monitor.views import Centroid1dPlotWidget
+from spot_motion_monitor.views import Centroid1dPlotWidget, CentroidScatterPlotWidget
 
 class TestPlotCentroidController:
 
@@ -13,41 +13,68 @@ class TestPlotCentroidController:
     def test_parametersAfterConstruction(self, qtbot):
         cxp = Centroid1dPlotWidget()
         cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
         qtbot.addWidget(cxp)
         qtbot.addWidget(cyp)
-        cxp.setup(self.bufferSize)
-        cyp.setup(self.bufferSize)
+        qtbot.addWidget(csp)
 
-        p1cc = PlotCentroidController(cxp, cyp)
-        assert p1cc.xplot is not None
-        assert p1cc.yplot is not None
+        p1cc = PlotCentroidController(cxp, cyp, csp)
+        assert p1cc.x1dPlot is not None
+        assert p1cc.y1dPlot is not None
+        assert p1cc.scatterPlot is not None
+
+    def test_parametersAfterSetup(self, qtbot):
+        cxp = Centroid1dPlotWidget()
+        cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
+        qtbot.addWidget(cxp)
+        qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
+
+        p1cc = PlotCentroidController(cxp, cyp, csp)
+        p1cc.setup(self.bufferSize)
+
+        assert p1cc.x1dPlot.dataSize == self.bufferSize
+        assert p1cc.y1dPlot.dataSize == self.bufferSize
+        assert p1cc.scatterPlot.dataSize == self.bufferSize
 
     def test_update(self, qtbot):
         cxp = Centroid1dPlotWidget()
         cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
         qtbot.addWidget(cxp)
         qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
         cxp.setup(self.bufferSize)
         cyp.setup(self.bufferSize)
+        csp.setup(self.bufferSize)
 
-        p1cc = PlotCentroidController(cxp, cyp)
+        p1cc = PlotCentroidController(cxp, cyp, csp)
         centroidX = 253.543
         centroidY = 313.683
         p1cc.update(centroidX, centroidY)
 
-        assert p1cc.xplot.data[0] == centroidX
-        assert p1cc.yplot.data[0] == centroidY
+        assert p1cc.x1dPlot.data[0] == centroidX
+        assert p1cc.y1dPlot.data[0] == centroidY
+        assert p1cc.scatterPlot.xData[0] == centroidX
+        assert p1cc.scatterPlot.yData[0] == centroidY
 
     def test_badCentroidsUpdate(self, qtbot, mocker):
         cxp = Centroid1dPlotWidget()
         cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
         qtbot.addWidget(cxp)
         qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
         cxp.setup(self.bufferSize)
         cyp.setup(self.bufferSize)
+        csp.setup(self.bufferSize)
         mocker.patch('spot_motion_monitor.views.centroid_1d_plot_widget.Centroid1dPlotWidget.updatePlot')
+        mocker.patch('spot_motion_monitor.views.centroid_scatter_plot_widget.'
+                     'CentroidScatterPlotWidget.updatePlot')
 
-        p1cc = PlotCentroidController(cxp, cyp)
+        p1cc = PlotCentroidController(cxp, cyp, csp)
         p1cc.update(None, None)
-        assert p1cc.xplot.updatePlot.call_count == 0
-        assert p1cc.yplot.updatePlot.call_count == 0
+        assert p1cc.x1dPlot.updatePlot.call_count == 0
+        assert p1cc.y1dPlot.updatePlot.call_count == 0
+        assert p1cc.scatterPlot.updatePlot.call_count == 0

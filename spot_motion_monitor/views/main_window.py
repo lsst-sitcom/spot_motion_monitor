@@ -6,7 +6,6 @@ import sys
 
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
-#from pyqtgraph import ImageView, PlotItem
 
 from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.controller.data_controller import DataController
@@ -49,11 +48,12 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.dataController = DataController(self.cameraData)
 
-        bufferSize = self.dataController.getBufferSize()
-        self.centroidXPlot.setup(bufferSize)
-        self.centroidYPlot.setup(bufferSize)
         self.plotCentroidController = PlotCentroidController(self.centroidXPlot,
-                                                             self.centroidYPlot)
+                                                             self.centroidYPlot,
+                                                             self.scatterPlot)
+
+        bufferSize = self.dataController.getBufferSize()
+        self.plotCentroidController.setup(bufferSize)
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
