@@ -10,8 +10,8 @@ from PyQt5 import QtWidgets
 
 from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.controller.data_controller import DataController
-from spot_motion_monitor.controller.plot_1d_centroid_controller import Plot1dCentroidController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
+from spot_motion_monitor.controller.plot_centroid_controller import Plot1dCentroidController
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
 
