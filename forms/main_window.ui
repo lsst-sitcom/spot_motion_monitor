@@ -31,7 +31,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGraphicsView" name="scatterPlot">
+       <widget class="CentroidScatterPlotWidget" name="scatterPlot">
         <property name="minimumSize">
          <size>
           <width>400</width>
@@ -190,6 +190,11 @@
    <class>Centroid1dPlotWidget</class>
    <extends>QGraphicsView</extends>
    <header>spot_motion_monitor.views.centroid_1d_plot_widget</header>
+  </customwidget>
+  <customwidget>
+   <class>CentroidScatterPlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>spot_motion_monitor.views.centroid_scatter_plot_widget</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -7,3 +7,4 @@ from .main_window import main
 from .camera_data_widget import CameraDataWidget
 from .camera_plot_widget import CameraPlotWidget
 from .centroid_1d_plot_widget import Centroid1dPlotWidget
+from .centroid_scatter_plot_widget import CentroidScatterPlotWidget
