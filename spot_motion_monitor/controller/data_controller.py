@@ -69,6 +69,9 @@ class DataController():
         else:
             return (None, None)
 
+    def getFft(self, currentFps):
+        return self.bufferModel.getFft(currentFps)
+
     def passFrame(self, frame, currentStatus):
         """Get a frame, do calculations and update information.
 

@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
+from spot_motion_monitor.utils import fft_calculator
 from spot_motion_monitor.utils.frame_information import RoiFrameInformation
 
 __all__ = ['BufferModel']
@@ -60,6 +61,25 @@ class BufferModel():
             return (self.centerX[-1], self.centerY[-1])
         except IndexError:
             return (None, None)
+
+    def getFft(self, currentFps):
+        """Return the current FFT calculations.
+
+        Parameters
+        ----------
+        currentFps : float
+            The current Frames per Second rate from the camera.
+
+        Returns
+        -------
+        (numpy.array, numpy.array, numpy.array)
+            The FFTX, FFTY and Frequencies from the FFT calculation.
+            If not rolling buffer return (None, None, None)
+        """
+        if self.rollBuffer:
+            return fft_calculator(self.centerX, self.centerY, currentFps)
+        else:
+            return (None, None, None)
 
     def getInformation(self, currentFps):
         """Retrieve the current information from the accumulated buffer.

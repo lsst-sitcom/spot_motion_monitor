@@ -110,3 +110,28 @@ class TestBufferModel():
         centroidY = info.centerY + self.offset[1]
         centroids = self.model.getCentroids()
         assert centroids == (centroidX, centroidY)
+
+    def test_getFft(self):
+        self.model.reset()
+        bufferSize = 3
+        currentFps = 40
+        self.model.bufferSize = bufferSize
+        self.model.pixelScale = 0.35
+
+        fft = self.model.getFft(currentFps)
+        assert fft == (None, None, None)
+
+        np.random.seed(2000)
+        x = np.random.random(3)
+        self.model.rollBuffer = True
+        self.model.maxAdc = 119.53 + x
+        self.model.flux = 2434.35 + x
+        self.model.centerX = 200 + x
+        self.model.centerY = 321.3 + x
+        self.model.objectSize = np.random.randint(60, 65)
+        self.model.stdMax = 1.42 + x
+
+        fft = self.model.getFft(currentFps)
+        assert fft[0] is not None
+        assert fft[1] is not None
+        assert fft[2] is not None
