@@ -77,7 +77,7 @@ class BufferModel():
             If not rolling buffer return (None, None, None)
         """
         if self.rollBuffer:
-            return fft_calculator(self.centerX, self.centerY, currentFps)
+            return fft_calculator(np.array(self.centerX), np.array(self.centerY), currentFps)
         else:
             return (None, None, None)
 
