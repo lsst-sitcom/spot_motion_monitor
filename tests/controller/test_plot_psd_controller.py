@@ -4,10 +4,10 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
-from spot_motion_monitor.controller import PlotFftController
+from spot_motion_monitor.controller import PlotPsdController
 from spot_motion_monitor.views import FftWaterfallPlotWidget
 
-class TestPlotFftController:
+class TestPlotPsdController:
 
     def test_parametersAfterContruction(self, qtbot):
         fftx = FftWaterfallPlotWidget()
@@ -15,9 +15,9 @@ class TestPlotFftController:
         qtbot.addWidget(fftx)
         qtbot.addWidget(ffty)
 
-        pfc = PlotFftController(fftx, ffty)
-        assert pfc.fftXPlot is not None
-        assert pfc.fftYPlot is not None
+        pfc = PlotPsdController(fftx, ffty)
+        assert pfc.psdXPlot is not None
+        assert pfc.psdYPlot is not None
 
     def test_parametersAfterSetup(self, qtbot):
         fftx = FftWaterfallPlotWidget()
@@ -26,10 +26,10 @@ class TestPlotFftController:
         qtbot.addWidget(ffty)
 
         arraySize = 5
-        pfc = PlotFftController(fftx, ffty)
+        pfc = PlotPsdController(fftx, ffty)
         pfc.setup(arraySize)
-        assert pfc.fftXPlot.arraySize == arraySize
-        assert pfc.fftYPlot.arraySize == arraySize
+        assert pfc.psdXPlot.arraySize == arraySize
+        assert pfc.psdYPlot.arraySize == arraySize
 
     def test_update(self, qtbot, mocker):
         fftx = FftWaterfallPlotWidget()
@@ -38,20 +38,20 @@ class TestPlotFftController:
         qtbot.addWidget(ffty)
 
         arraySize = 5
-        pfc = PlotFftController(fftx, ffty)
+        pfc = PlotPsdController(fftx, ffty)
         pfc.setup(arraySize)
 
         np.random.seed(3000)
-        fftDataX = np.random.random(7)
-        fftDataY = np.random.random(7)
+        psdDataX = np.random.random(7)
+        psdDataY = np.random.random(7)
         freqs = np.random.random(7)
 
-        mockFftXPlotUpdatePlot = mocker.patch.object(pfc.fftXPlot, 'updatePlot')
-        mockFftYPlotUpdatePlot = mocker.patch.object(pfc.fftYPlot, 'updatePlot')
-        pfc.update(fftDataX, fftDataY, freqs)
+        mockPsdXPlotUpdatePlot = mocker.patch.object(pfc.psdXPlot, 'updatePlot')
+        mockPsdYPlotUpdatePlot = mocker.patch.object(pfc.psdYPlot, 'updatePlot')
+        pfc.update(psdDataX, psdDataY, freqs)
 
-        assert mockFftXPlotUpdatePlot.call_count == 1
-        assert mockFftYPlotUpdatePlot.call_count == 1
+        assert mockPsdXPlotUpdatePlot.call_count == 1
+        assert mockPsdYPlotUpdatePlot.call_count == 1
 
     def test_badFftData(self, qtbot, mocker):
         fftx = FftWaterfallPlotWidget()
@@ -60,12 +60,12 @@ class TestPlotFftController:
         qtbot.addWidget(ffty)
 
         arraySize = 5
-        pfc = PlotFftController(fftx, ffty)
+        pfc = PlotPsdController(fftx, ffty)
         pfc.setup(arraySize)
 
-        mockFftXPlotUpdatePlot = mocker.patch.object(pfc.fftXPlot, 'updatePlot')
-        mockFftYPlotUpdatePlot = mocker.patch.object(pfc.fftYPlot, 'updatePlot')
+        mockPsdXPlotUpdatePlot = mocker.patch.object(pfc.psdXPlot, 'updatePlot')
+        mockPsdYPlotUpdatePlot = mocker.patch.object(pfc.psdYPlot, 'updatePlot')
         pfc.update(None, None, None)
 
-        assert mockFftXPlotUpdatePlot.call_count == 0
-        assert mockFftYPlotUpdatePlot.call_count == 0
+        assert mockPsdXPlotUpdatePlot.call_count == 0
+        assert mockPsdYPlotUpdatePlot.call_count == 0

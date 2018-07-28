@@ -2,18 +2,19 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-__all__ = ['PlotFftController']
+__all__ = ['PlotPsdController']
 
-class PlotFftController:
+class PlotPsdController:
 
-    """Summary
+    """This class handles the interactions between the main program and the
+       power spectrum distribution (PSD) waterfall plots.
 
     Attributes
     ----------
-    fftXPlot : FftWaterfallPlotWidget
-        The instance of the waterfall plot for the FFT x coordinates.
-    fftYPlot : FftWaterfallPlotWidget
-        The instance of the waterfall plot for the FFT y coordinates.
+    psdXPlot : FftWaterfallPlotWidget
+        The instance of the waterfall plot for the PSD x coordinates.
+    psdYPlot : FftWaterfallPlotWidget
+        The instance of the waterfall plot for the PSD y coordinates.
     """
 
     def __init__(self, fftx, ffty):
@@ -26,8 +27,8 @@ class PlotFftController:
         ffty : FftWaterfallPlotWidget
             The instance of the waterfall plot for the FFT y coordinates.
         """
-        self.fftXPlot = fftx
-        self.fftYPlot = ffty
+        self.psdXPlot = fftx
+        self.psdYPlot = ffty
 
     def setup(self, arraySize):
         """Setup the controller's internal information.
@@ -35,27 +36,27 @@ class PlotFftController:
         Parameters
         ----------
         arraySize : int
-            The vertical dimension of the FFT waterfall plot data.
+            The vertical dimension of the PSD waterfall plot data.
         """
-        self.fftXPlot.setup(arraySize)
-        self.fftYPlot.setup(arraySize)
+        self.psdXPlot.setup(arraySize)
+        self.psdYPlot.setup(arraySize)
 
-    def update(self, fftDataX, fftDataY, frequencies):
+    def update(self, psdDataX, psdDataY, frequencies):
         """Update the controller's plot widgets with the data provided.
 
         NOTE: If NoneType data is provided, the updatePlot methods are not called.
 
         Parameters
         ----------
-        fftDataX : numpy.array
-            The array of the FFT x coordinate data.
-        fftDataY : numpy.array
-            The array of the FFT y coordinate data.
+        psdDataX : numpy.array
+            The array of the PSD x coordinate data.
+        psdDataY : numpy.array
+            The array of the PSD y coordinate data.
         frequencies : numpy.array
-            The frequency array associated with the FFT data.
+            The frequency array associated with the PSD data.
         """
-        if fftDataX is None or fftDataY is None or frequencies is None:
+        if psdDataX is None or psdDataY is None or frequencies is None:
             return
 
-        self.fftXPlot.updatePlot(fftDataX, frequencies)
-        self.fftYPlot.updatePlot(fftDataY, frequencies)
+        self.psdXPlot.updatePlot(psdDataX, frequencies)
+        self.psdYPlot.updatePlot(psdDataY, frequencies)

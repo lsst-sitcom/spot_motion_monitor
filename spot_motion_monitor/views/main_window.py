@@ -11,7 +11,7 @@ from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
-from spot_motion_monitor.controller.plot_psd_controller import PlotFftController
+from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
 
@@ -53,11 +53,11 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
                                                              self.centroidYPlot,
                                                              self.scatterPlot)
 
-        self.plotFftController = PlotFftController(self.fftXPlot, self.fftYPlot)
+        self.plotPsdController = PlotPsdController(self.fftXPlot, self.fftYPlot)
 
         bufferSize = self.dataController.getBufferSize()
         self.plotCentroidController.setup(bufferSize)
-        self.plotFftController.setup(400)
+        self.plotPsdController.setup(400)
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
@@ -96,7 +96,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         centroids = self.dataController.getCentroids(cameraStatus.isRoiMode)
         self.plotCentroidController.update(centroids[0], centroids[1])
         psdData = self.dataController.getPsd(cameraStatus.currentFps)
-        self.plotFftController.update(psdData[0], psdData[1], psdData[2])
+        self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.
