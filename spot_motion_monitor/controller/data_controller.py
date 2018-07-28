@@ -52,25 +52,38 @@ class DataController():
         return self.bufferModel.bufferSize
 
     def getCentroids(self, isRoiMode):
-        """Summary
+        """Return the current x, y coordinate of the centroid.
 
         Parameters
         ----------
-        isRoiMode : TYPE
-            Description
+        isRoiMode : bool
+            True is system is in ROI mode, False if in Full Frame mode.
 
         Returns
         -------
-        TYPE
-            Description
+        (float, float)
+            The x and y pixel coordinates of the most current centroid.
+            Return (None, None) if not in ROI mode.
         """
         if isRoiMode:
             return self.bufferModel.getCentroids()
         else:
             return (None, None)
 
-    def getFft(self, currentFps):
-        return self.bufferModel.getFft(currentFps)
+    def getPsd(self, currentFps):
+        """
+
+        Parameters
+        ----------
+        currentFps : float
+            The current Frames per Second rate from the camera.
+
+        Returns
+        -------
+        (numpy.array, numpy.array, numpy.array)
+            The PSDX, PSDY and Frequencies from the PSD calculation.
+        """
+        return self.bufferModel.getPsd(currentFps)
 
     def passFrame(self, frame, currentStatus):
         """Get a frame, do calculations and update information.

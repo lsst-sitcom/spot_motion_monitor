@@ -95,8 +95,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotController.passFrame(frame)
         centroids = self.dataController.getCentroids(cameraStatus.isRoiMode)
         self.plotCentroidController.update(centroids[0], centroids[1])
-        fftData = self.dataController.getFft(cameraStatus.currentFps)
-        self.plotFftController.update(fftData[0], fftData[1], fftData[2])
+        psdData = self.dataController.getPsd(cameraStatus.currentFps)
+        self.plotFftController.update(psdData[0], psdData[1], psdData[2])
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.

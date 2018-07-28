@@ -88,16 +88,16 @@ class TestDataController():
         centroids = dc.getCentroids(True)
         assert centroids == truth_centroids
 
-    def test_getFtf(self, qtbot, mocker):
+    def test_getPsd(self, qtbot, mocker):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         currentFps = 40
-        fft = dc.getFft(currentFps)
-        assert fft == (None, None, None)
+        psd = dc.getPsd(currentFps)
+        assert psd == (None, None, None)
         dc.bufferModel.rollBuffer = True
-        truth_fft = (np.random.random(3), np.random.random(3), np.random.random(3))
-        dc.bufferModel.getFft = mocker.Mock(return_value=truth_fft)
-        fft = dc.getFft(currentFps)
-        dc.bufferModel.getFft.assert_called_with(currentFps)
-        assert fft == truth_fft
+        truth_psd = (np.random.random(3), np.random.random(3), np.random.random(3))
+        dc.bufferModel.getPsd = mocker.Mock(return_value=truth_psd)
+        psd = dc.getPsd(currentFps)
+        dc.bufferModel.getPsd.assert_called_with(currentFps)
+        assert psd == truth_psd

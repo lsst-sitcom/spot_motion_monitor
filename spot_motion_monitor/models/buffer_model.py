@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
-from spot_motion_monitor.utils import fft_calculator
+from spot_motion_monitor.utils import psd_calculator
 from spot_motion_monitor.utils.frame_information import RoiFrameInformation
 
 __all__ = ['BufferModel']
@@ -62,25 +62,6 @@ class BufferModel():
         except IndexError:
             return (None, None)
 
-    def getFft(self, currentFps):
-        """Return the current FFT calculations.
-
-        Parameters
-        ----------
-        currentFps : float
-            The current Frames per Second rate from the camera.
-
-        Returns
-        -------
-        (numpy.array, numpy.array, numpy.array)
-            The FFTX, FFTY and Frequencies from the FFT calculation.
-            If not rolling buffer return (None, None, None)
-        """
-        if self.rollBuffer:
-            return fft_calculator(np.array(self.centerX), np.array(self.centerY), currentFps)
-        else:
-            return (None, None, None)
-
     def getInformation(self, currentFps):
         """Retrieve the current information from the accumulated buffer.
 
@@ -107,6 +88,25 @@ class BufferModel():
                                        rmsX, rmsY, (self.bufferSize, self.bufferSize / currentFps))
         else:
             return None
+
+    def getPsd(self, currentFps):
+        """Return the current power spectrum distribution (PSD) calculations.
+
+        Parameters
+        ----------
+        currentFps : float
+            The current Frames per Second rate from the camera.
+
+        Returns
+        -------
+        (numpy.array, numpy.array, numpy.array)
+            The PSDX, PSDY and Frequencies from the PSD calculation.
+            If not rolling buffer return (None, None, None)
+        """
+        if self.rollBuffer:
+            return psd_calculator(np.array(self.centerX), np.array(self.centerY), currentFps)
+        else:
+            return (None, None, None)
 
     def reset(self):
         """Reset all of the arrays and turn off rolling buffer mode.

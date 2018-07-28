@@ -111,14 +111,14 @@ class TestBufferModel():
         centroids = self.model.getCentroids()
         assert centroids == (centroidX, centroidY)
 
-    def test_getFft(self):
+    def test_getPsd(self):
         self.model.reset()
         bufferSize = 3
         currentFps = 40
         self.model.bufferSize = bufferSize
         self.model.pixelScale = 0.35
 
-        fft = self.model.getFft(currentFps)
+        fft = self.model.getPsd(currentFps)
         assert fft == (None, None, None)
 
         np.random.seed(2000)
@@ -131,7 +131,7 @@ class TestBufferModel():
         self.model.objectSize = np.random.randint(60, 65)
         self.model.stdMax = 1.42 + x
 
-        fft = self.model.getFft(currentFps)
+        fft = self.model.getPsd(currentFps)
         assert fft[0] is not None
         assert fft[1] is not None
         assert fft[2] is not None
