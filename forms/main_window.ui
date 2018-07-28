@@ -71,7 +71,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="FftWaterfallPlotWidget" name="fftXPlot">
+         <widget class="PsdWaterfallPlotWidget" name="psdXPlot">
           <property name="minimumSize">
            <size>
             <width>250</width>
@@ -81,7 +81,7 @@
          </widget>
         </item>
         <item>
-         <widget class="FftWaterfallPlotWidget" name="fftYPlot">
+         <widget class="PsdWaterfallPlotWidget" name="psdYPlot">
           <property name="minimumSize">
            <size>
             <width>250</width>
@@ -197,9 +197,9 @@
    <header>spot_motion_monitor.views.centroid_scatter_plot_widget</header>
   </customwidget>
   <customwidget>
-   <class>FftWaterfallPlotWidget</class>
+   <class>PsdWaterfallPlotWidget</class>
    <extends>QGraphicsView</extends>
-   <header>spot_motion_monitor.views.fft_waterfall_plot_widget</header>
+   <header>spot_motion_monitor.views.psd_waterfall_plot_widget</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -11,24 +11,24 @@ class PlotPsdController:
 
     Attributes
     ----------
-    psdXPlot : FftWaterfallPlotWidget
+    psdXPlot : PsdWaterfallPlotWidget
         The instance of the waterfall plot for the PSD x coordinates.
-    psdYPlot : FftWaterfallPlotWidget
+    psdYPlot : PsdWaterfallPlotWidget
         The instance of the waterfall plot for the PSD y coordinates.
     """
 
-    def __init__(self, fftx, ffty):
+    def __init__(self, psdx, psdy):
         """Initialize the class.
 
         Parameters
         ----------
-        fftx : FftWaterfallPlotWidget
-            The instance of the waterfall plot for the FFT x coordinates.
-        ffty : FftWaterfallPlotWidget
-            The instance of the waterfall plot for the FFT y coordinates.
+        psdx : PsdWaterfallPlotWidget
+            The instance of the waterfall plot for the PSD x coordinates.
+        psdy : PsdWaterfallPlotWidget
+            The instance of the waterfall plot for the PSD y coordinates.
         """
-        self.psdXPlot = fftx
-        self.psdYPlot = ffty
+        self.psdXPlot = psdx
+        self.psdYPlot = psdy
 
     def setup(self, arraySize):
         """Setup the controller's internal information.

@@ -5,40 +5,40 @@
 import numpy as np
 
 from spot_motion_monitor.controller import PlotPsdController
-from spot_motion_monitor.views import FftWaterfallPlotWidget
+from spot_motion_monitor.views import PsdWaterfallPlotWidget
 
 class TestPlotPsdController:
 
     def test_parametersAfterContruction(self, qtbot):
-        fftx = FftWaterfallPlotWidget()
-        ffty = FftWaterfallPlotWidget()
-        qtbot.addWidget(fftx)
-        qtbot.addWidget(ffty)
+        psdx = PsdWaterfallPlotWidget()
+        psdy = PsdWaterfallPlotWidget()
+        qtbot.addWidget(psdx)
+        qtbot.addWidget(psdy)
 
-        pfc = PlotPsdController(fftx, ffty)
+        pfc = PlotPsdController(psdx, psdy)
         assert pfc.psdXPlot is not None
         assert pfc.psdYPlot is not None
 
     def test_parametersAfterSetup(self, qtbot):
-        fftx = FftWaterfallPlotWidget()
-        ffty = FftWaterfallPlotWidget()
-        qtbot.addWidget(fftx)
-        qtbot.addWidget(ffty)
+        psdx = PsdWaterfallPlotWidget()
+        psdy = PsdWaterfallPlotWidget()
+        qtbot.addWidget(psdx)
+        qtbot.addWidget(psdy)
 
         arraySize = 5
-        pfc = PlotPsdController(fftx, ffty)
+        pfc = PlotPsdController(psdx, psdy)
         pfc.setup(arraySize)
         assert pfc.psdXPlot.arraySize == arraySize
         assert pfc.psdYPlot.arraySize == arraySize
 
     def test_update(self, qtbot, mocker):
-        fftx = FftWaterfallPlotWidget()
-        ffty = FftWaterfallPlotWidget()
-        qtbot.addWidget(fftx)
-        qtbot.addWidget(ffty)
+        psdx = PsdWaterfallPlotWidget()
+        psdy = PsdWaterfallPlotWidget()
+        qtbot.addWidget(psdx)
+        qtbot.addWidget(psdy)
 
         arraySize = 5
-        pfc = PlotPsdController(fftx, ffty)
+        pfc = PlotPsdController(psdx, psdy)
         pfc.setup(arraySize)
 
         np.random.seed(3000)
@@ -54,13 +54,13 @@ class TestPlotPsdController:
         assert mockPsdYPlotUpdatePlot.call_count == 1
 
     def test_badFftData(self, qtbot, mocker):
-        fftx = FftWaterfallPlotWidget()
-        ffty = FftWaterfallPlotWidget()
-        qtbot.addWidget(fftx)
-        qtbot.addWidget(ffty)
+        psdx = PsdWaterfallPlotWidget()
+        psdy = PsdWaterfallPlotWidget()
+        qtbot.addWidget(psdx)
+        qtbot.addWidget(psdy)
 
         arraySize = 5
-        pfc = PlotPsdController(fftx, ffty)
+        pfc = PlotPsdController(psdx, psdy)
         pfc.setup(arraySize)
 
         mockPsdXPlotUpdatePlot = mocker.patch.object(pfc.psdXPlot, 'updatePlot')

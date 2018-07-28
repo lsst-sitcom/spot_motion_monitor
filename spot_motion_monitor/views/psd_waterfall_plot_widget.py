@@ -5,16 +5,19 @@
 import numpy as np
 from pyqtgraph import GraphicsLayoutWidget, ImageItem
 
-class FftWaterfallPlotWidget(GraphicsLayoutWidget):
+__all__ = ['PsdWaterfallPlotWidget']
 
-    """This class manages and displays the FFT data in a wterfall plot.
+class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
+
+    """This class manages and displays the power spectrum distribution (PSD)
+       data in a waterfall plot.
 
     Attributes
     ----------
     arraySize : int
         The size of the data array to display.
     data : numpy.ndarray
-        The 2D array for the FFT data.
+        The 2D array for the PSD data.
     image : pyqtgraph.ImageItem
         The instance of the image item for display.
     """
@@ -48,21 +51,21 @@ class FftWaterfallPlotWidget(GraphicsLayoutWidget):
         """
         self.arraySize = arraySize
 
-    def updatePlot(self, fft, freqs):
+    def updatePlot(self, psd, freqs):
         """Update the current plot with the given data.
 
         Parameters
         ----------
-        fft : numpy.array
-            The FFT data of a given centroid coordinate.
+        psd : numpy.array
+            The PSD data of a given centroid coordinate.
         freqs : numpy.array
-            The frequency array associated with the FFT data.
+            The frequency array associated with the PSD data.
         """
         if self.data is None:
-            self.data = np.zeros((self.arraySize, fft.size))
-            self.data[0, ...] = fft
+            self.data = np.zeros((self.arraySize, psd.size))
+            self.data[0, ...] = psd
         else:
             self.data[1:, ...] = self.data[:-1, ...]
-            self.data[0, ...] = fft
+            self.data[0, ...] = psd
 
         self.image.setImage(self.data)

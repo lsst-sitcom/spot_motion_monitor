@@ -53,7 +53,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
                                                              self.centroidYPlot,
                                                              self.scatterPlot)
 
-        self.plotPsdController = PlotPsdController(self.fftXPlot, self.fftYPlot)
+        self.plotPsdController = PlotPsdController(self.psdXPlot, self.psdYPlot)
 
         bufferSize = self.dataController.getBufferSize()
         self.plotCentroidController.setup(bufferSize)

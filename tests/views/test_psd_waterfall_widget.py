@@ -4,40 +4,40 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
-from spot_motion_monitor.views import FftWaterfallPlotWidget
+from spot_motion_monitor.views import PsdWaterfallPlotWidget
 
-class TestFftWaterfallPlotWidget:
+class TestPsdWaterfallPlotWidget:
 
     def test_parametersAfterConstruction(self, qtbot):
-        fwpw = FftWaterfallPlotWidget()
-        qtbot.addWidget(fwpw)
-        assert fwpw.image is not None
-        assert fwpw.data is None
-        assert fwpw.arraySize is None
+        pwpw = PsdWaterfallPlotWidget()
+        qtbot.addWidget(pwpw)
+        assert pwpw.image is not None
+        assert pwpw.data is None
+        assert pwpw.arraySize is None
 
     def test_parametersAfterSetup(self, qtbot):
-        fwpw = FftWaterfallPlotWidget()
-        qtbot.addWidget(fwpw)
+        pwpw = PsdWaterfallPlotWidget()
+        qtbot.addWidget(pwpw)
         arraySize = 5
-        fwpw.setup(arraySize)
-        assert fwpw.arraySize == arraySize
+        pwpw.setup(arraySize)
+        assert pwpw.arraySize == arraySize
 
     def test_parametersAfterUpdatePlot(self, qtbot, mocker):
-        fwpw = FftWaterfallPlotWidget()
-        qtbot.addWidget(fwpw)
-        mockSetImage = mocker.patch.object(fwpw.image, 'setImage')
+        pwpw = PsdWaterfallPlotWidget()
+        qtbot.addWidget(pwpw)
+        mockSetImage = mocker.patch.object(pwpw.image, 'setImage')
         arraySize = 3
-        fwpw.setup(arraySize)
-        f1 = np.arange(5, dtype=float)
-        f2 = np.arange(5, 10, dtype=float)
-        f3 = np.linspace(0.2, 1.2, 5)
+        pwpw.setup(arraySize)
+        p1 = np.arange(5, dtype=float)
+        p2 = np.arange(5, 10, dtype=float)
+        p3 = np.linspace(0.2, 1.2, 5)
 
-        fwpw.updatePlot(f1, f3)
-        assert fwpw.data.shape == (arraySize, f1.size)
-        assert (fwpw.data[0, ...] == f1).all()
+        pwpw.updatePlot(p1, p3)
+        assert pwpw.data.shape == (arraySize, p1.size)
+        assert (pwpw.data[0, ...] == p1).all()
         assert mockSetImage.call_count == 1
 
-        fwpw.updatePlot(f2, f3)
-        assert (fwpw.data[0, ...] == f2).all()
-        assert (fwpw.data[1, ...] == f1).all()
+        pwpw.updatePlot(p2, p3)
+        assert (pwpw.data[0, ...] == p2).all()
+        assert (pwpw.data[1, ...] == p1).all()
         assert mockSetImage.call_count == 2
