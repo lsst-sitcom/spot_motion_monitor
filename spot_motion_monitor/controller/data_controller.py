@@ -70,11 +70,13 @@ class DataController():
         else:
             return (None, None)
 
-    def getPsd(self, currentFps):
-        """
+    def getPsd(self, isRoiMode, currentFps):
+        """Return the power spectrum distribution (PSD).
 
         Parameters
         ----------
+        isRoiMode : bool
+            True is system is in ROI mode, False if in Full Frame mode.
         currentFps : float
             The current Frames per Second rate from the camera.
 
@@ -83,7 +85,10 @@ class DataController():
         (numpy.array, numpy.array, numpy.array)
             The PSDX, PSDY and Frequencies from the PSD calculation.
         """
-        return self.bufferModel.getPsd(currentFps)
+        if isRoiMode:
+            return self.bufferModel.getPsd(currentFps)
+        else:
+            return (None, None, None)
 
     def passFrame(self, frame, currentStatus):
         """Get a frame, do calculations and update information.

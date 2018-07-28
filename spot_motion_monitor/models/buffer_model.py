@@ -21,6 +21,8 @@ class BufferModel():
         Array of ROI centroid x coordinates.
     centerY : list
         Array of ROI centroid y coordinates.
+    counter : int
+        Running counter for buffer insertions.
     flux : list
         Array of ROI total fluxes.
     maxAdc : list
@@ -40,6 +42,7 @@ class BufferModel():
         """
         self.bufferSize = 1000
         self.rollBuffer = False
+        self.counter = 0
         self.pixelScale = 1.0
         self.maxAdc = []
         self.flux = []
@@ -103,7 +106,7 @@ class BufferModel():
             The PSDX, PSDY and Frequencies from the PSD calculation.
             If not rolling buffer return (None, None, None)
         """
-        if self.rollBuffer:
+        if self.rollBuffer and self.counter % self.bufferSize == 0:
             return psd_calculator(np.array(self.centerX), np.array(self.centerY), currentFps)
         else:
             return (None, None, None)
@@ -112,6 +115,7 @@ class BufferModel():
         """Reset all of the arrays and turn off rolling buffer mode.
         """
         self.rollBuffer = False
+        self.counter = 0
         self.maxAdc = []
         self.flux = []
         self.centerX = []
@@ -143,6 +147,7 @@ class BufferModel():
         self.centerY.append(info.centerY + offset[1])
         self.objectSize.append(info.objectSize)
         self.stdMax.append(info.stdNoObjects)
+        self.counter += 1
 
         if not self.rollBuffer:
             if len(self.flux) == self.bufferSize:

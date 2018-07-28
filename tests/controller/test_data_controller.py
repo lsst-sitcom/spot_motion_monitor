@@ -93,11 +93,11 @@ class TestDataController():
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         currentFps = 40
-        psd = dc.getPsd(currentFps)
+        psd = dc.getPsd(False, currentFps)
         assert psd == (None, None, None)
         dc.bufferModel.rollBuffer = True
         truth_psd = (np.random.random(3), np.random.random(3), np.random.random(3))
         dc.bufferModel.getPsd = mocker.Mock(return_value=truth_psd)
-        psd = dc.getPsd(currentFps)
+        psd = dc.getPsd(True, currentFps)
         dc.bufferModel.getPsd.assert_called_with(currentFps)
         assert psd == truth_psd

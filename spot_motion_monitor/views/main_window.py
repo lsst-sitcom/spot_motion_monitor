@@ -57,7 +57,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
 
         bufferSize = self.dataController.getBufferSize()
         self.plotCentroidController.setup(bufferSize)
-        self.plotPsdController.setup(400)
+        self.plotPsdController.setup(25)
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
@@ -95,7 +95,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotController.passFrame(frame)
         centroids = self.dataController.getCentroids(cameraStatus.isRoiMode)
         self.plotCentroidController.update(centroids[0], centroids[1])
-        psdData = self.dataController.getPsd(cameraStatus.currentFps)
+        psdData = self.dataController.getPsd(cameraStatus.isRoiMode, cameraStatus.currentFps)
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
 
     def setActionIcon(self, action, iconName, iconInMenu=False):

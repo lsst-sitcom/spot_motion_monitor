@@ -33,7 +33,6 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         super().__init__(parent)
         p1 = self.addPlot()
         p1.invertY()
-        p1.setAspectLocked(True)
         self.image = ImageItem()
         self.image.setOpts(axisOrder='row-major')
         p1.addItem(self.image)
