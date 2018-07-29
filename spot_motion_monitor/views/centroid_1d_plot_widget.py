@@ -83,6 +83,8 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
             self.timeRange = np.arange(self.data.size) / self.roiFps
 
         self.curve.setData(self.timeRange, self.data)
+        if self.data.size > 0.1 * self.dataSize:
+            self.curve.setDownsampling('mean')
 
         if self.dataCounter < self.dataSize:
             self.dataCounter += 1
