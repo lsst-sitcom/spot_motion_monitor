@@ -16,6 +16,10 @@ class TestCentroidScatterPlotWidget:
         assert cspw.yData is None
         assert cspw.rollArray is False
         assert cspw.dataCounter == 0
+        assert cspw.brushes is None
+        assert cspw.brushColor == (100, 100, 150)
+        assert cspw.maxAlpha == 255
+        assert cspw.minAlpha == 127
 
     def test_parametersAfterSetup(self, qtbot):
         cspw = CentroidScatterPlotWidget()
@@ -28,6 +32,14 @@ class TestCentroidScatterPlotWidget:
         assert cspw.yData is not None
         assert cspw.rollArray is False
         assert cspw.dataCounter == 0
+        assert cspw.brushes is not None
+        assert len(cspw.brushes) == arraySize
+        assert cspw.brushes[0].color().alpha() == 127
+        assert cspw.brushes[200].color().alpha() == 152
+        assert cspw.brushes[400].color().alpha() == 178
+        assert cspw.brushes[600].color().alpha() == 203
+        assert cspw.brushes[800].color().alpha() == 229
+        assert cspw.brushes[-1].color().alpha() == 255
 
     def test_updatePlot(self, qtbot, mocker):
         cspw = CentroidScatterPlotWidget()
@@ -35,6 +47,9 @@ class TestCentroidScatterPlotWidget:
         qtbot.addWidget(cspw)
         arraySize = 3
         cspw.setup(arraySize)
+        truthAlpha = [127, 191, 255]
+        alpha = [x.color().alpha() for x in cspw.brushes]
+        assert alpha == truthAlpha
         mockSetData = mocker.patch.object(cspw.scatterPlot, 'setData')
         valuesX = [254.43, 254.86, 253.91, 254.21]
         valuesY = [355.25, 355.10, 354.89, 355.57]
