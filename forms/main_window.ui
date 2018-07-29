@@ -18,8 +18,26 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>2</number>
+      </property>
       <item>
        <widget class="CameraPlotWidget" name="cameraPlot">
         <property name="minimumSize">
@@ -44,8 +62,14 @@
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>2</number>
+      </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <widget class="Centroid1dPlotWidget" name="centroidXPlot">
           <property name="minimumSize">
@@ -70,6 +94,9 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <widget class="PsdWaterfallPlotWidget" name="psdXPlot">
           <property name="minimumSize">
@@ -94,6 +121,9 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="spacing">
+         <number>2</number>
+        </property>
         <item>
          <widget class="CameraControlWidget" name="cameraControl" native="true">
           <property name="minimumSize">
