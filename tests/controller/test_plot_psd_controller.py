@@ -9,6 +9,10 @@ from spot_motion_monitor.views import PsdWaterfallPlotWidget
 
 class TestPlotPsdController:
 
+    def setup_class(cls):
+        cls.arraySize = 5
+        cls.timeScale = 10
+
     def test_parametersAfterContruction(self, qtbot):
         psdx = PsdWaterfallPlotWidget()
         psdy = PsdWaterfallPlotWidget()
@@ -25,11 +29,10 @@ class TestPlotPsdController:
         qtbot.addWidget(psdx)
         qtbot.addWidget(psdy)
 
-        arraySize = 5
         pfc = PlotPsdController(psdx, psdy)
-        pfc.setup(arraySize)
-        assert pfc.psdXPlot.arraySize == arraySize
-        assert pfc.psdYPlot.arraySize == arraySize
+        pfc.setup(self.arraySize, self.timeScale)
+        assert pfc.psdXPlot.arraySize == self.arraySize
+        assert pfc.psdYPlot.arraySize == self.arraySize
 
     def test_update(self, qtbot, mocker):
         psdx = PsdWaterfallPlotWidget()
@@ -37,9 +40,8 @@ class TestPlotPsdController:
         qtbot.addWidget(psdx)
         qtbot.addWidget(psdy)
 
-        arraySize = 5
         pfc = PlotPsdController(psdx, psdy)
-        pfc.setup(arraySize)
+        pfc.setup(self.arraySize, self.timeScale)
 
         np.random.seed(3000)
         psdDataX = np.random.random(7)
@@ -59,9 +61,8 @@ class TestPlotPsdController:
         qtbot.addWidget(psdx)
         qtbot.addWidget(psdy)
 
-        arraySize = 5
         pfc = PlotPsdController(psdx, psdy)
-        pfc.setup(arraySize)
+        pfc.setup(self.arraySize, self.timeScale)
 
         mockPsdXPlotUpdatePlot = mocker.patch.object(pfc.psdXPlot, 'updatePlot')
         mockPsdYPlotUpdatePlot = mocker.patch.object(pfc.psdYPlot, 'updatePlot')

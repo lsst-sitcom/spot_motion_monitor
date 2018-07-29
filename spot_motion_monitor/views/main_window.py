@@ -58,7 +58,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         bufferSize = self.dataController.getBufferSize()
         roiFps = self.cameraController.currentRoiFps()
         self.plotCentroidController.setup(bufferSize, roiFps)
-        self.plotPsdController.setup(25)
+        self.plotPsdController.setup(25, bufferSize / roiFps)
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
 

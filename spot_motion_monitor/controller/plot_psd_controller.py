@@ -30,16 +30,18 @@ class PlotPsdController:
         self.psdXPlot = psdx
         self.psdYPlot = psdy
 
-    def setup(self, arraySize):
+    def setup(self, arraySize, timeScale):
         """Setup the controller's internal information.
 
         Parameters
         ----------
         arraySize : int
             The vertical dimension of the PSD waterfall plot data.
+        timeScale : float
+            The total accumulation time from the buffer size and ROI FPS.
         """
-        self.psdXPlot.setup(arraySize)
-        self.psdYPlot.setup(arraySize)
+        self.psdXPlot.setup(arraySize, timeScale)
+        self.psdYPlot.setup(arraySize, timeScale)
 
     def update(self, psdDataX, psdDataY, frequencies):
         """Update the controller's plot widgets with the data provided.
