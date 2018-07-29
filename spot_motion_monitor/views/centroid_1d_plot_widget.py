@@ -22,6 +22,8 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         Number of times data array has been appended to up until array size.
     dataSize : int
         The requested size of the data array.
+    roiFps : float
+        The camera ROI FPS.
     rollArray : bool
         Flag as to when to start rolling the data array of centroid values.
     """
@@ -38,21 +40,31 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         self.curve = None
         self.dataSize = None
         self.data = None
+        self.timeRange = None
         self.rollArray = False
         self.dataCounter = 0
+        self.roiFps = None
 
-    def setup(self, arraySize):
+    def setup(self, arraySize, axisLabel, roiFps):
         """Provide information for setting up the plot.
 
         Parameters
         ----------
         arraySize : int
             The size for the plot data array.
+        axisLabel : str
+            The label for the axis.
+        roiFps : float
+            The camera ROI FPS.
         """
         self.dataSize = arraySize
         self.data = np.array([])
+        self.timeRange = np.array([])
+        self.roiFps = roiFps
         p1 = self.addPlot()
         self.curve = p1.plot(self.data)
+        p1.setLabel('bottom', 'Time', units='s')
+        p1.setLabel('left', axisLabel, units='pixel')
 
     def updatePlot(self, centroid):
         """Update the plot with a new centroid.
@@ -68,8 +80,9 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         else:
             # This does create copies of arrays, so watch performance.
             self.data = np.append(self.data, centroid)
+            self.timeRange = np.arange(self.data.size) / self.roiFps
 
-        self.curve.setData(self.data)
+        self.curve.setData(self.timeRange, self.data)
 
         if self.dataCounter < self.dataSize:
             self.dataCounter += 1

@@ -38,12 +38,20 @@ class GaussianCamera(BaseCamera):
     """
 
     seed = None
-    spotSize = None
 
     def __init__(self):
         """Initalize the class.
         """
         super().__init__()
+        self.spotSize = 20
+        self.height = 480
+        self.width = 640
+        self.fpsFullFrame = 24
+        self.fpsRoiFrame = 40
+        self.roiSize = 50
+        self.postageStamp = None
+        self.xPoint = None
+        self.yPoint = None
 
     def findInsertionPoint(self):
         """Determine the Gaussian spot insertion point.
@@ -115,12 +123,6 @@ class GaussianCamera(BaseCamera):
     def startup(self):
         """Handle the startup of the camera.
         """
-        self.spotSize = 20
-        self.height = 480
-        self.width = 640
-        self.fpsFullFrame = 24
-        self.fpsRoiFrame = 40
-        self.roiSize = 50
         np.random.seed(self.seed)
         self.makePostageStamp()
         self.findInsertionPoint()

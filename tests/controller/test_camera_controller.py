@@ -137,3 +137,13 @@ class TestCameraController():
         assert status.currentFps == 40
         assert status.isRoiMode is True
         assert status.frameOffset == (264, 200)
+
+    def test_currentRoiFps(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.startStopCamera(True)
+        roiFps = cc.currentRoiFps()
+        assert roiFps == 40

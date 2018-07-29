@@ -9,6 +9,7 @@ class TestPlotCentroidController:
 
     def setup_class(cls):
         cls.bufferSize = 3
+        cls.roiFps = 2
 
     def test_parametersAfterConstruction(self, qtbot):
         cxp = Centroid1dPlotWidget()
@@ -32,7 +33,7 @@ class TestPlotCentroidController:
         qtbot.addWidget(csp)
 
         p1cc = PlotCentroidController(cxp, cyp, csp)
-        p1cc.setup(self.bufferSize)
+        p1cc.setup(self.bufferSize, self.roiFps)
 
         assert p1cc.x1dPlot.dataSize == self.bufferSize
         assert p1cc.y1dPlot.dataSize == self.bufferSize
@@ -45,11 +46,9 @@ class TestPlotCentroidController:
         qtbot.addWidget(cxp)
         qtbot.addWidget(cyp)
         qtbot.addWidget(csp)
-        cxp.setup(self.bufferSize)
-        cyp.setup(self.bufferSize)
-        csp.setup(self.bufferSize)
 
         p1cc = PlotCentroidController(cxp, cyp, csp)
+        p1cc.setup(self.bufferSize, self.roiFps)
         centroidX = 253.543
         centroidY = 313.683
         p1cc.update(centroidX, centroidY)
@@ -66,14 +65,12 @@ class TestPlotCentroidController:
         qtbot.addWidget(cxp)
         qtbot.addWidget(cyp)
         qtbot.addWidget(csp)
-        cxp.setup(self.bufferSize)
-        cyp.setup(self.bufferSize)
-        csp.setup(self.bufferSize)
         mocker.patch('spot_motion_monitor.views.centroid_1d_plot_widget.Centroid1dPlotWidget.updatePlot')
         mocker.patch('spot_motion_monitor.views.centroid_scatter_plot_widget.'
                      'CentroidScatterPlotWidget.updatePlot')
 
         p1cc = PlotCentroidController(cxp, cyp, csp)
+        p1cc.setup(self.bufferSize, self.roiFps)
         p1cc.update(None, None)
         assert p1cc.x1dPlot.updatePlot.call_count == 0
         assert p1cc.y1dPlot.updatePlot.call_count == 0

@@ -35,16 +35,18 @@ class PlotCentroidController():
         self.y1dPlot = cyp
         self.scatterPlot = csp
 
-    def setup(self, arraySize):
+    def setup(self, arraySize, roiFps):
         """Pass along the requested array size to the contained plot widgets.
 
         Parameters
         ----------
         arraySize : int
             The size for the plot data array.
+        roiFps : float
+            The current camera ROI frames per second.
         """
-        self.x1dPlot.setup(arraySize)
-        self.y1dPlot.setup(arraySize)
+        self.x1dPlot.setup(arraySize, 'X', roiFps)
+        self.y1dPlot.setup(arraySize, 'Y', roiFps)
         self.scatterPlot.setup(arraySize)
 
     def update(self, cx, cy):

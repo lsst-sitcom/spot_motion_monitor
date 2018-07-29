@@ -13,16 +13,21 @@ class TestGaussianCamera():
 
     def test_parametersAfterConstruction(self):
         assert self.camera.seed is None
-        assert self.camera.spotSize is None
-
-    def test_parametersAfterStartup(self):
-        self.camera.startup()
         assert self.camera.height == 480
         assert self.camera.width == 640
         assert self.camera.spotSize == 20
         assert self.camera.fpsFullFrame == 24
         assert self.camera.fpsRoiFrame == 40
         assert self.camera.roiSize == 50
+        assert self.camera.postageStamp is None
+        assert self.camera.xPoint is None
+        assert self.camera.yPoint is None
+
+    def test_parametersAfterStartup(self):
+        self.camera.startup()
+        assert self.camera.postageStamp is not None
+        assert self.camera.xPoint is not None
+        assert self.camera.yPoint is not None
 
     def test_getFullFrame(self):
         self.camera.seed = 1000

@@ -106,6 +106,16 @@ class CameraController():
         """
         return self.camera.getOffset()
 
+    def currentRoiFps(self):
+        """The current camera ROI FPS.
+
+        Returns
+        -------
+        float
+            Get the current camera ROI FPS.
+        """
+        return self.camera.fpsRoiFrame
+
     def currentStatus(self):
         """The current status of the camera.
 
