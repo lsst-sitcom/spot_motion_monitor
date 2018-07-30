@@ -3,6 +3,18 @@
 History
 -------
 
+0.4.0 (2018-07-29)
+~~~~~~~~~~~~~~~~~~
+
+* Create ROI frame processing
+* Create and fill plots for ROI mode:
+
+  * Rolling 1D centroid plots
+  * 2D scatter plot with axis projections
+  * Power spectrum distribution waterfall plots
+
+* Push ROI data to camera status widget
+
 0.3.0 (2018-07-12)
 ~~~~~~~~~~~~~~~~~~
 
