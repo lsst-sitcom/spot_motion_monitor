@@ -38,8 +38,6 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         super().__init__(parent)
         self.plot = self.addPlot()
         self.plot.invertY()
-        self.plot.setLabel('bottom', '&#969;', units='Hz')
-        self.plot.setLabel('left', 'Time', units='s')
 
         self.image = ImageItem()
         self.image.setOpts(axisOrder='row-major')
@@ -50,7 +48,7 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         self.boundingRect = None
         self.timeScale = None
 
-    def setup(self, arraySize, timeScale):
+    def setup(self, arraySize, timeScale, axisLabel):
         """Setup the widget with the array size.
 
         Parameters
@@ -59,9 +57,13 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
             The size fo the data array to display in terms of history.
         timeScale : float
             The total time for the buffer to accumulate at the ROI FPS.
+        axisLabel : str
+            Label for particular centroid coordinate.
         """
         self.arraySize = arraySize
         self.timeScale = timeScale
+        self.plot.setLabel('bottom', '{} &#969;'.format(axisLabel), units='Hz')
+        self.plot.setLabel('left', 'Time', units='s')
 
     def updatePlot(self, psd, freqs):
         """Update the current plot with the given data.

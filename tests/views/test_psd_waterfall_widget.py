@@ -30,7 +30,7 @@ class TestPsdWaterfallPlotWidget:
         pwpw = PsdWaterfallPlotWidget()
         qtbot.addWidget(pwpw)
         arraySize = 5
-        pwpw.setup(arraySize, self.timeScale)
+        pwpw.setup(arraySize, self.timeScale, 'X')
         assert pwpw.arraySize == arraySize
         assert pwpw.timeScale == self.timeScale
 
@@ -39,7 +39,7 @@ class TestPsdWaterfallPlotWidget:
         mockSetImage = mocker.patch.object(self.pwpw1.image, 'setImage')
         mockSetImage.side_effect = self.setImage
         arraySize = 3
-        self.pwpw1.setup(arraySize, self.timeScale)
+        self.pwpw1.setup(arraySize, self.timeScale, 'X')
         p1 = np.arange(5, dtype=float)
         p2 = np.arange(5, 10, dtype=float)
         p3 = np.linspace(0.2, 1.2, 5)

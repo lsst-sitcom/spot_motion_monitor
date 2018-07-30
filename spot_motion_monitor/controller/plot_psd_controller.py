@@ -40,8 +40,8 @@ class PlotPsdController:
         timeScale : float
             The total accumulation time from the buffer size and ROI FPS.
         """
-        self.psdXPlot.setup(arraySize, timeScale)
-        self.psdYPlot.setup(arraySize, timeScale)
+        self.psdXPlot.setup(arraySize, timeScale, 'X')
+        self.psdYPlot.setup(arraySize, timeScale, 'Y')
 
     def update(self, psdDataX, psdDataY, frequencies):
         """Update the controller's plot widgets with the data provided.
