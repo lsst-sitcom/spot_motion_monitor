@@ -26,8 +26,8 @@ GenericFrameInformation : namedtuple
     * stdNoObjects (float) - The standard deviation of the frame with no object pixels
 RoiFrameInformation : namedtuple
     Information describing a ROI CCD frame
-    * centerX (int) - The calculated x pixel value of the frame centroid
-    * centerY (int) - The calculated y pixel value of the frame centroid
+    * centerX (float) - The calculated x pixel value of the frame centroid
+    * centerY (float) - The calculated y pixel value of the frame centroid
     * flux (float) - The sum total ADC count for the frame
     * maxAdc (float) - The maximum ADC in the frame
     * rmsX (float) - The standard deviation of the centerX values in arcseconds

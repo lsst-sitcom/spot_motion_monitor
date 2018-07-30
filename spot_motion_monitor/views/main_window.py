@@ -6,11 +6,12 @@ import sys
 
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
-#from pyqtgraph import ImageView, PlotItem
 
 from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.controller.data_controller import DataController
-from spot_motion_monitor.controller.plot_controller import PlotController
+from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
+from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
+from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
 
@@ -24,7 +25,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
     ----------
     cameraController : .CameraController
         An instance of the camera controller.
-    plotController : .PlotController
+    plotController : .PlotCcdController
         An instance of the plot controller.
     """
 
@@ -40,13 +41,24 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("Spot Motion Monitor")
 
-        self.plotController = PlotController(self.cameraPlot)
+        self.plotController = PlotCcdController(self.cameraPlot)
 
         self.cameraController = CameraController(self.cameraControl)
         # FIXME: Make this dynamic
         self.cameraController.setupCamera('GaussianCamera')
 
         self.dataController = DataController(self.cameraData)
+
+        self.plotCentroidController = PlotCentroidController(self.centroidXPlot,
+                                                             self.centroidYPlot,
+                                                             self.scatterPlot)
+
+        self.plotPsdController = PlotPsdController(self.psdXPlot, self.psdYPlot)
+
+        bufferSize = self.dataController.getBufferSize()
+        roiFps = self.cameraController.currentRoiFps()
+        self.plotCentroidController.setup(bufferSize, roiFps)
+        self.plotPsdController.setup(25, bufferSize / roiFps)
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
@@ -79,8 +91,13 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """Handle a camera CCD frame.
         """
         frame = self.cameraController.getFrame()
-        self.dataController.passFrame(frame)
+        cameraStatus = self.cameraController.currentStatus()
+        self.dataController.passFrame(frame, cameraStatus)
         self.plotController.passFrame(frame)
+        centroids = self.dataController.getCentroids(cameraStatus.isRoiMode)
+        self.plotCentroidController.update(centroids[0], centroids[1])
+        psdData = self.dataController.getPsd(cameraStatus.isRoiMode, cameraStatus.currentFps)
+        self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.

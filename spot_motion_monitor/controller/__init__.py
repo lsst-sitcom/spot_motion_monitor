@@ -4,4 +4,6 @@
 #------------------------------------------------------------------------------
 from .camera_controller import CameraController
 from .data_controller import DataController
-from .plot_controller import PlotController
+from .plot_ccd_controller import PlotCcdController
+from .plot_centroid_controller import PlotCentroidController
+from .plot_psd_controller import PlotPsdController

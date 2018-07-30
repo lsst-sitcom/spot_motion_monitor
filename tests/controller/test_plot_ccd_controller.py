@@ -5,15 +5,15 @@
 import numpy as np
 #from pyqtgraph import ImageView, PlotItem
 
-from spot_motion_monitor.controller.plot_controller import PlotController
+from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.views.camera_plot_widget import CameraPlotWidget
 
-class TestPlotController():
+class TestPlotCcdController():
 
     def test_parametersAfterConstruction(self, qtbot):
         cpw = CameraPlotWidget()
         qtbot.addWidget(cpw)
-        pc = PlotController(cpw)
+        pc = PlotCcdController(cpw)
         assert pc.cameraPlotWidget is not None
         assert pc.updateStatusBar is not None
 
@@ -21,7 +21,7 @@ class TestPlotController():
         cpw = CameraPlotWidget()
         cpw.show()
         qtbot.addWidget(cpw)
-        pc = PlotController(cpw)
+        pc = PlotCcdController(cpw)
         frame = np.ones((3, 5))
         pc.passFrame(frame)
         pc.cameraPlotWidget.image.shape = (3, 5)

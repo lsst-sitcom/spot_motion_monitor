@@ -7,6 +7,7 @@ import numpy as np
 #from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMainWindow
 
+from spot_motion_monitor.camera import CameraStatus
 from spot_motion_monitor.utils import FrameRejected, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.main_window import SpotMotionMonitor
 
@@ -58,9 +59,10 @@ class TestMainWindow():
         qtbot.addWidget(mw)
         mockCamCont = mocker.patch('spot_motion_monitor.views.main_window.CameraController',
                                    spec=True)
-        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFrame')
+        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFullFrame')
         mockCamCont.getFrame = mocker.MagicMock(return_value=np.ones((3, 5)))
         emessage = "Frame failed!"
+        mw.cameraController.currentStatus = mocker.Mock(return_value=CameraStatus(24, False, (0, 0)))
         mw.dataController.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected(emessage))
         mw.plotController.passFrame = mocker.Mock(return_value=None)
         mw.acquireFrame()

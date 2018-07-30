@@ -24,7 +24,7 @@ class TestFullFrameModel():
         camera = GaussianCamera()
         camera.seed = 1000
         camera.startup()
-        frame = camera.getFrame()
+        frame = camera.getFullFrame()
         info = self.model.calculateCentroid(frame)
         assert info.centerX == 288.45394404821826
         assert info.centerY == 224.47687644439395

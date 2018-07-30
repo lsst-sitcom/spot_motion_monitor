@@ -15,6 +15,8 @@ class TestBaseCamera(object):
         assert self.baseCamera.height is None
         assert self.baseCamera.width is None
         assert self.baseCamera.fpsFullFrame is None
+        assert self.baseCamera.fpsRoiFrame is None
+        assert self.baseCamera.roiSize is None
 
     def test_noApiAfterConstruction(self):
         with pytest.raises(NotImplementedError):
@@ -24,4 +26,7 @@ class TestBaseCamera(object):
             self.baseCamera.shutdown()
 
         with pytest.raises(NotImplementedError):
-            self.baseCamera.getFrame()
+            self.baseCamera.getFullFrame()
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.getRoiFrame()

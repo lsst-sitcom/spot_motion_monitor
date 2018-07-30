@@ -9,8 +9,14 @@ class BaseCamera():
 
     Attributes
     ----------
+    fpsFullFrame : int
+        The Frames per Second rate in full frame mode.
+    fpsRoiFrame : int
+        The Frames per Second rate in ROI frame mode.
     height : int
         The height in pixels of the camera CCD
+    roiSize : int
+        The size of a (square) ROI region in pixels.
     width : int
         The width in pixels of the camera CCD
     """
@@ -18,14 +24,25 @@ class BaseCamera():
     height = None
     width = None
     fpsFullFrame = None
+    fpsRoiFrame = None
+    roiSize = None
 
     def __init__(self):
         """Initialize the class.
         """
         pass
 
-    def getFrame(self):
-        """Return a CCD frame from the camera.
+    def getFullFrame(self):
+        """Return a full CCD frame from the camera.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
+    def getRoiFrame(self):
+        """Return a ROI CCD frame from the camera.
 
         Raises
         ------

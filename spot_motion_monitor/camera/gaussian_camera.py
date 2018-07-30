@@ -15,12 +15,20 @@ class GaussianCamera(BaseCamera):
 
     Attributes
     ----------
+    fpsFullFrame : int
+        The Frames per Second rate in full frame mode.
+    fpsRoiFrame : int
+        The Frames per Second rate in ROI frame mode.
     height : int
         The pixel height of the CCD.
     postageStamp : numpy.array
         The array containing the Gaussian postage stamp.
+    roiSize : int
+        The size of a (square) ROI region in pixels.
     seed : int
         The seed for the random number generator.
+    spotSize : int
+        The box size in pixels for the Gaussian spot.
     width : int
         The pixel width of the CCD.
     xPoint : int
@@ -35,6 +43,15 @@ class GaussianCamera(BaseCamera):
         """Initalize the class.
         """
         super().__init__()
+        self.spotSize = 20
+        self.height = 480
+        self.width = 640
+        self.fpsFullFrame = 24
+        self.fpsRoiFrame = 40
+        self.roiSize = 50
+        self.postageStamp = None
+        self.xPoint = None
+        self.yPoint = None
 
     def findInsertionPoint(self):
         """Determine the Gaussian spot insertion point.
@@ -48,13 +65,13 @@ class GaussianCamera(BaseCamera):
         self.xPoint = np.random.randint(xHalfwidth - xRange, xHalfwidth + xRange + 1)
         self.yPoint = np.random.randint(yHalfwidth - yRange, yHalfwidth + yRange + 1)
 
-    def getFrame(self):
-        """Get the frame from the CCD.
+    def getFullFrame(self):
+        """Get the full frame from the CCD.
 
         Returns
         -------
         numpy.array
-            The current CCD frame.
+            The current full CCD frame.
         """
         # Create base CCD frame
         ccd = np.random.poisson(20.0, (self.height, self.width))
@@ -65,10 +82,38 @@ class GaussianCamera(BaseCamera):
 
         return ccd
 
+    def getOffset(self):
+        """Get the offset for ROI mode.
+
+        Returns
+        -------
+        (float, float)
+            The x, y pixel positions of the offset for ROI mode.
+        """
+        # Offset is same for both axes since spot and ROI are square.
+        offset = (self.roiSize - self.spotSize) // 2
+        xStart = self.xPoint - offset
+        yStart = self.yPoint - offset
+        return (xStart, yStart)
+
+    def getRoiFrame(self):
+        """Get the ROI frame from the CCD.
+
+        Returns
+        -------
+        numpy.array
+            The current ROI CCD frame.
+        """
+        ccd = self.getFullFrame()
+        xOffset, yOffset = self.getOffset()
+        roi = ccd[yOffset:yOffset + self.roiSize, xOffset:xOffset + self.roiSize]
+        return roi
+
     def makePostageStamp(self):
         """Create the Gaussian spot.
         """
-        x, y = np.meshgrid(np.linspace(-2, 2, 20), np.linspace(-2, 2, 20))
+        linear_space = np.linspace(-2, 2, self.spotSize)
+        x, y = np.meshgrid(linear_space, linear_space)
         d = np.sqrt(x * x + y * y)
         sigma, mu = 0.5, 0.0
         a = 200.0 / (sigma * np.sqrt(2.0 * np.pi))
@@ -78,9 +123,6 @@ class GaussianCamera(BaseCamera):
     def startup(self):
         """Handle the startup of the camera.
         """
-        self.height = 480
-        self.width = 640
-        self.fpsFullFrame = 24
         np.random.seed(self.seed)
         self.makePostageStamp()
         self.findInsertionPoint()
