@@ -5,7 +5,7 @@
 from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.controller.camera_controller import CameraController
-from spot_motion_monitor.utils import ONE_SECOND_IN_MILLISECONDS
+from spot_motion_monitor.utils import CameraNotFound, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.camera_control_widget import CameraControlWidget
 
 class TestCameraController():
@@ -178,3 +178,13 @@ class TestCameraController():
         with qtbot.waitSignal(cc.updater.bufferSizeChanged) as blocker:
             cc.cameraControlWidget.bufferSizeSpinBox.stepUp()
         assert blocker.args == [2048]
+
+    def test_badCameraStartup(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.camera.startup = mocker.Mock(side_effect=CameraNotFound)
+        cc.startStopCamera(True)
+        assert ccWidget.startStopButton.isChecked() is False

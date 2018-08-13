@@ -194,10 +194,15 @@ class CameraController():
             The current state of the camera.
         """
         if state:
-            self.updater.displayStatus.emit('Starting Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
-            self.camera.startup()
-            self.updater.displayStatus.emit('Camera Started Successfully',
-                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            try:
+                self.updater.displayStatus.emit('Starting Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
+                self.camera.startup()
+                self.updater.displayStatus.emit('Camera Started Successfully',
+                                                smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            except smmUtils.CameraNotFound as err:
+                self.updater.displayStatus.emit(str(err),
+                                                smmUtils.ONE_SECOND_IN_MILLISECONDS * 5)
+
         else:
             self.updater.displayStatus.emit('Stopping Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.camera.shutdown()
