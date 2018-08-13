@@ -46,7 +46,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.cameraController = CameraController(self.cameraControl)
         # FIXME: Make this dynamic
-        self.cameraController.setupCamera('GaussianCamera')
+        try:
+            self.cameraController.setupCamera('VimbaCamera')
+        except AttributeError:
+            self.cameraController.setupCamera('GaussianCamera')
 
         self.dataController = DataController(self.cameraData)
 
