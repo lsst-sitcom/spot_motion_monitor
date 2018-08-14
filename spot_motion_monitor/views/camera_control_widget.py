@@ -77,6 +77,9 @@ class CameraControlWidget(QWidget, Ui_CameraControl):
         """
         if checked:
             self.startStopButton.setText("Stop Camera")
+
         else:
             self.startStopButton.setText("Start Camera")
+        self.acquireFramesButton.setEnabled(checked)
+        self.acquireRoiCheckBox.setEnabled(checked)
         self.cameraState.emit(checked)
