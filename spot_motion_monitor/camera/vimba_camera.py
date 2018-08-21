@@ -5,7 +5,7 @@
 import time
 
 import numpy as np
-import pyvimba as pv
+import pymba as pv
 
 from spot_motion_monitor.camera import BaseCamera
 from spot_motion_monitor.utils import CameraNotFound, FrameCaptureFailed
