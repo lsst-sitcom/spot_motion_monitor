@@ -41,6 +41,15 @@ class BaseCamera():
         """
         raise NotImplementedError
 
+    def getOffset(self):
+        """Return the offset of the CCD frame.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
     def getRoiFrame(self):
         """Return a ROI CCD frame from the camera.
 

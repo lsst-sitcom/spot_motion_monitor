@@ -48,6 +48,16 @@ class VimbaCamera(BaseCamera):
         img = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.height, self.width))
         return img
 
+    def getOffset(self):
+        """Get the offset for the CCD frame.
+
+        Returns
+        -------
+        (int, int)
+            The current offset of the CCD frame.
+        """
+        return (self.cameraPtr.OffsetX, self.cameraPtr.OffsetY)
+
     def getRoiFrame(self):
         """Get the ROI frame from the CCD.
 

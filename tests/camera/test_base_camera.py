@@ -30,3 +30,6 @@ class TestBaseCamera(object):
 
         with pytest.raises(NotImplementedError):
             self.baseCamera.getRoiFrame()
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.getOffset()
