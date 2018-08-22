@@ -12,6 +12,7 @@ from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
+from spot_motion_monitor.utils import DEFAULT_PSD_ARRAY_SIZE
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
 
@@ -58,7 +59,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         bufferSize = self.dataController.getBufferSize()
         roiFps = self.cameraController.currentRoiFps()
         self.plotCentroidController.setup(bufferSize, roiFps)
-        self.plotPsdController.setup(25, bufferSize / roiFps)
+        self.plotPsdController.setup(DEFAULT_PSD_ARRAY_SIZE, bufferSize / roiFps)
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
