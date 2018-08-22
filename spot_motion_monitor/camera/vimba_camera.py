@@ -70,12 +70,10 @@ class VimbaCamera(BaseCamera):
         numpy.array
             The current full CCD frame.
         """
-        self.frame = self.cameraPtr.getFrame()
         try:
-            self.frame.announceFrame()
             self.frame.queueFrameCapture()
         except pv.VimbaException as err:
-            raise FrameCaptureFailed(str(err))
+            raise FrameCaptureFailed("Frame capture failed: {}".format(str(err)))
 
         self.cameraPtr.runFeatureCommand('AcquisitionStart')
         #self.cameraPtr.runFeatureCommand('AcquisitionStop')
@@ -133,6 +131,10 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.TriggerSource = 'Freerun'
         self.cameraPtr.PixelFormat = 'Mono12'
         self.cameraPtr.ExposureTimeAbs = 20000  # microseconds
+
+        self.frame = self.cameraPtr.getFrame()
+        self.frame.announceFrame()
+        self.cameraPtr.startCapture()
 
     def shutdown(self):
         """Handle the shutdown of the camera.
