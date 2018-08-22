@@ -23,11 +23,15 @@ class TestCameraControl():
         qtbot.addWidget(cc)
         assert not cc.startStopButton.isChecked()
         assert cc.startStopButton.text() == "Start Camera"
+        assert cc.acquireRoiCheckBox.isEnabled() is False
+        assert cc.acquireFramesButton.isEnabled() is False
         with qtbot.waitSignal(cc.cameraState, timeout=self.fast_timeout,
                               check_params_cb=self.stateIsTrue):
             qtbot.mouseClick(cc.startStopButton, Qt.LeftButton)
         assert cc.startStopButton.isChecked()
         assert cc.startStopButton.text() == "Stop Camera"
+        assert cc.acquireRoiCheckBox.isEnabled() is True
+        assert cc.acquireFramesButton.isEnabled() is True
         with qtbot.waitSignal(cc.cameraState, timeout=self.fast_timeout,
                               check_params_cb=self.stateIsFalse):
             qtbot.mouseClick(cc.startStopButton, Qt.LeftButton)
@@ -38,6 +42,7 @@ class TestCameraControl():
         cc = CameraControlWidget()
         cc.show()
         qtbot.addWidget(cc)
+        qtbot.mouseClick(cc.startStopButton, Qt.LeftButton)
         assert not cc.acquireFramesButton.isChecked()
         assert cc.acquireFramesButton.text() == "Start Acquire Frames"
         with qtbot.waitSignal(cc.acquireFramesState, timeout=self.fast_timeout,
@@ -55,6 +60,7 @@ class TestCameraControl():
         cc = CameraControlWidget()
         cc.show()
         qtbot.addWidget(cc)
+        qtbot.mouseClick(cc.startStopButton, Qt.LeftButton)
         assert not cc.acquireRoiCheckBox.isChecked()
         with qtbot.waitSignal(cc.acquireRoiState, timeout=self.fast_timeout,
                               check_params_cb=self.stateIsTrue):

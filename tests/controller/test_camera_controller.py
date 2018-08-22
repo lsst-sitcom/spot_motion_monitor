@@ -46,7 +46,8 @@ class TestCameraController():
         qtbot.addWidget(ccWidget)
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         assert cc.frameTimer.isActive()
         interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
@@ -60,7 +61,8 @@ class TestCameraController():
         qtbot.addWidget(ccWidget)
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         fps = cc.currentCameraFps()
         assert fps == 24
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
@@ -73,7 +75,8 @@ class TestCameraController():
         qtbot.addWidget(ccWidget)
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
         interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
@@ -89,7 +92,8 @@ class TestCameraController():
         qtbot.addWidget(ccWidget)
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         frame = cc.getFrame()
         assert frame.shape == (480, 640)
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
@@ -102,7 +106,8 @@ class TestCameraController():
         qtbot.addWidget(ccWidget)
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         isRoiMode = cc.isRoiMode()
         assert isRoiMode is False
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
@@ -116,7 +121,8 @@ class TestCameraController():
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
         cc.camera.seed = 1000
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         offset = cc.currentOffset()
         assert offset == (264, 200)
 
@@ -127,7 +133,8 @@ class TestCameraController():
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
         cc.camera.seed = 1000
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         status = cc.currentStatus()
         assert status.currentFps == 24
         assert status.isRoiMode is False
@@ -144,6 +151,7 @@ class TestCameraController():
         qtbot.addWidget(ccWidget)
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
-        cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
         roiFps = cc.currentRoiFps()
         assert roiFps == 40

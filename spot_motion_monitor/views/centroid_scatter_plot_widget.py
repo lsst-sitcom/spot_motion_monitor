@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 import numpy as np
 from PyQt5.QtWidgets import QWidget
-from pyqtgraph import mkBrush, ScatterPlotItem
+from pyqtgraph import mkBrush, mkPen, ScatterPlotItem
 
 from spot_motion_monitor.views.ui_scatter_plot import Ui_ScatterPlot
 
@@ -33,8 +33,12 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         The minimum transparency value for a brush.
     numBins : int
         Number of histogram bins for the projections.
+    penColor : tuple
+        The outline color for all the points.
     pointBrush : QtGui.QBrush
         The brush for the scatter plot points.
+    pointPen : QtGui.QPen
+        The outline pen for the scatter plot points.
     rollArray : bool
         Flag as to when to start rolling the data arrays of centroid values.
     scatterPlotItem : pyqtgraph.ScatterPlotItem
@@ -77,10 +81,12 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         self.dataCounter = 0
         self.brushes = None
         self.brushColor = (159, 159, 159)
+        self.penColor = (255, 255, 255)
         self.maxAlpha = 255
         self.minAlpha = 127
         self.histogramFillBrush = mkBrush(*self.brushColor, 200)
         self.pointBrush = mkBrush(*self.brushColor, self.maxAlpha)
+        self.pointPen = mkPen(*self.penColor)
         self.scatterPlotItem.setBrush(self.pointBrush)
 
     def makeBrushes(self):
@@ -137,7 +143,7 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
             # Many brushes causes performance issues.
             #brushes = self.brushes[:self.xData.size]
 
-        self.scatterPlotItem.setData(self.xData, self.yData, pen=None)  # , brush=brushes)
+        self.scatterPlotItem.setData(self.xData, self.yData, pen=self.pointPen)  # , brush=brushes)
 
         xy, xx = np.histogram(self.xData,
                               bins=np.linspace(np.min(self.xData), np.max(self.xData), self.numBins))

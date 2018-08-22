@@ -45,6 +45,9 @@
    </item>
    <item>
     <widget class="QPushButton" name="acquireFramesButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Start Acquire Frames</string>
      </property>
@@ -73,6 +76,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="acquireRoiCheckBox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Acquire ROI</string>
        </property>
