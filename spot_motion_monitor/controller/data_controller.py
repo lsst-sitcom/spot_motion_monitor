@@ -100,6 +100,8 @@ class DataController():
         currentStatus : .CameraStatus
             Instance containing the current camera status.
         """
+        if frame is None:
+            return
         try:
             if currentStatus.isRoiMode:
                 genericFrameInfo = self.roiFrameModel.calculateCentroid(frame)

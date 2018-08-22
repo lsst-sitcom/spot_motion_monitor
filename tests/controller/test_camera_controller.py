@@ -5,7 +5,7 @@
 from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.controller.camera_controller import CameraController
-from spot_motion_monitor.utils import CameraNotFound, ONE_SECOND_IN_MILLISECONDS
+from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.camera_control_widget import CameraControlWidget
 
 class TestCameraController():
@@ -198,3 +198,16 @@ class TestCameraController():
         check1, check2 = cc.getFrameChecks()
         assert check1(1, 1, 1, 1) is True
         assert check2(1) is True
+
+    def test_cameraAcquireRejectedFrame(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.camera.getFullFrame = mocker.Mock(side_effect=FrameRejected)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+        frame = cc.getFrame()
+        assert frame is None
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)

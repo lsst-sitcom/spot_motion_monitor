@@ -118,3 +118,11 @@ class TestDataController():
         dc.setFrameChecks(passFrame, passFrame)
         assert dc.fullFrameModel.frameCheck is not None
         assert dc.roiFrameModel.frameCheck is not None
+
+    def test_noneFrame(self, qtbot, mocker):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        ffModel = mocker.patch.object(dc.fullFrameModel, "calculateCentroid")
+        dc.passFrame(None, self.fullFrameStatus)
+        assert ffModel.call_count == 0

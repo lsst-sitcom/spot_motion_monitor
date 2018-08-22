@@ -71,8 +71,8 @@ class VimbaCamera(BaseCamera):
             The current full CCD frame.
         """
         self.frame = self.cameraPtr.getFrame()
-        self.frame.announceFrame()
         try:
+            self.frame.announceFrame()
             self.frame.queueFrameCapture()
         except pv.VimbaException as err:
             raise FrameCaptureFailed(str(err))
@@ -137,7 +137,10 @@ class VimbaCamera(BaseCamera):
     def shutdown(self):
         """Handle the shutdown of the camera.
         """
-        self.cameraPtr.endCapture()
-        self.cameraPtr.revokeAllFrames()
-        self.cameraPtr.closeCamera()
+        try:
+            self.cameraPtr.endCapture()
+            self.cameraPtr.revokeAllFrames()
+            self.cameraPtr.closeCamera()
+        except pv.VimbaException:
+            pass
         self.vimba.shutdown()

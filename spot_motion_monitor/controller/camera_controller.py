@@ -150,10 +150,14 @@ class CameraController():
         numpy.array
             A frame from a camera CCD.
         """
-        if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
-            return self.camera.getRoiFrame()
-        else:
-            return self.camera.getFullFrame()
+        try:
+            if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
+                return self.camera.getRoiFrame()
+            else:
+                return self.camera.getFullFrame()
+        except (smmUtils.FrameCaptureFailed, smmUtils.FrameRejected) as err:
+            self.updater.displayStatus.emit(str(err), smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            return None
 
     def getFrameChecks(self):
         """Get the frame checking routines from the camera.
