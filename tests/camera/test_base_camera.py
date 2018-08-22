@@ -33,3 +33,6 @@ class TestBaseCamera(object):
 
         with pytest.raises(NotImplementedError):
             self.baseCamera.getOffset()
+
+        assert self.baseCamera.checkFullFrame(1, 1, 1, 1) is True
+        assert self.baseCamera.checkRoiFrame(1) is True

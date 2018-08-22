@@ -188,3 +188,13 @@ class TestCameraController():
         cc.camera.startup = mocker.Mock(side_effect=CameraNotFound)
         cc.startStopCamera(True)
         assert ccWidget.startStopButton.isChecked() is False
+
+    def test_frameChecks(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        check1, check2 = cc.getFrameChecks()
+        assert check1(1, 1, 1, 1) is True
+        assert check2(1) is True

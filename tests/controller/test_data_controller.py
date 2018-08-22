@@ -7,6 +7,7 @@ import numpy as np
 from spot_motion_monitor.camera import CameraStatus
 from spot_motion_monitor.controller import DataController
 from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, RoiFrameInformation
+from spot_motion_monitor.utils import passFrame
 from spot_motion_monitor.views import CameraDataWidget
 
 class TestDataController():
@@ -109,3 +110,11 @@ class TestDataController():
         truthBufferSize = 256
         dc.setBufferSize(truthBufferSize)
         assert dc.getBufferSize() == truthBufferSize
+
+    def test_setFrameChecks(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        dc.setFrameChecks(passFrame, passFrame)
+        assert dc.fullFrameModel.frameCheck is not None
+        assert dc.roiFrameModel.frameCheck is not None

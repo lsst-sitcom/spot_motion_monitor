@@ -24,6 +24,43 @@ class VimbaCamera(BaseCamera):
         self.fpsFullFrame = 24
         self.fpsRoiFrame = 40
         self.roiSize = 50
+        self.fluxMinRoi = 5000
+
+    def checkFullFrame(self, flux, maxAdc, comX, comY):
+        """Use the provided quantities to check frame validity.
+
+        Parameters
+        ----------
+        flux : float
+            The flux of the frame.
+        maxAdc : float
+            The maximum ADC of the frame.
+        comX : float
+            The x component of the center-of-mass.
+        comY : float
+            The y component of the center-of-mass.
+
+        Returns
+        -------
+        bool
+            True if frame is valid, False if not.
+        """
+        return flux > 100 and maxAdc > 0 and comX > 0 and comY > 0
+
+    def checkRoiFrame(self, flux):
+        """Use the provided quantities to check frame validity
+
+        Parameters
+        ----------
+        flux : float
+            The flux of the frame.
+
+        Returns
+        -------
+        bool
+            True if frame is valid, False if not.
+        """
+        return flux > self.fluxMinRoi
 
     def getFullFrame(self):
         """Get the full frame from the CCD.

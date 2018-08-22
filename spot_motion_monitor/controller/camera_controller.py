@@ -155,6 +155,16 @@ class CameraController():
         else:
             return self.camera.getFullFrame()
 
+    def getFrameChecks(self):
+        """Get the frame checking routines from the camera.
+
+        Returns
+        -------
+        (func, func)
+            The full frame and ROI frame check functions from the camera.
+        """
+        return (self.camera.checkFullFrame, self.camera.checkRoiFrame)
+
     def isRoiMode(self):
         """The current acquisition mode.
 

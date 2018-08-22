@@ -124,3 +124,16 @@ class DataController():
             The requested buffer size.
         """
         self.bufferModel.bufferSize = value
+
+    def setFrameChecks(self, fullFrameCheck, roiFrameCheck):
+        """Set the frame checks to the corresponding models.
+
+        Parameters
+        ----------
+        fullFrameCheck : func
+            The function capturing the full frame check.
+        roiFrameCheck : func
+            The function capturing the ROI frame check.
+        """
+        self.fullFrameModel.frameCheck = fullFrameCheck
+        self.roiFrameModel.frameCheck = roiFrameCheck

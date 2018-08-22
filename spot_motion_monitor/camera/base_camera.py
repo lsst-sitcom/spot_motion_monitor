@@ -32,6 +32,42 @@ class BaseCamera():
         """
         pass
 
+    def checkFullFrame(self, flux, maxAdc, comX, comY):
+        """Use the provided quantities to check frame validity.
+
+        Parameters
+        ----------
+        flux : float
+            The flux of the frame.
+        maxAdc : float
+            The maximum ADC of the frame.
+        comX : float
+            The x component of the center-of-mass.
+        comY : float
+            The y component of the center-of-mass.
+
+        Returns
+        -------
+        bool
+            True if frame is valid, False if not.
+        """
+        return True
+
+    def checkRoiFrame(self, flux):
+        """Use the provided quantities to check frame validity
+
+        Parameters
+        ----------
+        flux : float
+            The flux of the frame.
+
+        Returns
+        -------
+        bool
+            True if frame is valid, False if not.
+        """
+        return True
+
     def getFullFrame(self):
         """Return a full CCD frame from the camera.
 

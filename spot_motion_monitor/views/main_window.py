@@ -52,6 +52,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             self.cameraController.setupCamera('GaussianCamera')
 
         self.dataController = DataController(self.cameraData)
+        self.dataController.setFrameChecks(*self.cameraController.getFrameChecks())
 
         self.plotCentroidController = PlotCentroidController(self.centroidXPlot,
                                                              self.centroidYPlot,

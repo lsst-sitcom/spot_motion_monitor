@@ -14,6 +14,9 @@ class TestFullFrameModel():
     def setup_class(cls):
         cls.model = FullFrameModel()
 
+    def checkFrame(self, flux, maxAdc, comX, comY):
+        return flux > 4000 and maxAdc > 130 and comX > 0 and comY > 0
+
     def test_parametersAfterConstruction(self):
         assert self.model.sigmaScale == 5.0
         assert self.model.minimumNumPixels == 10
@@ -36,3 +39,15 @@ class TestFullFrameModel():
         frame = np.ones((480, 640))
         with pytest.raises(FrameRejected):
             self.model.calculateCentroid(frame)
+
+    def test_failedFrameCheck(self):
+        # This test requires the generation of a CCD frame which will be
+        # provided by the GaussianCamera
+        self.model.frameCheck = self.checkFrame
+        camera = GaussianCamera()
+        camera.seed = 1000
+        camera.startup()
+        frame = camera.getFullFrame()
+        with pytest.raises(FrameRejected):
+            self.model.calculateCentroid(frame)
+        self.model.frameCheck = None
