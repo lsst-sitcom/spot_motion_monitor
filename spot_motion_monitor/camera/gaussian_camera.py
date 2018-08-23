@@ -68,6 +68,7 @@ class GaussianCamera(BaseCamera):
         self.postageStamp = None
         self.xPoint = None
         self.yPoint = None
+        self.offsetUpdateTimeout = 30
         # Parameters for spot oscillation.
         self.counter = 0
         self.xFreq = 5.0
@@ -158,6 +159,13 @@ class GaussianCamera(BaseCamera):
                           self.yAmp * np.sin(self.yFreq * (self.counter / self.deltaTime)))
         self.counter += 1
 
+    def resetOffset(self):
+        """Reset the camera offsets back to zero.
+
+        For the Gaussian camera, this is a no-op.
+        """
+        pass
+
     def startup(self):
         """Handle the startup of the camera.
         """
@@ -168,4 +176,19 @@ class GaussianCamera(BaseCamera):
     def shutdown(self):
         """Handle the shutdown of the camera.
         """
+        pass
+
+    def updateOffset(self, centroidX, centroidY):
+        """Update the camera's internal offset values from the provided centroid.
+
+        For the Gaussian camera, this is a no-op, but helps test the mechanism.
+
+        Parameters
+        ----------
+        centroidX : float
+            The x component of the centroid for offset update.
+        centroidY : float
+            The y component of the centroid for offset update.
+        """
+        #print("Received centroid: ({}, {}), but not updating offsets.".format(centroidX, centroidY))
         pass

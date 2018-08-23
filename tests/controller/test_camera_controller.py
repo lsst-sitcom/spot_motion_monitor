@@ -50,6 +50,7 @@ class TestCameraController():
         #cc.startStopCamera(True)
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         assert cc.frameTimer.isActive()
+        assert cc.offsetTimer.isActive() is False
         interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
         assert cc.frameTimer.interval() == interval
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
@@ -79,6 +80,7 @@ class TestCameraController():
         #cc.startStopCamera(True)
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        assert cc.offsetTimer.isActive()
         interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
         assert cc.frameTimer.interval() == interval
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
@@ -211,3 +213,24 @@ class TestCameraController():
         frame = cc.getFrame()
         assert frame is None
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+
+    def test_getUpdateFrame(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        frame = cc.getUpdateFrame()
+        assert frame.shape == (480, 640)
+
+    def test_updateCameraOffset(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        cameraOffset = mocker.patch.object(cc.camera, 'updateOffset')
+        cc.updateCameraOffset(200, 400)
+        assert cameraOffset.call_count == 1

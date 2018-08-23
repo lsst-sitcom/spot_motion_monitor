@@ -51,6 +51,21 @@ class DataController():
         """
         return self.bufferModel.bufferSize
 
+    def getCentroidForUpdate(self, frame):
+        """Calculate centroid from frame for offset update.
+
+        Parameters
+        ----------
+        frame : numpy.array
+            A frame from a camera CCD.
+
+        Returns
+        -------
+        GenericInformation
+            The instance containing the results of the calculations.
+        """
+        return self.fullFrameModel.calculateCentroid(frame)
+
     def getCentroids(self, isRoiMode):
         """Return the current x, y coordinate of the centroid.
 

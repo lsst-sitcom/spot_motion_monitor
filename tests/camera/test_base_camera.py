@@ -17,6 +17,7 @@ class TestBaseCamera(object):
         assert self.baseCamera.fpsFullFrame is None
         assert self.baseCamera.fpsRoiFrame is None
         assert self.baseCamera.roiSize is None
+        assert self.baseCamera.offsetUpdateTimeout is None
 
     def test_noApiAfterConstruction(self):
         with pytest.raises(NotImplementedError):
@@ -33,6 +34,12 @@ class TestBaseCamera(object):
 
         with pytest.raises(NotImplementedError):
             self.baseCamera.getOffset()
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.updateOffset(1, 1)
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.resetOffset()
 
         assert self.baseCamera.checkFullFrame(1, 1, 1, 1) is True
         assert self.baseCamera.checkRoiFrame(1) is True

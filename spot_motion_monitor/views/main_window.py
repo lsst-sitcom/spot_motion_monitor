@@ -121,6 +121,13 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         action.setIcon(QtGui.QIcon(QtGui.QPixmap(':{}'.format(iconName))))
         action.setIconVisibleInMenu(iconInMenu)
 
+    def updateOffset(self):
+        """This function updates the camera offsets.
+        """
+        frame = self.cameraController.getUpdateFrame()
+        info = self.dataController.getCentroidForUpdate(frame)
+        self.cameraController.updateCameraOffset(info.centerX, info.centerY)
+
     def updateStatusBar(self, message, timeout):
         """This function updates the application status bar.
 

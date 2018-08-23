@@ -15,6 +15,8 @@ class BaseCamera():
         The Frames per Second rate in ROI frame mode.
     height : int
         The height in pixels of the camera CCD
+    offsetUpdateTimeout : int
+        The timeout (seconds) for updating the camera's current offset values.
     roiSize : int
         The size of a (square) ROI region in pixels.
     width : int
@@ -26,6 +28,7 @@ class BaseCamera():
     fpsFullFrame = None
     fpsRoiFrame = None
     roiSize = None
+    offsetUpdateTimeout = None
 
     def __init__(self):
         """Initialize the class.
@@ -95,6 +98,15 @@ class BaseCamera():
         """
         raise NotImplementedError
 
+    def resetOffset(self):
+        """Reset the camera offsets back to zero.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
     def shutdown(self):
         """Shutdown the camera safely.
 
@@ -106,6 +118,22 @@ class BaseCamera():
 
     def startup(self):
         """Startup the camera.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
+    def updateOffset(self, centroidX, centroidY):
+        """Update the camera's internal offset values from the provided centroid.
+
+        Parameters
+        ----------
+        centroidX : float
+            The x component of the centroid for offset update.
+        centroidY : float
+            The y component of the centroid for offset update.
 
         Raises
         ------

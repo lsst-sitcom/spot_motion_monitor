@@ -126,3 +126,13 @@ class TestDataController():
         ffModel = mocker.patch.object(dc.fullFrameModel, "calculateCentroid")
         dc.passFrame(None, self.fullFrameStatus)
         assert ffModel.call_count == 0
+
+    def test_getCentroidForUpdate(self, qtbot, mocker):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        truthInfo = GenericFrameInformation(300.3, 400.2, 32042.42, 145.422, 70, None)
+        dc.fullFrameModel.calculateCentroid = mocker.Mock(return_value=truthInfo)
+        info = dc.getCentroidForUpdate(self.frame)
+        assert info.centerX == truthInfo.centerX
+        assert info.centerY == truthInfo.centerY

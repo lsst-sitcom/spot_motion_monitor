@@ -73,7 +73,7 @@ class VimbaCamera(BaseCamera):
         try:
             self.frame.queueFrameCapture()
         except pv.VimbaException as err:
-            raise FrameCaptureFailed("Frame capture failed: {}".format(str(err)))
+            raise FrameCaptureFailed("Full frame capture failed: {}".format(str(err)))
 
         self.cameraPtr.runFeatureCommand('AcquisitionStart')
         #self.cameraPtr.runFeatureCommand('AcquisitionStop')
@@ -101,7 +101,24 @@ class VimbaCamera(BaseCamera):
         numpy.array
             The current ROI CCD frame.
         """
-        return self.getFullFrame()
+        try:
+            self.frame.queueFrameCapture()
+        except pv.VimbaException as err:
+            raise FrameCaptureFailed("ROI frame capture failed: {}".format(str(err)))
+
+        self.cameraPtr.runFeatureCommand('AcquisitionStart')
+        self.cameraPtr.runFeatureCommand('AcquisitionStop')
+        self.frame.waitFrameCapture(1)
+        frameData = self.frame.getBufferByteData()
+
+        img = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.roiSize, self.roiSize))
+        return img
+
+    def resetOffset(self):
+        """Reset the camera offsets back to zero.
+        """
+        self.cameraPtr.OffsetX = 0
+        self.cameraPtr.OffsetY = 0
 
     def startup(self):
         """Handle the startup of the camera.
@@ -146,3 +163,18 @@ class VimbaCamera(BaseCamera):
         except pv.VimbaException:
             pass
         self.vimba.shutdown()
+
+    def updateOffset(self, centroidX, centroidY):
+        """Update the camera's internal offset values from the provided centroid.
+
+        For the Gaussian camera, this is a no-op, but helps test the mechanism.
+
+        Parameters
+        ----------
+        centroidX : float
+            The x component of the centroid for offset update.
+        centroidY : float
+            The y component of the centroid for offset update.
+        """
+        self.cameraPtr.OffsetX = int(centroidX - self.roiSize / 2)
+        self.cameraPtr.OffsetY = int(centroidY - self.roiSize / 2)

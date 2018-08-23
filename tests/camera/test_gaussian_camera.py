@@ -22,6 +22,7 @@ class TestGaussianCamera():
         assert self.camera.postageStamp is None
         assert self.camera.xPoint is None
         assert self.camera.yPoint is None
+        assert self.camera.offsetUpdateTimeout == 30
 
     def test_parametersAfterStartup(self):
         self.camera.startup()

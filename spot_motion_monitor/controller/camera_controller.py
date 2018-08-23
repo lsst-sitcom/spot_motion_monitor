@@ -34,6 +34,7 @@ class CameraController():
         self.camera = None
         self.updater = smmUtils.InformationUpdater()
         self.frameTimer = QTimer()
+        self.offsetTimer = QTimer()
 
         self.cameraControlWidget.cameraState.connect(self.startStopCamera)
         self.cameraControlWidget.acquireFramesState.connect(self.acquireFrame)
@@ -78,10 +79,13 @@ class CameraController():
             current_fps = self.currentCameraFps()
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
             self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
+            self.offsetTimer.timeout.emit()
+            self.offsetTimer.start(self.camera.offsetUpdateTimeout * smmUtils.ONE_SECOND_IN_MILLISECONDS)
         else:
             self.frameTimer.stop()
             self.updater.displayStatus.emit('Stopping ROI Frame Acquistion',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.camera.resetOffset()
             if self.cameraControlWidget.acquireFramesButton.isChecked():
                 self.acquireFrame(True)
 
@@ -169,6 +173,16 @@ class CameraController():
         """
         return (self.camera.checkFullFrame, self.camera.checkRoiFrame)
 
+    def getUpdateFrame(self):
+        """Get a full frame from the camera for updating offset.
+
+        Returns
+        -------
+        numpy.array
+            A full frame from a camera CCD.
+        """
+        return self.camera.getFullFrame()
+
     def isRoiMode(self):
         """The current acquisition mode.
 
@@ -222,3 +236,15 @@ class CameraController():
             self.camera.shutdown()
             self.updater.displayStatus.emit('Camera Stopped Successfully',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
+
+    def updateCameraOffset(self, centroidX, centroidY):
+        """Pass along the current centroid values to update camera offset.
+
+        Parameters
+        ----------
+        centroidX : float
+            The current x component of the centroid from a full frame.
+        centroidY : float
+            The current y component of the centroid from a full frame.
+        """
+        self.camera.updateOffset(centroidX, centroidY)
