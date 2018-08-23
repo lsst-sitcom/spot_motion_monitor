@@ -25,6 +25,7 @@ class VimbaCamera(BaseCamera):
         self.fpsRoiFrame = 40
         self.roiSize = 50
         self.fluxMinRoi = 5000
+        self.offsetUpdateTimeout = 30
 
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
