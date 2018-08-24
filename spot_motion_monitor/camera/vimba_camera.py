@@ -138,8 +138,10 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.openCamera()
         self.cameraPtr.GevSCPSPacketSize = 1500
         self.cameraPtr.StreamBytesPerSecond = 100000000
-        self.height = self.cameraPtr.Height
-        self.width = self.cameraPtr.Width
+        self.height = self.cameraPtr.HeightMax
+        self.width = self.cameraPtr.WidthMax
+        self.cameraPtr.Height = self.height
+        self.cameraPtr.Width = self.width
         self.cameraPtr.OffsetX = 0
         self.cameraPtr.OffsetY = 0
         self.cameraPtr.GainAuto = 'Off'
