@@ -69,6 +69,13 @@ class TestMainWindow():
         assert mw.statusbar.currentMessage() == emessage
         assert mw.plotController.passFrame.call_count == 1
 
+    def test_updateBufferSize(self, qtbot):
+        mw = SpotMotionMonitor()
+        qtbot.addWidget(mw)
+        truth_buffer_size = 2048
+        mw.cameraController.updater.bufferSizeChanged.emit(truth_buffer_size)
+        assert mw.dataController.getBufferSize() == truth_buffer_size
+
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()
     #     qtbot.addWidget(mw)

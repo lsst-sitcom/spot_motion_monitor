@@ -155,3 +155,13 @@ class TestCameraController():
         #cc.startStopCamera(True)
         roiFps = cc.currentRoiFps()
         assert roiFps == 40
+
+    def test_changeRoiFps(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        truthRoiFps = 70
+        cc.cameraControlWidget.roiFpsSpinBox.setValue(truthRoiFps)
+        assert cc.currentRoiFps() == truthRoiFps

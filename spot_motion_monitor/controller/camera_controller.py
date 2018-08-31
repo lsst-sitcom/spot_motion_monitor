@@ -2,7 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from PyQt5.QtCore import pyqtSignal, QTimer
+from PyQt5.QtCore import QTimer
 
 import spot_motion_monitor.camera
 import spot_motion_monitor.utils as smmUtils
@@ -22,8 +22,6 @@ class CameraController():
         The instance of the camera control widget.
     """
 
-    bufferSizeChanged = pyqtSignal(int)
-
     def __init__(self, ccw):
         """Initialize the class.
 
@@ -41,6 +39,7 @@ class CameraController():
         self.cameraControlWidget.acquireFramesState.connect(self.acquireFrame)
         self.cameraControlWidget.acquireRoiState.connect(self.acquireRoiFrame)
         self.cameraControlWidget.bufferSizeValue.connect(self.bufferSize)
+        self.cameraControlWidget.roiFpsSpinBox.valueChanged.connect(self.setRoiFps)
 
     def acquireFrame(self, state):
         """Start or stop the timer for full frame acquisition.
@@ -87,6 +86,13 @@ class CameraController():
                 self.acquireFrame(True)
 
     def bufferSize(self, value):
+        """Rebroadcast a buffer size change request.
+
+        Parameters
+        ----------
+        value : int
+            The requested buffer size.
+        """
         self.bufferSizeChanged.emit(value)
 
     def currentCameraFps(self):
@@ -157,6 +163,16 @@ class CameraController():
             True if in ROI mode, False if in full frame mode.
         """
         return self.cameraControlWidget.acquireRoiCheckBox.isChecked()
+
+    def setRoiFps(self, roiFps):
+        """Set the ROI FPS on the camera.
+
+        Parameters
+        ----------
+        roiFps : int
+            The requested FPS for the ROI frame.
+        """
+        self.camera.fpsRoiFrame = roiFps
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.

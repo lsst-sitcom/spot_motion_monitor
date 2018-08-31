@@ -13,8 +13,11 @@ class InformationUpdater(QObject):
 
     Attributes
     ----------
+    bufferSizeChanged : pyqtSignal
+        Signal used to update data controller with a new buffer size.
     displayStatus : pyqtSignal
         Signal used for updating the main application status bar.
     """
 
+    bufferSizeChanged = pyqtSignal(int)
     displayStatus = pyqtSignal(str, int)

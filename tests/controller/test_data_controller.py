@@ -101,3 +101,11 @@ class TestDataController():
         psd = dc.getPsd(True, currentFps)
         dc.bufferModel.getPsd.assert_called_with(currentFps)
         assert psd == truth_psd
+
+    def test_setBufferSize(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        truthBufferSize = 256
+        dc.setBufferSize(truthBufferSize)
+        assert dc.getBufferSize() == truthBufferSize
