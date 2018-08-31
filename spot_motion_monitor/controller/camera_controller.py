@@ -2,7 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import pyqtSignal, QTimer
 
 import spot_motion_monitor.camera
 import spot_motion_monitor.utils as smmUtils
@@ -22,6 +22,8 @@ class CameraController():
         The instance of the camera control widget.
     """
 
+    bufferSizeChanged = pyqtSignal(int)
+
     def __init__(self, ccw):
         """Initialize the class.
 
@@ -38,6 +40,7 @@ class CameraController():
         self.cameraControlWidget.cameraState.connect(self.startStopCamera)
         self.cameraControlWidget.acquireFramesState.connect(self.acquireFrame)
         self.cameraControlWidget.acquireRoiState.connect(self.acquireRoiFrame)
+        self.cameraControlWidget.bufferSizeValue.connect(self.bufferSize)
 
     def acquireFrame(self, state):
         """Start or stop the timer for full frame acquisition.
@@ -82,6 +85,9 @@ class CameraController():
                                                     smmUtils.ONE_SECOND_IN_MILLISECONDS)
             if self.cameraControlWidget.acquireFramesButton.isChecked():
                 self.acquireFrame(True)
+
+    def bufferSize(self, value):
+        self.bufferSizeChanged.emit(value)
 
     def currentCameraFps(self):
         """Get the current camera FPS.

@@ -66,7 +66,36 @@ class TestCameraControl():
                               check_params_cb=self.stateIsTrue):
             qtbot.mouseClick(cc.acquireRoiCheckBox, Qt.LeftButton)
         assert cc.acquireRoiCheckBox.isChecked()
+        assert not cc.roiFpsSpinBox.isEnabled()
+        assert not cc.bufferSizeSpinBox.isEnabled()
         with qtbot.waitSignal(cc.acquireRoiState, timeout=self.fast_timeout,
                               check_params_cb=self.stateIsFalse):
             qtbot.mouseClick(cc.acquireRoiCheckBox, Qt.LeftButton)
         assert not cc.acquireRoiCheckBox.isChecked()
+        assert cc.roiFpsSpinBox.isEnabled()
+        assert cc.bufferSizeSpinBox.isEnabled()
+
+    def test_roiFpsSpinBox(self, qtbot):
+        cc = CameraControlWidget()
+        cc.show()
+        qtbot.addWidget(cc)
+        assert cc.roiFpsSpinBox.value() == 40
+        cc.roiFpsSpinBox.setValue(0)
+        assert cc.roiFpsSpinBox.value() == 1
+        cc.roiFpsSpinBox.setValue(200)
+        assert cc.roiFpsSpinBox.value() == 150
+        cc.roiFpsSpinBox.stepUp()
+        assert cc.roiFpsSpinBox.value() == 150
+        cc.roiFpsSpinBox.stepDown()
+        assert cc.roiFpsSpinBox.value() == 149
+
+    def test_bufferSizeSpinBox(self, qtbot):
+        cc = CameraControlWidget()
+        cc.show()
+        qtbot.addWidget(cc)
+        assert cc.bufferSizeSpinBox.value() == 1024
+        cc.bufferSizeSpinBox.stepUp()
+        assert cc.bufferSizeSpinBox.value() == 2048
+        cc.bufferSizeSpinBox.setValue(1024)
+        cc.bufferSizeSpinBox.stepDown()
+        assert cc.bufferSizeSpinBox.value() == 512

@@ -116,3 +116,13 @@ class DataController():
                 self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
         except FrameRejected as err:
             self.updateStatusBar.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)
+
+    def setBufferSize(self, value):
+        """Set the buffer size on the buffer model.
+
+        Parameters
+        ----------
+        value : int
+            The requested buffer size.
+        """
+        self.bufferModel.bufferSize = value
