@@ -75,7 +75,7 @@ class TestDataController():
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         bufferSize = dc.getBufferSize()
-        assert bufferSize == 1000
+        assert bufferSize == 1024
 
     def test_getCentroids(self, qtbot, mocker):
         cdw = CameraDataWidget()

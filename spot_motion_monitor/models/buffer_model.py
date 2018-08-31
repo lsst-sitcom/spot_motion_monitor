@@ -40,7 +40,7 @@ class BufferModel():
     def __init__(self):
         """Initialize the class.
         """
-        self.bufferSize = 1000
+        self.bufferSize = 1024
         self.rollBuffer = False
         self.counter = 0
         self.pixelScale = 1.0
