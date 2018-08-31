@@ -77,7 +77,7 @@ class FullFrameModel():
             objectFrame[objectFrame < 0] = 0
             flux = objectFrame.sum()
             maxAdc = objectFrame.max()
-            comX, comY = ndimage.center_of_mass(objectFrame)
+            comY, comX = ndimage.center_of_mass(objectFrame)
             centerX = comX + xSlice.start
             centerY = comY + ySlice.start
 

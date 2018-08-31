@@ -26,8 +26,8 @@ class TestFullFrameModel():
         camera.startup()
         frame = camera.getFullFrame()
         info = self.model.calculateCentroid(frame)
-        assert info.centerX == 288.45394404821826
-        assert info.centerY == 224.47687644439395
+        assert info.centerX == 288.47687644439395
+        assert info.centerY == 224.45394404821826
         assert info.flux == 3235.9182163661176
         assert info.maxAdc == 135.83703259361937
         assert info.stdNoObjects is None

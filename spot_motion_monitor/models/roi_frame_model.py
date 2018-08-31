@@ -45,7 +45,7 @@ class RoiFrameModel():
         newFrame[newFrame < 0] = 0
         maxAdc = newFrame.max()
         flux = np.sum(newFrame)
-        comX, comY = ndimage.center_of_mass(newFrame)
+        comY, comX = ndimage.center_of_mass(newFrame)
         objectSize = np.count_nonzero(newFrame)
         # Get standard deviation of original image without object pixels
         maxStd = np.std(np.ma.masked_array(roiFrame, mask=newFrame))
