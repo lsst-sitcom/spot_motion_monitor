@@ -49,12 +49,14 @@ class TestCameraControl():
                               check_params_cb=self.stateIsTrue):
             qtbot.mouseClick(cc.acquireFramesButton, Qt.LeftButton)
         assert cc.acquireFramesButton.isChecked()
+        assert not cc.startStopButton.isEnabled()
         assert cc.acquireFramesButton.text() == "Stop Acquire Frames"
         with qtbot.waitSignal(cc.acquireFramesState, timeout=self.fast_timeout,
                               check_params_cb=self.stateIsFalse):
             qtbot.mouseClick(cc.acquireFramesButton, Qt.LeftButton)
         assert not cc.acquireFramesButton.isChecked()
         assert cc.acquireFramesButton.text() == "Start Acquire Frames"
+        assert cc.startStopButton.isEnabled()
 
     def test_acquireRoiCheckbox(self, qtbot):
         cc = CameraControlWidget()

@@ -62,6 +62,7 @@ class CameraControlWidget(QWidget, Ui_CameraControl):
             self.acquireFramesButton.setText("Stop Acquire Frames")
         else:
             self.acquireFramesButton.setText("Start Acquire Frames")
+        self.startStopButton.setEnabled(not checked)
         self.acquireFramesState.emit(checked)
 
     def handleAcquireRoi(self, checked):
