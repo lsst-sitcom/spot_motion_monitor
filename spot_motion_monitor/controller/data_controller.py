@@ -103,7 +103,6 @@ class DataController():
         try:
             if currentStatus.isRoiMode:
                 genericFrameInfo = self.roiFrameModel.calculateCentroid(frame)
-                self.cameraDataWidget.updateFps(currentStatus.currentFps)
                 self.bufferModel.updateInformation(genericFrameInfo, currentStatus.frameOffset)
                 roiFrameInfo = self.bufferModel.getInformation(currentStatus.currentFps)
                 self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
@@ -112,7 +111,6 @@ class DataController():
                 fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX),
                                                      int(genericFrameInfo.centerY),
                                                      genericFrameInfo.flux, genericFrameInfo.maxAdc)
-                self.cameraDataWidget.updateFps(currentStatus.currentFps)
                 self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
         except FrameRejected as err:
             self.updater.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)

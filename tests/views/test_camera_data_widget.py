@@ -16,8 +16,6 @@ class TestCameraDataWidget():
         qtbot.addWidget(cdw)
 
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
-        assert cdw.fpsValueLabel.text() == NO_DATA_VALUE
-        assert cdw.bufferSizeValueLabel.text() == NO_DATA_VALUE
         assert cdw.fluxValueLabel.text() == NO_DATA_VALUE
         assert cdw.maxAdcValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == NO_DATA_VALUE
@@ -34,23 +32,12 @@ class TestCameraDataWidget():
         cdw.updateFullFrameData(ffi)
 
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
-        assert cdw.bufferSizeValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == str(ffi.centerX)
         assert cdw.centroidYLabel.text() == str(ffi.centerY)
         assert cdw.fluxValueLabel.text() == self.formatFloatText(ffi.flux)
         assert cdw.maxAdcValueLabel.text() == self.formatFloatText(ffi.maxAdc)
         assert cdw.rmsXLabel.text() == NO_DATA_VALUE
         assert cdw.rmsYLabel.text() == NO_DATA_VALUE
-
-    def test_PassedFpsValue(self, qtbot):
-        cdw = CameraDataWidget()
-        cdw.show()
-        qtbot.addWidget(cdw)
-
-        fps = 30
-        cdw.updateFps(fps)
-
-        assert cdw.fpsValueLabel.text() == str(fps)
 
     def test_RoiFramePassedValues(self, qtbot):
         cdw = CameraDataWidget()
@@ -61,7 +48,6 @@ class TestCameraDataWidget():
         cdw.updateRoiFrameData(rfi)
 
         assert cdw.accumPeriodValueLabel.text() == self.formatFloatText(rfi.validFrames[1])
-        assert cdw.bufferSizeValueLabel.text() == str(rfi.validFrames[0])
         assert cdw.centroidXLabel.text() == self.formatFloatText(rfi.centerX)
         assert cdw.centroidYLabel.text() == self.formatFloatText(rfi.centerY)
         assert cdw.fluxValueLabel.text() == self.formatFloatText(rfi.flux)
@@ -78,8 +64,6 @@ class TestCameraDataWidget():
         cdw.updateRoiFrameData(rfi)
 
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
-        assert cdw.fpsValueLabel.text() == NO_DATA_VALUE
-        assert cdw.bufferSizeValueLabel.text() == NO_DATA_VALUE
         assert cdw.fluxValueLabel.text() == NO_DATA_VALUE
         assert cdw.maxAdcValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == NO_DATA_VALUE
