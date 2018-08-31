@@ -15,7 +15,7 @@ class PlotCcdController():
     ----------
     cameraPlotWidget : .CameraPlotWidget
         An instance of the camera plot widget.
-    updateStatusBar : .StatusBarUpdater
+    updater : .InformationUpdater
         An instance of the status bar updater.
     """
 
@@ -28,7 +28,7 @@ class PlotCcdController():
             An instance of the camera plot widget.
         """
         self.cameraPlotWidget = cpw
-        self.updateStatusBar = smmUtils.StatusBarUpdater()
+        self.updater = smmUtils.InformationUpdater()
 
     def passFrame(self, frame):
         """Receive and handle the camera CCD frame.

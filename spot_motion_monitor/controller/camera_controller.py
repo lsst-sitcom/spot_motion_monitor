@@ -34,7 +34,7 @@ class CameraController():
         """
         self.cameraControlWidget = ccw
         self.camera = None
-        self.updateStatusBar = smmUtils.StatusBarUpdater()
+        self.updater = smmUtils.InformationUpdater()
         self.frameTimer = QTimer()
 
         self.cameraControlWidget.cameraState.connect(self.startStopCamera)
@@ -51,16 +51,16 @@ class CameraController():
             The current state of the Start Frame Acquisition button.
         """
         if state:
-            self.updateStatusBar.displayStatus.emit('Starting Frame Acquisition',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Starting Frame Acquisition',
+                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)
             if self.frameTimer.isActive():
                 self.frameTimer.stop()
             current_fps = self.currentCameraFps()
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
             self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
         else:
-            self.updateStatusBar.displayStatus.emit('Stopping Frame Acquistion',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Stopping Frame Acquistion',
+                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.frameTimer.stop()
 
     def acquireRoiFrame(self, state):
@@ -74,15 +74,15 @@ class CameraController():
         if state:
             if self.frameTimer.isActive():
                 self.frameTimer.stop()
-            self.updateStatusBar.displayStatus.emit('Starting ROI Frame Acquistion',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Starting ROI Frame Acquistion',
+                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)
             current_fps = self.currentCameraFps()
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
             self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
         else:
             self.frameTimer.stop()
-            self.updateStatusBar.displayStatus.emit('Stopping ROI Frame Acquistion',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Stopping ROI Frame Acquistion',
+                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)
             if self.cameraControlWidget.acquireFramesButton.isChecked():
                 self.acquireFrame(True)
 
@@ -177,14 +177,12 @@ class CameraController():
             The current state of the camera.
         """
         if state:
-            self.updateStatusBar.displayStatus.emit('Starting Camera',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Starting Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.camera.startup()
-            self.updateStatusBar.displayStatus.emit('Camera Started Successfully',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Camera Started Successfully',
+                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)
         else:
-            self.updateStatusBar.displayStatus.emit('Stopping Camera',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Stopping Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.camera.shutdown()
-            self.updateStatusBar.displayStatus.emit('Camera Stopped Successfully',
-                                                    smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.displayStatus.emit('Camera Stopped Successfully',
+                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)

@@ -45,13 +45,13 @@ class TestMainWindow():
         mw.show()
         qtbot.addWidget(mw)
         message1 = "Hello World!"
-        mw.cameraController.updateStatusBar.displayStatus.emit(message1, ONE_SECOND_IN_MILLISECONDS)
+        mw.cameraController.updater.displayStatus.emit(message1, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message1
         message2 = "Have a nice evening!"
-        mw.plotController.updateStatusBar.displayStatus.emit(message2, ONE_SECOND_IN_MILLISECONDS)
+        mw.plotController.updater.displayStatus.emit(message2, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message2
         message3 = "See you later!"
-        mw.dataController.updateStatusBar.displayStatus.emit(message3, ONE_SECOND_IN_MILLISECONDS)
+        mw.dataController.updater.displayStatus.emit(message3, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message3
 
     def test_statusForFrameRejection(self, qtbot, mocker):

@@ -21,7 +21,7 @@ class TestDataController():
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         assert dc.cameraDataWidget is not None
-        assert dc.updateStatusBar is not None
+        assert dc.updater is not None
         assert dc.fullFrameModel is not None
         assert dc.roiFrameModel is not None
         assert dc.bufferModel is not None

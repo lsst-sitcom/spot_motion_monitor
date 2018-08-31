@@ -15,7 +15,7 @@ class TestPlotCcdController():
         qtbot.addWidget(cpw)
         pc = PlotCcdController(cpw)
         assert pc.cameraPlotWidget is not None
-        assert pc.updateStatusBar is not None
+        assert pc.updater is not None
 
     def test_passFrame(self, qtbot):
         cpw = CameraPlotWidget()

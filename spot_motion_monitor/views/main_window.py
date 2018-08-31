@@ -64,10 +64,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
         self.cameraController.frameTimer.timeout.connect(self.acquireFrame)
-        self.cameraController.updateStatusBar.displayStatus.connect(self.updateStatusBar)
+        self.cameraController.updater.displayStatus.connect(self.updateStatusBar)
         #self.cameraController.bufferSizeChanged.connect(self.dataController.setBufferSize)
-        self.plotController.updateStatusBar.displayStatus.connect(self.updateStatusBar)
-        self.dataController.updateStatusBar.displayStatus.connect(self.updateStatusBar)
+        self.plotController.updater.displayStatus.connect(self.updateStatusBar)
+        self.dataController.updater.displayStatus.connect(self.updateStatusBar)
         self.actionExit.triggered.connect(self.close)
         self.actionAbout.triggered.connect(self.about)
 

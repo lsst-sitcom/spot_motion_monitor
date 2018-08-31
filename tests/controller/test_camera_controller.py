@@ -17,7 +17,7 @@ class TestCameraController():
         assert cc.cameraControlWidget is not None
         assert cc.camera is None
         assert cc.frameTimer is not None
-        assert cc.updateStatusBar is not None
+        assert cc.updater is not None
 
     def test_cameraObject(self, qtbot):
         ccWidget = CameraControlWidget()
