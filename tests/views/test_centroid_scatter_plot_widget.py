@@ -53,7 +53,7 @@ class TestCentroidScatterPlotWidget:
         assert cspw.brushes[800].color().alpha() == 229
         assert cspw.brushes[-1].color().alpha() == 255
 
-    def test_updatePlot(self, qtbot, mocker):
+    def test_updateData(self, qtbot):
         cspw = CentroidScatterPlotWidget()
         qtbot.addWidget(cspw)
         arraySize = 3
@@ -61,22 +61,38 @@ class TestCentroidScatterPlotWidget:
         truthAlpha = [127, 191, 255]
         alpha = [x.color().alpha() for x in cspw.brushes]
         assert alpha == truthAlpha
-        mockSetData = mocker.patch.object(cspw.scatterPlotItem, 'setData')
         valuesX = [254.43, 254.86, 253.91, 254.21]
         valuesY = [355.25, 355.10, 354.89, 355.57]
-        cspw.updatePlot(valuesX[0], valuesY[0])
+        cspw.updateData(valuesX[0], valuesY[0])
         assert cspw.xData.tolist() == [valuesX[0]]
         assert cspw.yData.tolist() == [valuesY[0]]
         assert cspw.dataCounter == 1
-        cspw.updatePlot(valuesX[1], valuesY[1])
-        cspw.updatePlot(valuesX[2], valuesY[2])
+        cspw.updateData(valuesX[1], valuesY[1])
+        cspw.updateData(valuesX[2], valuesY[2])
         assert cspw.xData.tolist() == valuesX[:-1]
         assert cspw.yData.tolist() == valuesY[:-1]
         assert cspw.dataCounter == arraySize
         assert cspw.rollArray is True
-        cspw.updatePlot(valuesX[3], valuesY[3])
+        cspw.updateData(valuesX[3], valuesY[3])
         assert cspw.xData.tolist() == valuesX[1:]
         assert cspw.yData.tolist() == valuesY[1:]
         assert cspw.dataCounter == arraySize
         assert cspw.rollArray is True
-        assert mockSetData.call_count == len(valuesX)
+
+    def test_showPlot(self, qtbot, mocker):
+        cspw = CentroidScatterPlotWidget()
+        qtbot.addWidget(cspw)
+        arraySize = 3
+        cspw.setup(arraySize)
+        # Add some data so plot doesn't fail
+        valuesX = [254.43, 254.86, 253.91, 254.21]
+        valuesY = [355.25, 355.10, 354.89, 355.57]
+        for x, y in zip(valuesX, valuesY):
+            cspw.updateData(x, y)
+        mockScatterSetData = mocker.patch.object(cspw.scatterPlotItem, 'setData')
+        mockXHistSetData = mocker.patch.object(cspw.xHistogramItem, 'setData')
+        mockYHistSetData = mocker.patch.object(cspw.yHistogramItem, 'setData')
+        cspw.showPlot()
+        assert mockScatterSetData.call_count == 1
+        assert mockXHistSetData.call_count == 1
+        assert mockYHistSetData.call_count == 1

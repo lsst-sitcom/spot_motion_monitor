@@ -49,8 +49,19 @@ class PlotCentroidController():
         self.y1dPlot.setup(arraySize, 'Y', roiFps)
         self.scatterPlot.setup(arraySize)
 
+    def showScatterPlots(self, doShow):
+        """Show the scatter plots.
+
+        Parameters
+        ----------
+        doShow : bool
+            True if plots are to be rendered, False if not.
+        """
+        if doShow:
+            self.scatterPlot.showPlot()
+
     def update(self, cx, cy):
-        """Update the x and y centroid plots with current values.
+        """Update the x and y centroid plots and scatter plot data with current values.
 
         Parameters
         ----------
@@ -63,4 +74,4 @@ class PlotCentroidController():
             return
         self.x1dPlot.updatePlot(cx)
         self.y1dPlot.updatePlot(cy)
-        self.scatterPlot.updatePlot(cx, cy)
+        self.scatterPlot.updateData(cx, cy)

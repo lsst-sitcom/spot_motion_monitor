@@ -67,11 +67,30 @@ class TestPlotCentroidController:
         qtbot.addWidget(csp)
         mocker.patch('spot_motion_monitor.views.centroid_1d_plot_widget.Centroid1dPlotWidget.updatePlot')
         mocker.patch('spot_motion_monitor.views.centroid_scatter_plot_widget.'
-                     'CentroidScatterPlotWidget.updatePlot')
+                     'CentroidScatterPlotWidget.updateData')
 
         p1cc = PlotCentroidController(cxp, cyp, csp)
         p1cc.setup(self.bufferSize, self.roiFps)
         p1cc.update(None, None)
         assert p1cc.x1dPlot.updatePlot.call_count == 0
         assert p1cc.y1dPlot.updatePlot.call_count == 0
-        assert p1cc.scatterPlot.updatePlot.call_count == 0
+        assert p1cc.scatterPlot.updateData.call_count == 0
+
+    def test_showScatterPlots(self, qtbot, mocker):
+        cxp = Centroid1dPlotWidget()
+        cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
+        qtbot.addWidget(cxp)
+        qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
+        mocker.patch('spot_motion_monitor.views.centroid_scatter_plot_widget.'
+                     'CentroidScatterPlotWidget.showPlot')
+        p1cc = PlotCentroidController(cxp, cyp, csp)
+        p1cc.setup(self.bufferSize, self.roiFps)
+        centroidX = 253.543
+        centroidY = 313.683
+        p1cc.update(centroidX, centroidY)
+        p1cc.showScatterPlots(False)
+        assert p1cc.scatterPlot.showPlot.call_count == 0
+        p1cc.showScatterPlots(True)
+        assert p1cc.scatterPlot.showPlot.call_count == 1
