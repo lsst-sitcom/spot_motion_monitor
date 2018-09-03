@@ -139,11 +139,14 @@ class TestCameraController():
         assert status.currentFps == 24
         assert status.isRoiMode is False
         assert status.frameOffset == (264, 200)
+        assert status.showFrames is True
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        qtbot.mouseClick(ccWidget.showFramesCheckBox, Qt.LeftButton)
         status = cc.currentStatus()
         assert status.currentFps == 40
         assert status.isRoiMode is True
         assert status.frameOffset == (264, 200)
+        assert status.showFrames is False
 
     def test_currentRoiFps(self, qtbot):
         ccWidget = CameraControlWidget()

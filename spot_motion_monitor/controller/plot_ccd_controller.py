@@ -30,12 +30,15 @@ class PlotCcdController():
         self.cameraPlotWidget = cpw
         self.updater = smmUtils.InformationUpdater()
 
-    def passFrame(self, frame):
+    def passFrame(self, frame, showFrames):
         """Receive and handle the camera CCD frame.
 
         Parameters
         ----------
         frame : numpy.array
             A frame from a camera CCD.
+        showFrames : bool
+            Flag to show camera CCD frames.
         """
-        self.cameraPlotWidget.image.setImage(frame)
+        if showFrames:
+            self.cameraPlotWidget.image.setImage(frame)

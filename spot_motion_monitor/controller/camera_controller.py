@@ -139,7 +139,8 @@ class CameraController():
         fps = self.currentCameraFps()
         mode = self.isRoiMode()
         offset = self.currentOffset()
-        return spot_motion_monitor.camera.CameraStatus(fps, mode, offset)
+        showFrames = self.cameraControlWidget.showFramesCheckBox.isChecked()
+        return spot_motion_monitor.camera.CameraStatus(fps, mode, offset, showFrames)
 
     def getFrame(self):
         """Get the frame from the camera.

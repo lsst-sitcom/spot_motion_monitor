@@ -101,3 +101,11 @@ class TestCameraControl():
         cc.bufferSizeSpinBox.setValue(1024)
         cc.bufferSizeSpinBox.stepDown()
         assert cc.bufferSizeSpinBox.value() == 512
+
+    def test_showFramesCheckBox(self, qtbot):
+        cc = CameraControlWidget()
+        cc.show()
+        qtbot.addWidget(cc)
+        assert cc.showFramesCheckBox.isChecked()
+        qtbot.mouseClick(cc.showFramesCheckBox, Qt.LeftButton)
+        assert not cc.showFramesCheckBox.isChecked()

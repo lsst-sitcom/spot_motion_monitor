@@ -95,7 +95,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         frame = self.cameraController.getFrame()
         cameraStatus = self.cameraController.currentStatus()
         self.dataController.passFrame(frame, cameraStatus)
-        self.plotController.passFrame(frame)
+        self.plotController.passFrame(frame, cameraStatus.showFrames)
         centroids = self.dataController.getCentroids(cameraStatus.isRoiMode)
         self.plotCentroidController.update(centroids[0], centroids[1])
         psdData = self.dataController.getPsd(cameraStatus.isRoiMode, cameraStatus.currentFps)

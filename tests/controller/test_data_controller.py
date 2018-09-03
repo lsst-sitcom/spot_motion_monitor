@@ -13,8 +13,8 @@ class TestDataController():
 
     def setup_class(cls):
         cls.frame = np.ones((3, 5))
-        cls.fullFrameStatus = CameraStatus(24, False, (0, 0))
-        cls.roiFrameStatus = CameraStatus(40, True, (264, 200))
+        cls.fullFrameStatus = CameraStatus(24, False, (0, 0), True)
+        cls.roiFrameStatus = CameraStatus(40, True, (264, 200), True)
 
     def test_parametersAfterConstruction(self, qtbot):
         cdw = CameraDataWidget()

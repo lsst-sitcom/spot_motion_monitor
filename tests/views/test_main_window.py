@@ -62,7 +62,7 @@ class TestMainWindow():
         mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFullFrame')
         mockCamCont.getFrame = mocker.MagicMock(return_value=np.ones((3, 5)))
         emessage = "Frame failed!"
-        mw.cameraController.currentStatus = mocker.Mock(return_value=CameraStatus(24, False, (0, 0)))
+        mw.cameraController.currentStatus = mocker.Mock(return_value=CameraStatus(24, False, (0, 0), True))
         mw.dataController.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected(emessage))
         mw.plotController.passFrame = mocker.Mock(return_value=None)
         mw.acquireFrame()
