@@ -3,6 +3,20 @@
 History
 -------
 
+0.5.0 (2018-09-03)
+~~~~~~~~~~~~~~~~~~
+
+* Adding spot oscillation to Gaussian camera
+* Adding new controls to UI
+
+  * ROI FPS
+  * Buffer Size
+  * Show Frames
+
+* Centroid 1D plots disable auto range after start
+* Make scatter and histogram plots update at same rate as PSD plots
+* Locking out control buttons to stop unexpected behavior
+
 0.4.0 (2018-07-29)
 ~~~~~~~~~~~~~~~~~~
 
