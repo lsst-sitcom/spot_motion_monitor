@@ -45,13 +45,13 @@ class TestMainWindow():
         mw.show()
         qtbot.addWidget(mw)
         message1 = "Hello World!"
-        mw.cameraController.updateStatusBar.displayStatus.emit(message1, ONE_SECOND_IN_MILLISECONDS)
+        mw.cameraController.updater.displayStatus.emit(message1, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message1
         message2 = "Have a nice evening!"
-        mw.plotController.updateStatusBar.displayStatus.emit(message2, ONE_SECOND_IN_MILLISECONDS)
+        mw.plotController.updater.displayStatus.emit(message2, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message2
         message3 = "See you later!"
-        mw.dataController.updateStatusBar.displayStatus.emit(message3, ONE_SECOND_IN_MILLISECONDS)
+        mw.dataController.updater.displayStatus.emit(message3, ONE_SECOND_IN_MILLISECONDS)
         assert mw.statusbar.currentMessage() == message3
 
     def test_statusForFrameRejection(self, qtbot, mocker):
@@ -62,12 +62,19 @@ class TestMainWindow():
         mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFullFrame')
         mockCamCont.getFrame = mocker.MagicMock(return_value=np.ones((3, 5)))
         emessage = "Frame failed!"
-        mw.cameraController.currentStatus = mocker.Mock(return_value=CameraStatus(24, False, (0, 0)))
+        mw.cameraController.currentStatus = mocker.Mock(return_value=CameraStatus(24, False, (0, 0), True))
         mw.dataController.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected(emessage))
         mw.plotController.passFrame = mocker.Mock(return_value=None)
         mw.acquireFrame()
         assert mw.statusbar.currentMessage() == emessage
         assert mw.plotController.passFrame.call_count == 1
+
+    def test_updateBufferSize(self, qtbot):
+        mw = SpotMotionMonitor()
+        qtbot.addWidget(mw)
+        truth_buffer_size = 2048
+        mw.cameraController.updater.bufferSizeChanged.emit(truth_buffer_size)
+        assert mw.dataController.getBufferSize() == truth_buffer_size
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()

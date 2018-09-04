@@ -15,6 +15,10 @@ class GaussianCamera(BaseCamera):
 
     Attributes
     ----------
+    counter : int
+        The progress of the oscillation in time.
+    deltaTime : int
+        The number of segments in a full oscillation cycle.
     fpsFullFrame : int
         The Frames per Second rate in full frame mode.
     fpsRoiFrame : int
@@ -31,10 +35,22 @@ class GaussianCamera(BaseCamera):
         The box size in pixels for the Gaussian spot.
     width : int
         The pixel width of the CCD.
+    xAmp : int
+        The amplitude of the x-axis oscillation.
+    xFreq : float
+        The frequency of the x-axis oscillation.
     xPoint : int
         The x-coordinate of the Gaussian postage stamp insertion point.
+    xPointOriginal : int
+        The x-coordinate of the original postage stamp insertion point.
+    yAmp : int
+        The amplitude of the y-axis oscillation.
+    yFreq : float
+        The frequency of the y-axis oscillation.
     yPoint : int
         The y-coordinate of the Gaussian postage stamp insertion point.
+    yPointOriginal : int
+        The y-coordinate of the original postage stamp insertion point.
     """
 
     seed = None
@@ -52,6 +68,15 @@ class GaussianCamera(BaseCamera):
         self.postageStamp = None
         self.xPoint = None
         self.yPoint = None
+        # Parameters for spot oscillation.
+        self.counter = 0
+        self.xFreq = 5.0
+        self.xAmp = 10
+        self.yFreq = 10.0
+        self.yAmp = 5
+        self.deltaTime = 200
+        self.xPointOriginal = None
+        self.yPointOriginal = None
 
     def findInsertionPoint(self):
         """Determine the Gaussian spot insertion point.
@@ -64,6 +89,8 @@ class GaussianCamera(BaseCamera):
         yHalfwidth = self.height / 2
         self.xPoint = np.random.randint(xHalfwidth - xRange, xHalfwidth + xRange + 1)
         self.yPoint = np.random.randint(yHalfwidth - yRange, yHalfwidth + yRange + 1)
+        self.xPointOriginal = self.xPoint
+        self.yPointOriginal = self.yPoint
 
     def getFullFrame(self):
         """Get the full frame from the CCD.
@@ -76,9 +103,11 @@ class GaussianCamera(BaseCamera):
         # Create base CCD frame
         ccd = np.random.poisson(20.0, (self.height, self.width))
 
+        self.oscillateSpot()
+
         # Merge CCD frame and postage stamp
-        ccd[self.yPoint:self.yPoint + self.postageStamp.shape[0],
-            self.xPoint:self.xPoint + self.postageStamp.shape[1]] += self.postageStamp
+        ccd[self.yPoint:self.yPoint + self.postageStamp.shape[1],
+            self.xPoint:self.xPoint + self.postageStamp.shape[0]] += self.postageStamp
 
         return ccd
 
@@ -92,8 +121,8 @@ class GaussianCamera(BaseCamera):
         """
         # Offset is same for both axes since spot and ROI are square.
         offset = (self.roiSize - self.spotSize) // 2
-        xStart = self.xPoint - offset
-        yStart = self.yPoint - offset
+        xStart = self.xPointOriginal - offset
+        yStart = self.yPointOriginal - offset
         return (xStart, yStart)
 
     def getRoiFrame(self):
@@ -119,6 +148,15 @@ class GaussianCamera(BaseCamera):
         a = 200.0 / (sigma * np.sqrt(2.0 * np.pi))
         self.postageStamp = a * np.exp(-((d - mu)**2 / (2.0 * sigma**2)))
         self.postageStamp = self.postageStamp.astype(np.int64)
+
+    def oscillateSpot(self):
+        """Calculate the oscillation of the spot.
+        """
+        self.xPoint = int(self.xPointOriginal +
+                          self.xAmp * np.sin(self.xFreq * (self.counter / self.deltaTime)))
+        self.yPoint = int(self.yPointOriginal +
+                          self.yAmp * np.sin(self.yFreq * (self.counter / self.deltaTime)))
+        self.counter += 1
 
     def startup(self):
         """Handle the startup of the camera.

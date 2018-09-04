@@ -14,7 +14,7 @@ class TestBufferModel():
 
     def test_parametersAfterConstruction(self):
         model = BufferModel()
-        assert model.bufferSize == 1000
+        assert model.bufferSize == 1024
         assert model.pixelScale == 1.0
         assert model.rollBuffer is False
         assert model.counter == 0

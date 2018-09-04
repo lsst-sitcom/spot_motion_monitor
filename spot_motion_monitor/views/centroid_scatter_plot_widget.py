@@ -119,8 +119,8 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         p2 = self.xHistogram.addPlot()
         self.xHistogramItem = p2.plot(self.xData, self.xData)
 
-    def updatePlot(self, centroidX, centroidY):
-        """Update the plot with a new centroid coordinate pair.
+    def updateData(self, centroidX, centroidY):
+        """Update the data arrays with a new centroid coordinate pair.
 
         Parameters
         ----------
@@ -134,16 +134,20 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
             self.xData[-1] = centroidX
             self.yData[:-1] = self.yData[1:]
             self.yData[-1] = centroidY
-            #brushes = self.brushes
         else:
             # This does create copies of arrays, so watch performance.
             self.xData = np.append(self.xData, centroidX)
             self.yData = np.append(self.yData, centroidY)
-            # Get brushes from end of array since that's where newer data is at.
-            # Many brushes causes performance issues.
-            #brushes = self.brushes[:self.xData.size]
 
-        self.scatterPlotItem.setData(self.xData, self.yData, pen=self.pointPen)  # , brush=brushes)
+        if self.dataCounter < self.dataSize:
+            self.dataCounter += 1
+            if self.dataCounter == self.dataSize:
+                self.rollArray = True
+
+    def showPlot(self):
+        """Show the scatter and histogram plots.
+        """
+        self.scatterPlotItem.setData(self.xData, self.yData, pen=self.pointPen, brush=self.brushes)
 
         xy, xx = np.histogram(self.xData,
                               bins=np.linspace(np.min(self.xData), np.max(self.xData), self.numBins))
@@ -153,8 +157,3 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         # Flip due to rotated plot
         yy *= -1
         self.yHistogramItem.setData(yx, yy, stepMode=True, fillLevel=0, fillBrush=self.histogramFillBrush)
-
-        if self.dataCounter < self.dataSize:
-            self.dataCounter += 1
-            if self.dataCounter == self.dataSize:
-                self.rollArray = True

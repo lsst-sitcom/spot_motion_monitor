@@ -15,7 +15,7 @@ class TestPlotCcdController():
         qtbot.addWidget(cpw)
         pc = PlotCcdController(cpw)
         assert pc.cameraPlotWidget is not None
-        assert pc.updateStatusBar is not None
+        assert pc.updater is not None
 
     def test_passFrame(self, qtbot):
         cpw = CameraPlotWidget()
@@ -23,5 +23,15 @@ class TestPlotCcdController():
         qtbot.addWidget(cpw)
         pc = PlotCcdController(cpw)
         frame = np.ones((3, 5))
-        pc.passFrame(frame)
+        pc.passFrame(frame, True)
         pc.cameraPlotWidget.image.shape = (3, 5)
+
+    def test_passFrameWithNoShowFrames(self, qtbot, mocker):
+        cpw = CameraPlotWidget()
+        cpw.show()
+        qtbot.addWidget(cpw)
+        pc = PlotCcdController(cpw)
+        frame = np.ones((3, 5))
+        mockSetImage = mocker.patch.object(pc.cameraPlotWidget.image, 'setImage')
+        pc.passFrame(frame, False)
+        assert mockSetImage.call_count == 0

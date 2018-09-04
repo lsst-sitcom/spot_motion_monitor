@@ -13,15 +13,15 @@ class TestDataController():
 
     def setup_class(cls):
         cls.frame = np.ones((3, 5))
-        cls.fullFrameStatus = CameraStatus(24, False, (0, 0))
-        cls.roiFrameStatus = CameraStatus(40, True, (264, 200))
+        cls.fullFrameStatus = CameraStatus(24, False, (0, 0), True)
+        cls.roiFrameStatus = CameraStatus(40, True, (264, 200), True)
 
     def test_parametersAfterConstruction(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         assert dc.cameraDataWidget is not None
-        assert dc.updateStatusBar is not None
+        assert dc.updater is not None
         assert dc.fullFrameModel is not None
         assert dc.roiFrameModel is not None
         assert dc.bufferModel is not None
@@ -75,7 +75,7 @@ class TestDataController():
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         bufferSize = dc.getBufferSize()
-        assert bufferSize == 1000
+        assert bufferSize == 1024
 
     def test_getCentroids(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -101,3 +101,11 @@ class TestDataController():
         psd = dc.getPsd(True, currentFps)
         dc.bufferModel.getPsd.assert_called_with(currentFps)
         assert psd == truth_psd
+
+    def test_setBufferSize(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        truthBufferSize = 256
+        dc.setBufferSize(truthBufferSize)
+        assert dc.getBufferSize() == truthBufferSize

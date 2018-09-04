@@ -17,7 +17,7 @@ class TestCameraController():
         assert cc.cameraControlWidget is not None
         assert cc.camera is None
         assert cc.frameTimer is not None
-        assert cc.updateStatusBar is not None
+        assert cc.updater is not None
 
     def test_cameraObject(self, qtbot):
         ccWidget = CameraControlWidget()
@@ -139,11 +139,14 @@ class TestCameraController():
         assert status.currentFps == 24
         assert status.isRoiMode is False
         assert status.frameOffset == (264, 200)
+        assert status.showFrames is True
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        qtbot.mouseClick(ccWidget.showFramesCheckBox, Qt.LeftButton)
         status = cc.currentStatus()
         assert status.currentFps == 40
         assert status.isRoiMode is True
         assert status.frameOffset == (264, 200)
+        assert status.showFrames is False
 
     def test_currentRoiFps(self, qtbot):
         ccWidget = CameraControlWidget()
@@ -155,3 +158,13 @@ class TestCameraController():
         #cc.startStopCamera(True)
         roiFps = cc.currentRoiFps()
         assert roiFps == 40
+
+    def test_changeRoiFps(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        truthRoiFps = 70
+        cc.cameraControlWidget.roiFpsSpinBox.setValue(truthRoiFps)
+        assert cc.currentRoiFps() == truthRoiFps

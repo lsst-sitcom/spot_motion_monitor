@@ -21,8 +21,8 @@ class TestRoiFrameModel():
         camera.startup()
         frame = camera.getRoiFrame()
         info = self.model.calculateCentroid(frame)
-        assert info.centerX == 24.46080549340329
-        assert info.centerY == 24.492516009567165
+        assert info.centerX == 24.492516009567165
+        assert info.centerY == 24.46080549340329
         assert info.flux == 2592.2000000000003
         assert info.maxAdc == 125.30000000000001
         assert info.objectSize == 54

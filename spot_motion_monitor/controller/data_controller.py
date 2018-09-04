@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
-from spot_motion_monitor.utils import STATUSBAR_FAST_TIMEOUT, StatusBarUpdater
+from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT
 
 __all__ = ["DataController"]
 
@@ -23,8 +23,8 @@ class DataController():
         An instance of the full frame calculation model.
     roiFrameModel : .RoiFrameModel
         An instance of the ROI frame calculation model.
-    updateStatusBar : .StatusBarUpdater
-        An instance of the status bar updater.
+    updater : .InformationUpdater
+        An instance of the information updater.
     """
 
     def __init__(self, cdw):
@@ -39,7 +39,7 @@ class DataController():
         self.fullFrameModel = FullFrameModel()
         self.roiFrameModel = RoiFrameModel()
         self.bufferModel = BufferModel()
-        self.updateStatusBar = StatusBarUpdater()
+        self.updater = InformationUpdater()
 
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
@@ -103,7 +103,6 @@ class DataController():
         try:
             if currentStatus.isRoiMode:
                 genericFrameInfo = self.roiFrameModel.calculateCentroid(frame)
-                self.cameraDataWidget.updateFps(currentStatus.currentFps)
                 self.bufferModel.updateInformation(genericFrameInfo, currentStatus.frameOffset)
                 roiFrameInfo = self.bufferModel.getInformation(currentStatus.currentFps)
                 self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
@@ -112,7 +111,16 @@ class DataController():
                 fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX),
                                                      int(genericFrameInfo.centerY),
                                                      genericFrameInfo.flux, genericFrameInfo.maxAdc)
-                self.cameraDataWidget.updateFps(currentStatus.currentFps)
                 self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
         except FrameRejected as err:
-            self.updateStatusBar.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)
+            self.updater.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)
+
+    def setBufferSize(self, value):
+        """Set the buffer size on the buffer model.
+
+        Parameters
+        ----------
+        value : int
+            The requested buffer size.
+        """
+        self.bufferModel.bufferSize = value
