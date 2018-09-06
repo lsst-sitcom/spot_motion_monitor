@@ -50,7 +50,6 @@ class TestCameraController():
         #cc.startStopCamera(True)
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         assert cc.frameTimer.isActive()
-        assert cc.offsetTimer.isActive() is False
         interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
         assert cc.frameTimer.interval() == interval
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
@@ -80,7 +79,6 @@ class TestCameraController():
         #cc.startStopCamera(True)
         qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
-        assert cc.offsetTimer.isActive()
         interval = int((1 / cc.currentCameraFps()) * ONE_SECOND_IN_MILLISECONDS)
         assert cc.frameTimer.interval() == interval
         qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)

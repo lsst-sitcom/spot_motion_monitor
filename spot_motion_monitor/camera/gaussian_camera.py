@@ -192,3 +192,6 @@ class GaussianCamera(BaseCamera):
         """
         #print("Received centroid: ({}, {}), but not updating offsets.".format(centroidX, centroidY))
         pass
+
+    def waitOnRoi(self):
+        pass

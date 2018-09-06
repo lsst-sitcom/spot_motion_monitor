@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import time
+
 from PyQt5.QtCore import QTimer
 
 import spot_motion_monitor.camera
@@ -76,11 +78,14 @@ class CameraController():
                 self.frameTimer.stop()
             self.updater.displayStatus.emit('Starting ROI Frame Acquistion',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
+
+            self.offsetTimer.timeout.emit()
+            self.camera.waitOnRoi()
+            # Wait for full frame acquires to empty
+            time.sleep(0.3)
             current_fps = self.currentCameraFps()
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
             self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
-            self.offsetTimer.timeout.emit()
-            self.offsetTimer.start(self.camera.offsetUpdateTimeout * smmUtils.ONE_SECOND_IN_MILLISECONDS)
         else:
             self.frameTimer.stop()
             self.updater.displayStatus.emit('Stopping ROI Frame Acquistion',
@@ -212,6 +217,10 @@ class CameraController():
             Class name for concrete camera instance.
         """
         self.camera = getattr(spot_motion_monitor.camera, cameraStr)()
+
+    def showFrameStatus(self, check):
+        if check:
+            self.camera.showFrameStatus()
 
     def startStopCamera(self, state):
         """Start or stop the camera.

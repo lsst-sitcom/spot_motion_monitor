@@ -56,6 +56,7 @@ class TestMainWindow():
 
     def test_statusForFrameRejection(self, qtbot, mocker):
         mw = SpotMotionMonitor()
+        mw.cameraController.setupCamera('GaussianCamera')
         qtbot.addWidget(mw)
         mockCamCont = mocker.patch('spot_motion_monitor.views.main_window.CameraController',
                                    spec=True)

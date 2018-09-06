@@ -2,6 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from datetime import datetime
 import time
 
 import numpy as np
@@ -26,6 +27,8 @@ class VimbaCamera(BaseCamera):
         self.roiSize = 50
         self.fluxMinRoi = 5000
         self.offsetUpdateTimeout = 30
+        self.offsetX = 0
+        self.offsetY = 0
 
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
@@ -74,7 +77,7 @@ class VimbaCamera(BaseCamera):
         try:
             self.frame.queueFrameCapture()
         except pv.VimbaException as err:
-            raise FrameCaptureFailed("Full frame capture failed: {}".format(str(err)))
+            raise FrameCaptureFailed("{} Full frame capture failed: {}".format(datetime.now(), str(err)))
 
         self.cameraPtr.runFeatureCommand('AcquisitionStart')
         #self.cameraPtr.runFeatureCommand('AcquisitionStop')
@@ -92,7 +95,7 @@ class VimbaCamera(BaseCamera):
         (int, int)
             The current offset of the CCD frame.
         """
-        return (self.cameraPtr.OffsetX, self.cameraPtr.OffsetY)
+        return (self.offsetX, self.offsetY)
 
     def getRoiFrame(self):
         """Get the ROI frame from the CCD.
@@ -102,11 +105,13 @@ class VimbaCamera(BaseCamera):
         numpy.array
             The current ROI CCD frame.
         """
+        self.totalFrames += 1
         try:
             self.frame.queueFrameCapture()
         except pv.VimbaException as err:
-            raise FrameCaptureFailed("ROI frame capture failed: {}".format(str(err)))
-
+            self.badFrames += 1
+            raise FrameCaptureFailed("{} ROI frame capture failed: {}".format(datetime.now(), str(err)))
+        self.goodFrames += 1
         self.cameraPtr.runFeatureCommand('AcquisitionStart')
         self.cameraPtr.runFeatureCommand('AcquisitionStop')
         self.frame.waitFrameCapture(1)
@@ -120,10 +125,20 @@ class VimbaCamera(BaseCamera):
         """
         self.cameraPtr.OffsetX = 0
         self.cameraPtr.OffsetY = 0
+        self.offsetX = 0
+        self.offsetY = 0
+        self.cameraPtr.Height = self.height
+        self.cameraPtr.Width = self.width
+
+    def showFrameStatus(self):
+        print("{} {}, {}, {}".format(datetime.now(), self.goodFrames, self.badFrames, self.totalFrames))
 
     def startup(self):
         """Handle the startup of the camera.
         """
+        self.goodFrames = 0
+        self.badFrames = 0
+        self.totalFrames = 0
         self.vimba = pv.Vimba()
         self.vimba.startup()
         system = self.vimba.getSystem()
@@ -137,7 +152,7 @@ class VimbaCamera(BaseCamera):
 
         self.cameraPtr.openCamera()
         self.cameraPtr.GevSCPSPacketSize = 1500
-        self.cameraPtr.StreamBytesPerSecond = 100000000
+        self.cameraPtr.StreamBytesPerSecond = 124000000
         self.height = self.cameraPtr.HeightMax
         self.width = self.cameraPtr.WidthMax
         self.cameraPtr.Height = self.height
@@ -150,7 +165,7 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.AcquisitionMode = 'Continuous'
         self.cameraPtr.TriggerSource = 'Freerun'
         self.cameraPtr.PixelFormat = 'Mono12'
-        self.cameraPtr.ExposureTimeAbs = 20000  # microseconds
+        self.cameraPtr.ExposureTimeAbs = 8000  # microseconds
 
         self.frame = self.cameraPtr.getFrame()
         self.frame.announceFrame()
@@ -179,5 +194,14 @@ class VimbaCamera(BaseCamera):
         centroidY : float
             The y component of the centroid for offset update.
         """
-        self.cameraPtr.OffsetX = int(centroidX - self.roiSize / 2)
-        self.cameraPtr.OffsetY = int(centroidY - self.roiSize / 2)
+        self.offsetX = int(centroidX - self.roiSize / 2)
+        self.offsetY = int(centroidY - self.roiSize / 2)
+        self.cameraPtr.OffsetX = self.offsetX
+        self.cameraPtr.OffsetY = self.offsetY
+        self.cameraPtr.Height = self.roiSize
+        self.cameraPtr.Width = self.roiSize
+
+    def waitOnRoi(self):
+        while True:
+            if self.cameraPtr.Height == self.roiSize and self.cameraPtr.Width == self.roiSize:
+                break
