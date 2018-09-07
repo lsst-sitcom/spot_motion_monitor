@@ -25,7 +25,7 @@ class VimbaCamera(BaseCamera):
         self.fpsFullFrame = 24
         self.fpsRoiFrame = 40
         self.roiSize = 50
-        self.fluxMinRoi = 5000
+        self.fluxMinRoi = 2000
         self.offsetUpdateTimeout = 30
         self.offsetX = 0
         self.offsetY = 0
@@ -165,7 +165,7 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.AcquisitionMode = 'Continuous'
         self.cameraPtr.TriggerSource = 'Freerun'
         self.cameraPtr.PixelFormat = 'Mono12'
-        self.cameraPtr.ExposureTimeAbs = 8000  # microseconds
+        self.cameraPtr.ExposureTimeAbs = 3000  # microseconds
 
         self.frame = self.cameraPtr.getFrame()
         self.frame.announceFrame()

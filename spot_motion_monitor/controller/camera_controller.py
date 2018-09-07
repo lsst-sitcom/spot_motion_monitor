@@ -207,6 +207,7 @@ class CameraController():
             The requested FPS for the ROI frame.
         """
         self.camera.fpsRoiFrame = roiFps
+        self.updater.roiFpsChanged.emit(roiFps)
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.

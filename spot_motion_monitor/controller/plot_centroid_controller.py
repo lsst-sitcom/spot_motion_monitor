@@ -75,3 +75,7 @@ class PlotCentroidController():
         self.x1dPlot.updatePlot(cx)
         self.y1dPlot.updatePlot(cy)
         self.scatterPlot.updateData(cx, cy)
+
+    def updateRoiFps(self, newRoiFps):
+        self.x1dPlot.setRoiFps(newRoiFps)
+        self.y1dPlot.setRoiFps(newRoiFps)

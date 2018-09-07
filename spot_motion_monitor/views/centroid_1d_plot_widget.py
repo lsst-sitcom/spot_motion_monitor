@@ -80,6 +80,17 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         self.plot.setLabel('bottom', 'Time', units='s')
         self.plot.setLabel('left', axisLabel, units='pixel')
 
+    def setArraySize(self, arraySize):
+        self.dataSize = arraySize
+        self.data = np.zeros(self.dataSize)
+        self.timeRange = np.arange(self.dataSize) / self.roiFps
+        self.curve.setData(self.timeRange, self.data)
+
+    def setRoiFps(self, roiFps):
+        self.roiFps = roiFps
+        self.timeRange = np.arange(self.dataSize) / self.roiFps
+        self.curve.setData(self.timeRange, self.data)
+
     def updatePlot(self, centroid):
         """Update the plot with a new centroid.
 

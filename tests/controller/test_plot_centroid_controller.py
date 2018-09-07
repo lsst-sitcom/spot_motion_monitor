@@ -94,3 +94,18 @@ class TestPlotCentroidController:
         assert p1cc.scatterPlot.showPlot.call_count == 0
         p1cc.showScatterPlots(True)
         assert p1cc.scatterPlot.showPlot.call_count == 1
+
+    def test_updateRoiFps(self, qtbot, mocker):
+        cxp = Centroid1dPlotWidget()
+        cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
+        qtbot.addWidget(cxp)
+        qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
+        p1cc = PlotCentroidController(cxp, cyp, csp)
+        mockXSetRoiFps = mocker.patch.object(p1cc.x1dPlot, 'setRoiFps')
+        mockYSetRoiFps = mocker.patch.object(p1cc.y1dPlot, 'setRoiFps')
+        p1cc.setup(self.bufferSize, self.roiFps)
+        p1cc.updateRoiFps(20)
+        assert mockXSetRoiFps.call_count == 1
+        assert mockYSetRoiFps.call_count == 1
