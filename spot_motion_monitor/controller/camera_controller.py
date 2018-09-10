@@ -93,7 +93,7 @@ class CameraController():
         value : int
             The requested buffer size.
         """
-        self.bufferSizeChanged.emit(value)
+        self.updater.bufferSizeChanged.emit(value)
 
     def currentCameraFps(self):
         """Get the current camera FPS.
