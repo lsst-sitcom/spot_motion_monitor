@@ -168,3 +168,13 @@ class TestCameraController():
         truthRoiFps = 70
         cc.cameraControlWidget.roiFpsSpinBox.setValue(truthRoiFps)
         assert cc.currentRoiFps() == truthRoiFps
+
+    def test_changeBufferSize(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        with qtbot.waitSignal(cc.updater.bufferSizeChanged) as blocker:
+            cc.cameraControlWidget.bufferSizeSpinBox.stepUp()
+        assert blocker.args == [2048]
