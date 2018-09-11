@@ -22,6 +22,12 @@ class CameraController():
         A particular concrete instance of a camera.
     cameraControlWidget : .CameraControlWidget
         The instance of the camera control widget.
+    frameTimer : QtCore.QTimer
+        Instance of the timer which controls the frame request cycle.
+    offsetTimer : QtCore.QTimer
+        Instance of the timer which controls the offset update request.
+    updater : InformationUpdater
+        Instance of the information updater.
     """
 
     def __init__(self, ccw):

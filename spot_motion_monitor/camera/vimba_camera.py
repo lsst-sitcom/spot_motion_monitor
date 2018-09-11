@@ -15,6 +15,41 @@ __all__ = ['VimbaCamera']
 
 class VimbaCamera(BaseCamera):
 
+    """This class handles the connection to an Allied Vision camera through
+       the Vimba interface.
+
+    Attributes
+    ----------
+    badFrames : int
+        Counter for the number of failed frame captures.
+    cameraPtr : pymba.VimbaCamera
+        Instance of the actual camera object.
+    fluxMinRoi : int
+        The minimum flux allowed for an ROI frame.
+    fpsFullFrame : int
+        The Frames per Second rate in full frame mode.
+    fpsRoiFrame : int
+        The Frames per Second rate in ROI frame mode.
+    frame : pymba.VimbaFrame
+        Instance of the frame object for the camera.
+    goodFrames : int
+        Counter for the number of capture frames.
+    height : int
+        The pixel height of the CCD.
+    offsetX : int
+        The current offset in X for the camera.
+    offsetY : int
+        The current offset in Y for the camera.
+    roiSize : int
+        The size of a (square) ROI region in pixels.
+    totalFrames : int
+        Counter for the total number of requested frames.
+    vimba : pymba.Vimba
+        Instance of the Python control library.
+    width : int
+        The pixel width of the CCD.
+    """
+
     def __init__(self):
         """Initalize the class.
         """
@@ -72,6 +107,12 @@ class VimbaCamera(BaseCamera):
         -------
         numpy.array
             The current full CCD frame.
+
+        Raises
+        ------
+        FrameCaptureFailed
+            Raises this if the camera fails to capture the frame when
+            requested.
         """
         try:
             self.frame.queueFrameCapture()
@@ -103,6 +144,12 @@ class VimbaCamera(BaseCamera):
         -------
         numpy.array
             The current ROI CCD frame.
+
+        Raises
+        ------
+        FrameCaptureFailed
+            Raises this if the camera fails to capture the frame when
+            requested.
         """
         self.totalFrames += 1
         try:
@@ -139,6 +186,11 @@ class VimbaCamera(BaseCamera):
 
     def startup(self):
         """Handle the startup of the camera.
+
+        Raises
+        ------
+        CameraNotFound
+            Raises this exception if there is an issue with the camera.
         """
         self.goodFrames = 0
         self.badFrames = 0
