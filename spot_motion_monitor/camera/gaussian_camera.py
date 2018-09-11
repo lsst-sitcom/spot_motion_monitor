@@ -68,7 +68,6 @@ class GaussianCamera(BaseCamera):
         self.postageStamp = None
         self.xPoint = None
         self.yPoint = None
-        self.offsetUpdateTimeout = 30
         # Parameters for spot oscillation.
         self.counter = 0
         self.xFreq = 5.0

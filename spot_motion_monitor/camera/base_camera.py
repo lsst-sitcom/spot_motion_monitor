@@ -15,8 +15,6 @@ class BaseCamera():
         The Frames per Second rate in ROI frame mode.
     height : int
         The height in pixels of the camera CCD
-    offsetUpdateTimeout : int
-        The timeout (seconds) for updating the camera's current offset values.
     roiSize : int
         The size of a (square) ROI region in pixels.
     width : int
@@ -28,7 +26,6 @@ class BaseCamera():
     fpsFullFrame = None
     fpsRoiFrame = None
     roiSize = None
-    offsetUpdateTimeout = None
 
     def __init__(self):
         """Initialize the class.

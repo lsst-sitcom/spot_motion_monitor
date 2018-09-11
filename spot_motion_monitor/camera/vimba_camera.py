@@ -26,7 +26,6 @@ class VimbaCamera(BaseCamera):
         self.fpsRoiFrame = 40
         self.roiSize = 50
         self.fluxMinRoi = 2000
-        self.offsetUpdateTimeout = 30
         self.offsetX = 0
         self.offsetY = 0
 
