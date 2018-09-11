@@ -173,17 +173,17 @@ class GaussianCamera(BaseCamera):
         """
         pass
 
+    def shutdown(self):
+        """Handle the shutdown of the camera.
+        """
+        pass
+
     def startup(self):
         """Handle the startup of the camera.
         """
         np.random.seed(self.seed)
         self.makePostageStamp()
         self.findInsertionPoint()
-
-    def shutdown(self):
-        """Handle the shutdown of the camera.
-        """
-        pass
 
     def updateOffset(self, centroidX, centroidY):
         """Update the camera's internal offset values from the provided centroid.
