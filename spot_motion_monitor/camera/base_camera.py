@@ -104,6 +104,15 @@ class BaseCamera():
         """
         raise NotImplementedError
 
+    def showFrameStatus(self):
+        """Show frame status from the camera.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
     def shutdown(self):
         """Shutdown the camera safely.
 

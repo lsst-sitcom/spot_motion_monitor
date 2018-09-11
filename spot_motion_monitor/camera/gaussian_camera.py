@@ -165,6 +165,14 @@ class GaussianCamera(BaseCamera):
         """
         pass
 
+    def showFrameStatus(self):
+        """Show frame status from the camera.
+
+        The Gaussian camera does not use this function since all frames are
+        good.
+        """
+        pass
+
     def startup(self):
         """Handle the startup of the camera.
         """

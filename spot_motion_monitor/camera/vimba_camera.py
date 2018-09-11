@@ -130,6 +130,11 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.Width = self.width
 
     def showFrameStatus(self):
+        """Show frame status from the camera.
+
+        The camera reports the number of good, bad and total frames to the
+        system.
+        """
         print("{} {}, {}, {}".format(datetime.now(), self.goodFrames, self.badFrames, self.totalFrames))
 
     def startup(self):

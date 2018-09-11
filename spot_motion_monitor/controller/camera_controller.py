@@ -220,6 +220,13 @@ class CameraController():
         self.camera = getattr(spot_motion_monitor.camera, cameraStr)()
 
     def showFrameStatus(self, check):
+        """Show the frame status for the current camera.
+
+        Parameters
+        ----------
+        check : bool
+            If flag is True, report the frame status, if False, don't.
+        """
         if check:
             self.camera.showFrameStatus()
 
