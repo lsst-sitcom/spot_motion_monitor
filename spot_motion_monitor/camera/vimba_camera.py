@@ -201,6 +201,11 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.Width = self.roiSize
 
     def waitOnRoi(self):
+        """Wait on information to be updated for ROI mode use.
+
+        Run the loop until both the reported camera height and width are the
+        same size as the specified ROI.
+        """
         while True:
             if self.cameraPtr.Height == self.roiSize and self.cameraPtr.Width == self.roiSize:
                 break

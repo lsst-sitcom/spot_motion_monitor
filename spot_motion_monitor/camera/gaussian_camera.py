@@ -193,4 +193,8 @@ class GaussianCamera(BaseCamera):
         pass
 
     def waitOnRoi(self):
+        """Wait on information to be updated for ROI mode use.
+
+        The Gaussian camera does not make use of this currently.
+        """
         pass

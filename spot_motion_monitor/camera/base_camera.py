@@ -137,3 +137,12 @@ class BaseCamera():
         NotImplementedError
         """
         raise NotImplementedError
+
+    def waitOnRoi(self):
+        """Wait on information to be updated for ROI mode use.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
