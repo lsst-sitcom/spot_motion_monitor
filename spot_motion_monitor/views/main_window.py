@@ -28,8 +28,14 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
     ----------
     cameraController : .CameraController
         An instance of the camera controller.
+    dataController : .DataController
+        An instance of the data controller.
+    plotCentroidController : .PlotCentroidController
+        An instance of the centroid (scatter and histograms) plot controller.
     plotController : .PlotCcdController
         An instance of the plot controller.
+    plotPsdController : .PlotPsdController
+        An instance of the Power Spectrum Distribution plot controller.
     """
 
     def __init__(self, parent=None):
