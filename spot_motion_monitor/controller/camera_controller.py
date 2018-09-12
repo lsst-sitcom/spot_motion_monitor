@@ -157,6 +157,23 @@ class CameraController():
         showFrames = self.cameraControlWidget.showFramesCheckBox.isChecked()
         return spot_motion_monitor.camera.CameraStatus(fps, mode, offset, showFrames)
 
+    def getAvailableCameras(self):
+        """Determine which cameras are available.
+
+        Returns
+        -------
+        list(str)
+            The cameras available to the program.
+        """
+        available = []
+        for name in spot_motion_monitor.camera.names:
+            try:
+                getattr(spot_motion_monitor.camera, '{}Camera'.format(name))()
+                available.append(name)
+            except AttributeError:
+                pass
+        return available
+
     def getFrame(self):
         """Get the frame from the camera.
 
@@ -250,6 +267,7 @@ class CameraController():
                 self.camera.startup()
                 self.updater.displayStatus.emit('Camera Started Successfully',
                                                 smmUtils.ONE_SECOND_IN_MILLISECONDS)
+                self.updater.cameraState.emit(state)
             except smmUtils.CameraNotFound as err:
                 self.updater.displayStatus.emit(str(err),
                                                 smmUtils.ONE_SECOND_IN_MILLISECONDS * 5)
@@ -259,6 +277,7 @@ class CameraController():
             self.camera.shutdown()
             self.updater.displayStatus.emit('Camera Stopped Successfully',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.cameraState.emit(state)
 
     def updateCameraOffset(self, centroidX, centroidY):
         """Pass along the current centroid values to update camera offset.

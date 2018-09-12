@@ -26,6 +26,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
 
     Attributes
     ----------
+    cameraActionGroup : QtWidgets.QActionGroup
+        Allows the camera menu entries to be exclusive.
     cameraController : .CameraController
         An instance of the camera controller.
     dataController : .DataController
@@ -51,27 +53,14 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowTitle("Spot Motion Monitor")
 
         self.plotController = PlotCcdController(self.cameraPlot)
-
         self.cameraController = CameraController(self.cameraControl)
-        # FIXME: Make this dynamic
-        try:
-            self.cameraController.setupCamera('VimbaCamera')
-        except AttributeError:
-            self.cameraController.setupCamera('GaussianCamera')
-
         self.dataController = DataController(self.cameraData)
-        self.dataController.setFrameChecks(*self.cameraController.getFrameChecks())
-
         self.plotCentroidController = PlotCentroidController(self.centroidXPlot,
                                                              self.centroidYPlot,
                                                              self.scatterPlot)
-
         self.plotPsdController = PlotPsdController(self.psdXPlot, self.psdYPlot)
 
-        bufferSize = self.dataController.getBufferSize()
-        roiFps = self.cameraController.currentRoiFps()
-        self.plotCentroidController.setup(bufferSize, roiFps)
-        self.plotPsdController.setup(DEFAULT_PSD_ARRAY_SIZE, bufferSize / roiFps)
+        self.setupCameraMenu()
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
 
@@ -80,6 +69,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.updater.displayStatus.connect(self.updateStatusBar)
         self.cameraController.updater.bufferSizeChanged.connect(self.dataController.setBufferSize)
         self.cameraController.updater.roiFpsChanged.connect(self.plotCentroidController.updateRoiFps)
+        self.cameraController.updater.cameraState.connect(self.updateApplicationForCameraState)
         self.plotController.updater.displayStatus.connect(self.updateStatusBar)
         self.dataController.updater.displayStatus.connect(self.updateStatusBar)
         self.actionExit.triggered.connect(self.close)
@@ -117,6 +107,22 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.showFrameStatus(psdData[0] is not None)
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
 
+    def handleCameraSelection(self, checked):
+        """Respond to a choice from the camera menu.
+
+        Parameters
+        ----------
+        checked : bool
+            If the current camera is selected.
+        """
+        name = self.sender().objectName()
+        self.cameraController.setupCamera(name)
+        self.dataController.setFrameChecks(*self.cameraController.getFrameChecks())
+        bufferSize = self.dataController.getBufferSize()
+        roiFps = self.cameraController.currentRoiFps()
+        self.plotCentroidController.setup(bufferSize, roiFps)
+        self.plotPsdController.setup(DEFAULT_PSD_ARRAY_SIZE, bufferSize / roiFps)
+
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.
 
@@ -131,6 +137,36 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         action.setIcon(QtGui.QIcon(QtGui.QPixmap(':{}'.format(iconName))))
         action.setIconVisibleInMenu(iconInMenu)
+
+    def setupCameraMenu(self):
+        """Add the available cameras to the menu.
+        """
+        cameraList = self.cameraController.getAvailableCameras()
+        self.cameraActionGroup = QtWidgets.QActionGroup(self)
+        index = 0
+        for i, cameraName in enumerate(cameraList):
+            if cameraName == 'Gaussian':
+                index = i
+            cameraAction = QtWidgets.QAction(cameraName, self)
+            self.cameraActionGroup.addAction(cameraAction)
+            cameraAction.setObjectName('{}Camera'.format(cameraName))
+            cameraAction.triggered.connect(self.handleCameraSelection)
+            cameraAction.setCheckable(True)
+            self.menuCamera.addAction(cameraAction)
+        # Setup the Gaussian camera by default.
+        action = self.menuCamera.actions()[index]
+        action.setChecked(True)
+        action.trigger()
+
+    def updateApplicationForCameraState(self, state):
+        """Update any application UI elements based on camera state.
+
+        Parameters
+        ----------
+        state : bool
+            True is camera is started, False is stopped.
+        """
+        self.menuCamera.setEnabled(not state)
 
     def updateOffset(self):
         """This function updates the camera offsets.

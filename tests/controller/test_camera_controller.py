@@ -232,3 +232,12 @@ class TestCameraController():
         cameraOffset = mocker.patch.object(cc.camera, 'updateOffset')
         cc.updateCameraOffset(200, 400)
         assert cameraOffset.call_count == 1
+
+    def test_getAvailableCameras(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cameras = cc.getAvailableCameras()
+        assert len(cameras) == 1
+        assert cameras[0] == 'Gaussian'
