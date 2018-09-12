@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import cProfile
+from datetime import datetime
 import sys
 
 from PyQt5 import QtGui
@@ -12,7 +14,7 @@ from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
-from spot_motion_monitor.utils import DEFAULT_PSD_ARRAY_SIZE
+from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE
 from spot_motion_monitor.views import Ui_MainWindow
 from spot_motion_monitor import __version__
 
@@ -144,9 +146,13 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.statusbar.showMessage(message, timeout)
 
 
-def main():
-    """
-    This is the entrance point of the program
+def launch(opts):
+    """This creates the application and launches the program.
+
+    Parameters
+    ----------
+    opts : Namespace
+        The parsed command-line options.
     """
     app = QtWidgets.QApplication(sys.argv)
     app.setOrganizationName("LSST-Systems-Engineering")
@@ -155,3 +161,15 @@ def main():
     form = SpotMotionMonitor()
     form.show()
     app.exec_()
+
+
+def main():
+    """This is the entrance point of the program.
+    """
+    parser = create_parser()
+    args = parser.parse_args()
+    if args.profile:
+        profileFile = 'smm_prof_{}.dat'.format(datetime.now().strftime('%Y%m%d_%H%M%S'))
+        cProfile.runctx('launch(args)', {'launch': launch, 'args': args}, {}, filename=profileFile)
+    else:
+        launch(args)
