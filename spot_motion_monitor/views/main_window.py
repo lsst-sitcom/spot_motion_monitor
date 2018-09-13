@@ -6,6 +6,7 @@ import cProfile
 from datetime import datetime
 import sys
 
+from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 
@@ -51,6 +52,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowTitle("Spot Motion Monitor")
+        self.getProgramSettings()
 
         self.plotController = PlotCcdController(self.cameraPlot)
         self.cameraController = CameraController(self.cameraControl)
@@ -106,6 +108,29 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotCentroidController.showScatterPlots(psdData[0] is not None)
         self.cameraController.showFrameStatus(psdData[0] is not None)
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
+
+    def closeEvent(self, event):
+        """Handle saving settings on shutdown.
+
+        Parameters
+        ----------
+        event : QtCore.QEvent
+            The close event instance.
+        """
+        settings = QtCore.QSettings()
+        currentCamera = self.cameraActionGroup.checkedAction()
+        if currentCamera is not None:
+            cameraName = currentCamera.objectName()
+            cameraValue = QtCore.QVariant(cameraName)
+        else:
+            cameraValue = QtCore.QVariant()
+        settings.setValue('LastCamera', cameraValue)
+
+    def getProgramSettings(self):
+        """Retrieve program settings.
+        """
+        settings = QtCore.QSettings()
+        self.lastCamera = str(settings.value('LastCamera'))
 
     def handleBufferSizeChanged(self, newBufferSize):
         """Update the necessary controllers when the buffer size changes.
@@ -176,8 +201,15 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             cameraAction.triggered.connect(self.handleCameraSelection)
             cameraAction.setCheckable(True)
             self.menuCamera.addAction(cameraAction)
-        # Setup the Gaussian camera by default.
-        action = self.menuCamera.actions()[index]
+        action = None
+        if self.lastCamera != 'None':
+            for menuAction in self.menuCamera.actions():
+                if menuAction.objectName() == self.lastCamera:
+                    action = menuAction
+                    break
+        else:
+            # Setup the Gaussian camera.
+            action = self.menuCamera.actions()[index]
         action.setChecked(True)
         action.trigger()
 
