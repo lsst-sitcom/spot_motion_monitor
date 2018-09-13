@@ -96,3 +96,17 @@ class TestCentroidScatterPlotWidget:
         assert mockScatterSetData.call_count == 1
         assert mockXHistSetData.call_count == 1
         assert mockYHistSetData.call_count == 1
+
+    def test_updateArraySize(self, qtbot):
+        cspw = CentroidScatterPlotWidget()
+        qtbot.addWidget(cspw)
+        arraySize = 3
+        cspw.setup(arraySize)
+        cspw.rollArray = True
+        newArraySize = 20
+        cspw.setArraySize(newArraySize)
+        assert cspw.dataSize == newArraySize
+        assert cspw.xData.shape[0] == 0
+        assert cspw.yData.shape[0] == 0
+        assert len(cspw.brushes) == newArraySize
+        assert cspw.rollArray is False

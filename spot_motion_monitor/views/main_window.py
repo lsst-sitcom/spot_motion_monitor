@@ -67,7 +67,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.frameTimer.timeout.connect(self.acquireFrame)
         self.cameraController.offsetTimer.timeout.connect(self.updateOffset)
         self.cameraController.updater.displayStatus.connect(self.updateStatusBar)
-        self.cameraController.updater.bufferSizeChanged.connect(self.dataController.setBufferSize)
+        self.cameraController.updater.bufferSizeChanged.connect(self.handleBufferSizeChanged)
         self.cameraController.updater.roiFpsChanged.connect(self.plotCentroidController.updateRoiFps)
         self.cameraController.updater.cameraState.connect(self.updateApplicationForCameraState)
         self.plotController.updater.displayStatus.connect(self.updateStatusBar)
@@ -106,6 +106,17 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotCentroidController.showScatterPlots(psdData[0] is not None)
         self.cameraController.showFrameStatus(psdData[0] is not None)
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
+
+    def handleBufferSizeChanged(self, newBufferSize):
+        """Update the necessary controllers when the buffer size changes.
+
+        Parameters
+        ----------
+        newBufferSize : int
+            The new buffer size.
+        """
+        self.dataController.setBufferSize(newBufferSize)
+        self.plotCentroidController.updateBufferSize(newBufferSize)
 
     def handleCameraSelection(self, checked):
         """Respond to a choice from the camera menu.

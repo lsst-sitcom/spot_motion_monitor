@@ -81,12 +81,27 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         self.plot.setLabel('left', axisLabel, units='pixel')
 
     def setArraySize(self, arraySize):
+        """Update the stored array size and adjust arrays.
+
+        Parameters
+        ----------
+        arraySize : int
+            The new array size to use.
+        """
         self.dataSize = arraySize
         self.data = np.zeros(self.dataSize)
         self.timeRange = np.arange(self.dataSize) / self.roiFps
         self.curve.setData(self.timeRange, self.data)
+        self.rollArray = False
 
     def setRoiFps(self, roiFps):
+        """Update the stored ROI FPS and adjust arrays.
+
+        Parameters
+        ----------
+        roiFps : int
+            The new ROI FPS.
+        """
         self.roiFps = roiFps
         self.timeRange = np.arange(self.dataSize) / self.roiFps
         self.curve.setData(self.timeRange, self.data)

@@ -76,6 +76,25 @@ class PlotCentroidController():
         self.y1dPlot.updatePlot(cy)
         self.scatterPlot.updateData(cx, cy)
 
+    def updateBufferSize(self, bufferSize):
+        """Update the stored array sizes in the plot widgets.
+
+        Parameters
+        ----------
+        bufferSize : int
+            The new array size.
+        """
+        self.x1dPlot.setArraySize(bufferSize)
+        self.y1dPlot.setArraySize(bufferSize)
+        self.scatterPlot.setArraySize(bufferSize)
+
     def updateRoiFps(self, newRoiFps):
+        """Update the stored ROI FPS in the plot widgets.
+
+        Parameters
+        ----------
+        newRoiFps : int
+            The new ROI FPS.
+        """
         self.x1dPlot.setRoiFps(newRoiFps)
         self.y1dPlot.setRoiFps(newRoiFps)

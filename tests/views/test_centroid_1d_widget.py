@@ -82,9 +82,11 @@ class TestCentroid1dPlotWidget():
         arraySize = 1024
         roiFps = 40
         c1dpw.setup(arraySize, 'X', roiFps)
+        c1dpw.rollArray = True
         newArraySize = 2048
         c1dpw.setArraySize(newArraySize)
         assert c1dpw.dataSize == newArraySize
         assert c1dpw.data.shape[0] == newArraySize
         assert c1dpw.timeRange.shape[0] == newArraySize
         assert c1dpw.timeRange[-1] == (newArraySize - 1) / roiFps
+        assert c1dpw.rollArray is False

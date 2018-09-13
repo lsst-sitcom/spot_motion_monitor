@@ -101,6 +101,20 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
             #c = int(alpha)
             #self.brushes.append(mkBrush(c, c, c, self.maxAlpha))
 
+    def setArraySize(self, arraySize):
+        """Update the stored array size and adjust arrays.
+
+        Parameters
+        ----------
+        arraySize : int
+            The new array size to use.
+        """
+        self.dataSize = arraySize
+        self.xData = np.array([])
+        self.yData = np.array([])
+        self.makeBrushes()
+        self.rollArray = False
+
     def setup(self, arraySize):
         """Provide information for setting up the plot.
 
