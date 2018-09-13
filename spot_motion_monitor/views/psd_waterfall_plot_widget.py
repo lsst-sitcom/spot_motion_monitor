@@ -48,6 +48,18 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         self.boundingRect = None
         self.timeScale = None
 
+    def setTimeScale(self, timeScale):
+        """Update the stored timescale and invalidate data and bounding rect.
+
+        Parameters
+        ----------
+        timeScale : float
+            The new timescale.
+        """
+        self.timeScale = timeScale
+        self.data = None
+        self.boundingRect = None
+
     def setup(self, arraySize, timeScale, axisLabel):
         """Setup the widget with the array size.
 

@@ -62,3 +62,14 @@ class PlotPsdController:
 
         self.psdXPlot.updatePlot(psdDataX, frequencies)
         self.psdYPlot.updatePlot(psdDataY, frequencies)
+
+    def updateTimeScale(self, newTimeScale):
+        """Update the stored timescale in the plot widgets.
+
+        Parameters
+        ----------
+        newTimeScale : float
+            The new timescale.
+        """
+        self.psdXPlot.setTimeScale(newTimeScale)
+        self.psdYPlot.setTimeScale(newTimeScale)

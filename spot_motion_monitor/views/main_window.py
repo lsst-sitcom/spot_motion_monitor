@@ -68,7 +68,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.offsetTimer.timeout.connect(self.updateOffset)
         self.cameraController.updater.displayStatus.connect(self.updateStatusBar)
         self.cameraController.updater.bufferSizeChanged.connect(self.handleBufferSizeChanged)
-        self.cameraController.updater.roiFpsChanged.connect(self.plotCentroidController.updateRoiFps)
+        self.cameraController.updater.roiFpsChanged.connect(self.handleRoiFpsChanged)
         self.cameraController.updater.cameraState.connect(self.updateApplicationForCameraState)
         self.plotController.updater.displayStatus.connect(self.updateStatusBar)
         self.dataController.updater.displayStatus.connect(self.updateStatusBar)
@@ -133,6 +133,18 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         roiFps = self.cameraController.currentRoiFps()
         self.plotCentroidController.setup(bufferSize, roiFps)
         self.plotPsdController.setup(DEFAULT_PSD_ARRAY_SIZE, bufferSize / roiFps)
+
+    def handleRoiFpsChanged(self, newRoiFps):
+        """Update the necessary controllers when the ROI FPS changes.
+
+        Parameters
+        ----------
+        newRoiFps : int
+            The new ROI FPS.
+        """
+        self.plotCentroidController.updateRoiFps(newRoiFps)
+        bufferSize = self.dataController.getBufferSize()
+        self.plotPsdController.updateTimeScale(bufferSize / newRoiFps)
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.
