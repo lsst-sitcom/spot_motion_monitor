@@ -90,7 +90,8 @@ class TestMainWindow():
         mw = SpotMotionMonitor()
         mw.show()
         qtbot.addWidget(mw)
-        assert len(mw.menuCamera.actions()) == 1
+        numCameras = len(mw.cameraController.getAvailableCameras())
+        assert len(mw.menuCamera.actions()) == numCameras
         # Force camera setup
         mw.cameraController.setupCamera('GaussianCamera')
         assert mw.menuCamera.isEnabled() is True

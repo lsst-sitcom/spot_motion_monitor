@@ -4,6 +4,12 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
 
+try:
+    import pymba  # noqa
+    VimbaFound = True
+except ImportError:
+    VimbaFound = False
+
 from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.camera_control_widget import CameraControlWidget
@@ -239,5 +245,9 @@ class TestCameraController():
         qtbot.addWidget(ccWidget)
         cc = CameraController(ccWidget)
         cameras = cc.getAvailableCameras()
-        assert len(cameras) == 1
-        assert cameras[0] == 'Gaussian'
+        if VimbaFound:
+            assert len(cameras) == 2
+            assert cameras[0] == 'Vimba'
+        else:
+            assert len(cameras) == 1
+            assert cameras[0] == 'Gaussian'

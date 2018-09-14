@@ -50,6 +50,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             Top-level widget.
         """
         super().__init__(parent)
+        self.cameraSwitched = False
         self.setupUi(self)
         self.setWindowTitle("Spot Motion Monitor")
         self.getProgramSettings()
@@ -156,7 +157,12 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dataController.setFrameChecks(*self.cameraController.getFrameChecks())
         bufferSize = self.dataController.getBufferSize()
         roiFps = self.cameraController.currentRoiFps()
-        self.plotCentroidController.setup(bufferSize, roiFps)
+        if self.cameraSwitched:
+            self.plotCentroidController.updateBufferSize(bufferSize)
+            self.plotCentroidController.updateRoiFps(roiFps)
+        else:
+            self.plotCentroidController.setup(bufferSize, roiFps)
+            self.cameraSwitched = True
         self.plotPsdController.setup(DEFAULT_PSD_ARRAY_SIZE, bufferSize / roiFps)
 
     def handleRoiFpsChanged(self, newRoiFps):
