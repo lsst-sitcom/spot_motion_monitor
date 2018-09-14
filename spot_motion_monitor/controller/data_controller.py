@@ -51,6 +51,21 @@ class DataController():
         """
         return self.bufferModel.bufferSize
 
+    def getCentroidForUpdate(self, frame):
+        """Calculate centroid from frame for offset update.
+
+        Parameters
+        ----------
+        frame : numpy.array
+            A frame from a camera CCD.
+
+        Returns
+        -------
+        GenericInformation
+            The instance containing the results of the calculations.
+        """
+        return self.fullFrameModel.calculateCentroid(frame)
+
     def getCentroids(self, isRoiMode):
         """Return the current x, y coordinate of the centroid.
 
@@ -100,6 +115,8 @@ class DataController():
         currentStatus : .CameraStatus
             Instance containing the current camera status.
         """
+        if frame is None:
+            return
         try:
             if currentStatus.isRoiMode:
                 genericFrameInfo = self.roiFrameModel.calculateCentroid(frame)
@@ -124,3 +141,16 @@ class DataController():
             The requested buffer size.
         """
         self.bufferModel.bufferSize = value
+
+    def setFrameChecks(self, fullFrameCheck, roiFrameCheck):
+        """Set the frame checks to the corresponding models.
+
+        Parameters
+        ----------
+        fullFrameCheck : func
+            The function capturing the full frame check.
+        roiFrameCheck : func
+            The function capturing the ROI frame check.
+        """
+        self.fullFrameModel.frameCheck = fullFrameCheck
+        self.roiFrameModel.frameCheck = roiFrameCheck

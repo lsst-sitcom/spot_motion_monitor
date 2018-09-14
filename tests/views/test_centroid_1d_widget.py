@@ -63,3 +63,30 @@ class TestCentroid1dPlotWidget():
         assert c1dpw.dataCounter == arraySize
         assert c1dpw.rollArray is True
         assert mockSetData.call_count == len(values)
+
+    def test_updateRoiFps(self, qtbot):
+        c1dpw = Centroid1dPlotWidget()
+        c1dpw.show()
+        qtbot.addWidget(c1dpw)
+        arraySize = 1024
+        c1dpw.setup(arraySize, 'X', 40)
+        newRoiFps = 90
+        c1dpw.setRoiFps(newRoiFps)
+        assert c1dpw.timeRange.shape[0] == arraySize
+        assert c1dpw.timeRange[-1] == (arraySize - 1) / newRoiFps
+
+    def test_updateArraySize(self, qtbot):
+        c1dpw = Centroid1dPlotWidget()
+        c1dpw.show()
+        qtbot.addWidget(c1dpw)
+        arraySize = 1024
+        roiFps = 40
+        c1dpw.setup(arraySize, 'X', roiFps)
+        c1dpw.rollArray = True
+        newArraySize = 2048
+        c1dpw.setArraySize(newArraySize)
+        assert c1dpw.dataSize == newArraySize
+        assert c1dpw.data.shape[0] == newArraySize
+        assert c1dpw.timeRange.shape[0] == newArraySize
+        assert c1dpw.timeRange[-1] == (newArraySize - 1) / roiFps
+        assert c1dpw.rollArray is False

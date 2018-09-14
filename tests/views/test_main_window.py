@@ -4,11 +4,11 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
-#from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMainWindow
 
 from spot_motion_monitor.camera import CameraStatus
-from spot_motion_monitor.utils import FrameRejected, ONE_SECOND_IN_MILLISECONDS
+from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.main_window import SpotMotionMonitor
 
 class TestMainWindow():
@@ -56,6 +56,7 @@ class TestMainWindow():
 
     def test_statusForFrameRejection(self, qtbot, mocker):
         mw = SpotMotionMonitor()
+        mw.cameraController.setupCamera('GaussianCamera')
         qtbot.addWidget(mw)
         mockCamCont = mocker.patch('spot_motion_monitor.views.main_window.CameraController',
                                    spec=True)
@@ -75,6 +76,27 @@ class TestMainWindow():
         truth_buffer_size = 2048
         mw.cameraController.updater.bufferSizeChanged.emit(truth_buffer_size)
         assert mw.dataController.getBufferSize() == truth_buffer_size
+
+    def test_statusForCameraNotFound(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        qtbot.addWidget(mw)
+        emessage = "Camera Not Found!"
+        mw.cameraController.camera.startup = mocker.Mock(side_effect=CameraNotFound(emessage))
+        qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
+        assert mw.statusbar.currentMessage() == emessage
+
+    def test_cameraMenu(self, qtbot, mocker):
+        mocker.patch('spot_motion_monitor.views.main_window.SpotMotionMonitor.handleCameraSelection')
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        numCameras = len(mw.cameraController.getAvailableCameras())
+        assert len(mw.menuCamera.actions()) == numCameras
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+        assert mw.menuCamera.isEnabled() is True
+        qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
+        assert mw.menuCamera.isEnabled() is False
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()

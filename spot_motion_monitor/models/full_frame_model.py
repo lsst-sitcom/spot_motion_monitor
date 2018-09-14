@@ -5,7 +5,7 @@
 import numpy as np
 from scipy import ndimage
 
-from spot_motion_monitor.utils import GenericFrameInformation, FrameRejected
+from spot_motion_monitor.utils import GenericFrameInformation, FrameRejected, passFrame
 
 __all__ = ["FullFrameModel"]
 
@@ -31,6 +31,7 @@ class FullFrameModel():
         """
         self.sigmaScale = 5.0
         self.minimumNumPixels = 10
+        self.frameCheck = None
 
     def calculateCentroid(self, fullFrame):
         """This function performs calculations for the full CCD frame.
@@ -50,6 +51,9 @@ class FullFrameModel():
         FrameRejected
             Reject frames for different reasons. Messages tell why.
         """
+        if self.frameCheck is None:
+            self.frameCheck = passFrame
+
         # Background and noise threshold calculations
         frameStd = ndimage.standard_deviation(fullFrame)
         threshold = np.median(fullFrame) + self.sigmaScale * frameStd
@@ -78,9 +82,15 @@ class FullFrameModel():
             flux = objectFrame.sum()
             maxAdc = objectFrame.max()
             comY, comX = ndimage.center_of_mass(objectFrame)
-            centerX = comX + xSlice.start
-            centerY = comY + ySlice.start
-
-            return GenericFrameInformation(centerX, centerY, flux, maxAdc, objectSize, None)
+            if self.frameCheck(flux, maxAdc, comX, comY):
+                centerX = comX + xSlice.start
+                centerY = comY + ySlice.start
+                return GenericFrameInformation(centerX, centerY, flux, maxAdc, objectSize, None)
+            else:
+                msg = 'Full frame rejected: flux = {}, maxAdc = {}, centroid = ({}, {})'.format(flux,
+                                                                                                maxAdc,
+                                                                                                comX,
+                                                                                                comY)
+                raise FrameRejected(msg)
         except IndexError:
             raise FrameRejected("Failed to find object in frame.")

@@ -30,3 +30,21 @@ class TestBaseCamera(object):
 
         with pytest.raises(NotImplementedError):
             self.baseCamera.getRoiFrame()
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.getOffset()
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.updateOffset(1, 1)
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.resetOffset()
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.waitOnRoi()
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.showFrameStatus()
+
+        assert self.baseCamera.checkFullFrame(1, 1, 1, 1) is True
+        assert self.baseCamera.checkRoiFrame(1) is True

@@ -15,9 +15,15 @@ class InformationUpdater(QObject):
     ----------
     bufferSizeChanged : pyqtSignal
         Signal used to update data controller with a new buffer size.
+    cameraState : pyqtSignal
+        Signal used to update application UI based on camera state.
     displayStatus : pyqtSignal
         Signal used for updating the main application status bar.
+    roiFpsChanged : pyqtSignal
+        Signal used to update controllers with a new ROI FPS.
     """
 
     bufferSizeChanged = pyqtSignal(int)
+    cameraState = pyqtSignal(bool)
+    roiFpsChanged = pyqtSignal(int)
     displayStatus = pyqtSignal(str, int)

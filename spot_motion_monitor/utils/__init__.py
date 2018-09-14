@@ -7,4 +7,6 @@ from .exceptions import *
 from .fft_calculator import *
 from .frame_information import *
 from .information_updater import InformationUpdater
+from .functions import *
+from .parser import *
 from .psd_calculator import *

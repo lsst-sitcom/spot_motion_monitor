@@ -70,3 +70,19 @@ class TestPlotPsdController:
 
         assert mockPsdXPlotUpdatePlot.call_count == 0
         assert mockPsdYPlotUpdatePlot.call_count == 0
+
+    def test_updateTimeScale(self, qtbot, mocker):
+        psdx = PsdWaterfallPlotWidget()
+        psdy = PsdWaterfallPlotWidget()
+        qtbot.addWidget(psdx)
+        qtbot.addWidget(psdy)
+
+        pfc = PlotPsdController(psdx, psdy)
+        pfc.setup(self.arraySize, self.timeScale)
+
+        mockPsdXPlotSetTimeScale = mocker.patch.object(pfc.psdXPlot, 'setTimeScale')
+        mockPsdYPlotSetTimeScale = mocker.patch.object(pfc.psdYPlot, 'setTimeScale')
+        pfc.updateTimeScale(100)
+
+        assert mockPsdXPlotSetTimeScale.call_count == 1
+        assert mockPsdYPlotSetTimeScale.call_count == 1

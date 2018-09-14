@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import time
+
 from PyQt5.QtCore import QTimer
 
 import spot_motion_monitor.camera
@@ -20,6 +22,12 @@ class CameraController():
         A particular concrete instance of a camera.
     cameraControlWidget : .CameraControlWidget
         The instance of the camera control widget.
+    frameTimer : QtCore.QTimer
+        Instance of the timer which controls the frame request cycle.
+    offsetTimer : QtCore.QTimer
+        Instance of the timer which controls the offset update request.
+    updater : InformationUpdater
+        Instance of the information updater.
     """
 
     def __init__(self, ccw):
@@ -34,6 +42,7 @@ class CameraController():
         self.camera = None
         self.updater = smmUtils.InformationUpdater()
         self.frameTimer = QTimer()
+        self.offsetTimer = QTimer()
 
         self.cameraControlWidget.cameraState.connect(self.startStopCamera)
         self.cameraControlWidget.acquireFramesState.connect(self.acquireFrame)
@@ -75,6 +84,11 @@ class CameraController():
                 self.frameTimer.stop()
             self.updater.displayStatus.emit('Starting ROI Frame Acquistion',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
+
+            self.offsetTimer.timeout.emit()
+            self.camera.waitOnRoi()
+            # Wait for full frame acquires to empty
+            time.sleep(0.3)
             current_fps = self.currentCameraFps()
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
             self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
@@ -82,6 +96,7 @@ class CameraController():
             self.frameTimer.stop()
             self.updater.displayStatus.emit('Stopping ROI Frame Acquistion',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.camera.resetOffset()
             if self.cameraControlWidget.acquireFramesButton.isChecked():
                 self.acquireFrame(True)
 
@@ -142,6 +157,23 @@ class CameraController():
         showFrames = self.cameraControlWidget.showFramesCheckBox.isChecked()
         return spot_motion_monitor.camera.CameraStatus(fps, mode, offset, showFrames)
 
+    def getAvailableCameras(self):
+        """Determine which cameras are available.
+
+        Returns
+        -------
+        list(str)
+            The cameras available to the program.
+        """
+        available = []
+        for name in spot_motion_monitor.camera.names:
+            try:
+                getattr(spot_motion_monitor.camera, '{}Camera'.format(name))()
+                available.append(name)
+            except AttributeError:
+                pass
+        return available
+
     def getFrame(self):
         """Get the frame from the camera.
 
@@ -150,10 +182,34 @@ class CameraController():
         numpy.array
             A frame from a camera CCD.
         """
-        if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
-            return self.camera.getRoiFrame()
-        else:
-            return self.camera.getFullFrame()
+        try:
+            if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
+                return self.camera.getRoiFrame()
+            else:
+                return self.camera.getFullFrame()
+        except (smmUtils.FrameCaptureFailed, smmUtils.FrameRejected) as err:
+            self.updater.displayStatus.emit(str(err), smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            return None
+
+    def getFrameChecks(self):
+        """Get the frame checking routines from the camera.
+
+        Returns
+        -------
+        (func, func)
+            The full frame and ROI frame check functions from the camera.
+        """
+        return (self.camera.checkFullFrame, self.camera.checkRoiFrame)
+
+    def getUpdateFrame(self):
+        """Get a full frame from the camera for updating offset.
+
+        Returns
+        -------
+        numpy.array
+            A full frame from a camera CCD.
+        """
+        return self.camera.getFullFrame()
 
     def isRoiMode(self):
         """The current acquisition mode.
@@ -174,6 +230,7 @@ class CameraController():
             The requested FPS for the ROI frame.
         """
         self.camera.fpsRoiFrame = roiFps
+        self.updater.roiFpsChanged.emit(roiFps)
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.
@@ -185,6 +242,17 @@ class CameraController():
         """
         self.camera = getattr(spot_motion_monitor.camera, cameraStr)()
 
+    def showFrameStatus(self, check):
+        """Show the frame status for the current camera.
+
+        Parameters
+        ----------
+        check : bool
+            If flag is True, report the frame status, if False, don't.
+        """
+        if check:
+            self.camera.showFrameStatus()
+
     def startStopCamera(self, state):
         """Start or stop the camera.
 
@@ -194,12 +262,31 @@ class CameraController():
             The current state of the camera.
         """
         if state:
-            self.updater.displayStatus.emit('Starting Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
-            self.camera.startup()
-            self.updater.displayStatus.emit('Camera Started Successfully',
-                                            smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            try:
+                self.updater.displayStatus.emit('Starting Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
+                self.camera.startup()
+                self.updater.displayStatus.emit('Camera Started Successfully',
+                                                smmUtils.ONE_SECOND_IN_MILLISECONDS)
+                self.updater.cameraState.emit(state)
+            except smmUtils.CameraNotFound as err:
+                self.updater.displayStatus.emit(str(err),
+                                                smmUtils.ONE_SECOND_IN_MILLISECONDS * 5)
+
         else:
             self.updater.displayStatus.emit('Stopping Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.camera.shutdown()
             self.updater.displayStatus.emit('Camera Stopped Successfully',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
+            self.updater.cameraState.emit(state)
+
+    def updateCameraOffset(self, centroidX, centroidY):
+        """Pass along the current centroid values to update camera offset.
+
+        Parameters
+        ----------
+        centroidX : float
+            The current x component of the centroid from a full frame.
+        centroidY : float
+            The current y component of the centroid from a full frame.
+        """
+        self.camera.updateOffset(centroidX, centroidY)

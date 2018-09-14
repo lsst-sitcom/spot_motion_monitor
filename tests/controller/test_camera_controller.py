@@ -4,8 +4,14 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
 
+try:
+    import pymba  # noqa
+    VimbaFound = True
+except ImportError:
+    VimbaFound = False
+
 from spot_motion_monitor.controller.camera_controller import CameraController
-from spot_motion_monitor.utils import ONE_SECOND_IN_MILLISECONDS
+from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.camera_control_widget import CameraControlWidget
 
 class TestCameraController():
@@ -178,3 +184,70 @@ class TestCameraController():
         with qtbot.waitSignal(cc.updater.bufferSizeChanged) as blocker:
             cc.cameraControlWidget.bufferSizeSpinBox.stepUp()
         assert blocker.args == [2048]
+
+    def test_badCameraStartup(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.camera.startup = mocker.Mock(side_effect=CameraNotFound)
+        cc.startStopCamera(True)
+        assert ccWidget.startStopButton.isChecked() is False
+
+    def test_frameChecks(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        check1, check2 = cc.getFrameChecks()
+        assert check1(1, 1, 1, 1) is True
+        assert check2(1) is True
+
+    def test_cameraAcquireRejectedFrame(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        cc.camera.getFullFrame = mocker.Mock(side_effect=FrameRejected)
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+        frame = cc.getFrame()
+        assert frame is None
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+
+    def test_getUpdateFrame(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        frame = cc.getUpdateFrame()
+        assert frame.shape == (480, 640)
+
+    def test_updateCameraOffset(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        cameraOffset = mocker.patch.object(cc.camera, 'updateOffset')
+        cc.updateCameraOffset(200, 400)
+        assert cameraOffset.call_count == 1
+
+    def test_getAvailableCameras(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cameras = cc.getAvailableCameras()
+        if VimbaFound:
+            assert len(cameras) == 2
+            assert cameras[0] == 'Vimba'
+        else:
+            assert len(cameras) == 1
+            assert cameras[0] == 'Gaussian'

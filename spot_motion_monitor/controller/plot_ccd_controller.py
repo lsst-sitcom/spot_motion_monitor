@@ -40,5 +40,7 @@ class PlotCcdController():
         showFrames : bool
             Flag to show camera CCD frames.
         """
+        if frame is None:
+            return
         if showFrames:
             self.cameraPlotWidget.image.setImage(frame)

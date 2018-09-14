@@ -35,3 +35,12 @@ class TestPlotCcdController():
         mockSetImage = mocker.patch.object(pc.cameraPlotWidget.image, 'setImage')
         pc.passFrame(frame, False)
         assert mockSetImage.call_count == 0
+
+    def test_passFrameWithNone(self, qtbot, mocker):
+        cpw = CameraPlotWidget()
+        cpw.show()
+        qtbot.addWidget(cpw)
+        pc = PlotCcdController(cpw)
+        cpwImage = mocker.patch.object(cpw.image, 'setImage')
+        pc.passFrame(None, True)
+        assert cpwImage.call_count == 0

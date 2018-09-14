@@ -2,12 +2,11 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-names = ['Vimba', 'Gaussian']
 
-from .base_camera import BaseCamera
-from .camera_status import CameraStatus
-from .gaussian_camera import GaussianCamera
-try:
-    from .vimba_camera import VimbaCamera
-except ImportError:
-    pass
+# This script is meant for running the UI during development. It needs to be
+# run in a wrapped environment where the PYTHONPATH points to the
+# spot_motion_monitor library.
+
+from spot_motion_monitor.views.main_window import main
+
+main()

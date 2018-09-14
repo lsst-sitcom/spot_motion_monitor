@@ -158,6 +158,26 @@ class GaussianCamera(BaseCamera):
                           self.yAmp * np.sin(self.yFreq * (self.counter / self.deltaTime)))
         self.counter += 1
 
+    def resetOffset(self):
+        """Reset the camera offsets back to zero.
+
+        For the Gaussian camera, this is a no-op.
+        """
+        pass
+
+    def showFrameStatus(self):
+        """Show frame status from the camera.
+
+        The Gaussian camera does not use this function since all frames are
+        good.
+        """
+        pass
+
+    def shutdown(self):
+        """Handle the shutdown of the camera.
+        """
+        pass
+
     def startup(self):
         """Handle the startup of the camera.
         """
@@ -165,7 +185,24 @@ class GaussianCamera(BaseCamera):
         self.makePostageStamp()
         self.findInsertionPoint()
 
-    def shutdown(self):
-        """Handle the shutdown of the camera.
+    def updateOffset(self, centroidX, centroidY):
+        """Update the camera's internal offset values from the provided centroid.
+
+        For the Gaussian camera, this is a no-op, but helps test the mechanism.
+
+        Parameters
+        ----------
+        centroidX : float
+            The x component of the centroid for offset update.
+        centroidY : float
+            The y component of the centroid for offset update.
+        """
+        #print("Received centroid: ({}, {}), but not updating offsets.".format(centroidX, centroidY))
+        pass
+
+    def waitOnRoi(self):
+        """Wait on information to be updated for ROI mode use.
+
+        The Gaussian camera does not make use of this currently.
         """
         pass
