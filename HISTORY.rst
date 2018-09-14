@@ -3,6 +3,13 @@
 History
 -------
 
+0.6.0 (2018-09-14)
+~~~~~~~~~~~~~~~~~~
+
+* Support for Vimba interface cameras
+* Added menu switching for multiple cameras
+* Added CLI parser for profiling and future use
+
 0.5.1 (2018-09-10)
 ~~~~~~~~~~~~~~~~~~
 
