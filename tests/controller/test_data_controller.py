@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import os
+
 import numpy as np
 
 from spot_motion_monitor.camera import CameraStatus
@@ -27,6 +29,7 @@ class TestDataController():
         assert dc.roiFrameModel is not None
         assert dc.bufferModel is not None
         assert dc.roiResetDone is False
+        assert dc.writeData is False
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -179,3 +182,29 @@ class TestDataController():
         truthConfig = {'pixelScale': 0.5}
         dc.setDataConfiguration(truthConfig)
         assert dc.bufferModel.pixelScale == truthConfig['pixelScale']
+
+    def test_writingData(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        dc.writeData = True
+        # Setup buffer model
+        dc.setBufferSize(4)
+        dc.bufferModel.updateInformation(GenericFrameInformation(300.3, 400.2,
+                                                                 32042.42, 145.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(300.4, 400.4,
+                                                                 32045.42, 146.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(300.2, 400.5,
+                                                                 32040.42, 142.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(300.1, 400.3,
+                                                                 32043.42, 143.422,
+                                                                 70, None), (0, 0))
+        assert dc.bufferModel.rollBuffer is True
+        outputFile = 'smm.h5'
+        psdInfo = dc.bufferModel.getPsd(40)
+        dc.writeDataToFile(psdInfo)
+        assert os.path.exists(outputFile)
+        #os.remove(outputFile)

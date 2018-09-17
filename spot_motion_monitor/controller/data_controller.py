@@ -2,6 +2,9 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import numpy as np
+import pandas as pd
+
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
 from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT
@@ -41,6 +44,7 @@ class DataController():
         self.bufferModel = BufferModel()
         self.updater = InformationUpdater()
         self.roiResetDone = False
+        self.writeData = False
 
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
@@ -114,7 +118,8 @@ class DataController():
             The PSDX, PSDY and Frequencies from the PSD calculation.
         """
         if isRoiMode:
-            return self.bufferModel.getPsd(currentFps)
+            psd = self.bufferModel.getPsd(currentFps)
+            return psd
         else:
             return (None, None, None)
 
@@ -195,3 +200,31 @@ class DataController():
         if show:
             roiFrameInfo = self.bufferModel.getInformation(currentFps)
             self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
+
+    def writeDataToFile(self, psd):
+        """Write centroid and power spectrum distributions to a file.
+
+        Parameters
+        ----------
+        psd : tuple
+            The PSDX. PSDY and Frequency components.
+        """
+        if psd[0] is None:
+            print(self.bufferModel.rollBuffer)
+            return
+
+        centroidX = np.array(self.bufferModel.centerX)
+        centroidY = np.array(self.bufferModel.centerY)
+
+        outputFile = 'smm.h5'
+        centDf = pd.DataFrame({
+                              'X': centroidX,
+                              'Y': centroidY
+                              })
+        psdDf = pd.DataFrame({
+                             'Frequencies': psd[2],
+                             'X': psd[0],
+                             'Y': psd[1]
+                             })
+        centDf.to_hdf(outputFile, key='centroid', append=True)
+        psdDf.to_hdf(outputFile, key='psd', append=True)
