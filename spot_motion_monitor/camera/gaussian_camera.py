@@ -69,6 +69,7 @@ class GaussianCamera(BaseCamera):
         self.xPoint = None
         self.yPoint = None
         # Parameters for spot oscillation.
+        self.doSpotOscillation = True
         self.counter = 0
         self.xFreq = 5.0
         self.xAmp = 10
@@ -92,6 +93,24 @@ class GaussianCamera(BaseCamera):
         self.xPointOriginal = self.xPoint
         self.yPointOriginal = self.yPoint
 
+    def getConfiguration(self):
+        """Get the current camera configuration.
+
+        Returns
+        -------
+        dict
+            The set of current configuration parameters.
+        """
+        config = {}
+        config['roiSize'] = self.roiSize
+        config['doSpotOscillation'] = self.doSpotOscillation
+        config['xAmplitude'] = self.xAmp
+        config['xFrequency'] = self.xFreq
+        config['yAmplitude'] = self.yAmp
+        config['yFrequency'] = self.yFreq
+        config['deltaTime'] = self.deltaTime
+        return config
+
     def getFullFrame(self):
         """Get the full frame from the CCD.
 
@@ -103,7 +122,8 @@ class GaussianCamera(BaseCamera):
         # Create base CCD frame
         ccd = np.random.poisson(20.0, (self.height, self.width))
 
-        self.oscillateSpot()
+        if self.doSpotOscillation:
+            self.oscillateSpot()
 
         # Merge CCD frame and postage stamp
         ccd[self.yPoint:self.yPoint + self.postageStamp.shape[1],

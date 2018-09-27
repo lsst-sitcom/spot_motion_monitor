@@ -68,6 +68,15 @@ class BaseCamera():
         """
         return True
 
+    def getConfiguration(self):
+        """Return the current camera configuration.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
     def getFullFrame(self):
         """Return a full CCD frame from the camera.
 

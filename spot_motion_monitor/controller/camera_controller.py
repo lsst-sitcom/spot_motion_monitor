@@ -174,6 +174,16 @@ class CameraController():
                 pass
         return available
 
+    def getCameraConfiguration(self):
+        """Get the current camera configuration.
+
+        Returns
+        -------
+        dict
+            The set of current camera configuration parameters.
+        """
+        return self.camera.getConfiguration()
+
     def getFrame(self):
         """Get the frame from the camera.
 

@@ -11,3 +11,14 @@ class TestVimbaCameraConfigTab:
         qtbot.addWidget(gcConfigTab)
 
         assert gcConfigTab.name == 'Vimba'
+
+    def test_setParametersFromConfiguration(self, qtbot):
+        gcConfigTab = VimbaCameraConfigTab()
+        qtbot.addWidget(gcConfigTab)
+
+        config = {'roiSize': 20, 'roiFluxMinimum': 1000, 'roiExposureTime': 5000}
+        gcConfigTab.setConfiguration(config)
+
+        assert int(gcConfigTab.roiSizeLineEdit.text()) == config['roiSize']
+        assert int(gcConfigTab.roiFluxMinLineEdit.text()) == config['roiFluxMinimum']
+        assert int(gcConfigTab.roiExposureTimeLineEdit.text()) == config['roiExposureTime']

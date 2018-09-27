@@ -100,6 +100,20 @@ class VimbaCamera(BaseCamera):
         """
         return flux > self.fluxMinRoi
 
+    def getConfiguration(self):
+        """Get the current camera configuration.
+
+        Returns
+        -------
+        dict
+            The set of current configuration parameters.
+        """
+        config = {}
+        config['roiSize'] = self.roiSize
+        config['roiFluxMinimum'] = self.fluxMinRoi
+        config['roiExposureTime'] = self.cameraPtr.ExposureTimeAbs if self.cameraPtr is not None else None
+        return config
+
     def getFullFrame(self):
         """Get the full frame from the CCD.
 

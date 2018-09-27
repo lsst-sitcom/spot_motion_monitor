@@ -245,6 +245,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             return
         cameraName = currentCamera.objectName()
         cameraConfigDialog = CameraConfigurationDialog(cameraName)
+        currentConfig = self.cameraController.getCameraConfiguration()
+        cameraConfigDialog.setCameraConfiguration(currentConfig)
         if cameraConfigDialog.exec_():
             pass
 
