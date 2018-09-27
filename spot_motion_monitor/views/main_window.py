@@ -16,7 +16,7 @@ from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
 from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE
-from spot_motion_monitor.views import Ui_MainWindow
+from spot_motion_monitor.views import CameraConfigurationDialog, PlotConfigurationDialog, Ui_MainWindow
 from spot_motion_monitor import __version__
 
 __all__ = ['main']
@@ -77,6 +77,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dataController.updater.displayStatus.connect(self.updateStatusBar)
         self.actionExit.triggered.connect(self.close)
         self.actionAbout.triggered.connect(self.about)
+        self.actionPlotsConfig.triggered.connect(self.updatePlotConfiguration)
+        self.actionCameraConfig.triggered.connect(self.updateCameraConfiguration)
 
     def about(self):
         """This function presents the about dialog box.
@@ -228,6 +230,23 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             True is camera is started, False is stopped.
         """
         self.menuCamera.setEnabled(not state)
+        self.actionCameraConfig.setEnabled(not state)
+
+    def updateCameraConfiguration(self):
+        """This function handles camera configuration.
+
+        The camera configuration dialog is shown when the menu action is
+        triggered. If dialog is accepted (OK button pressed), then the
+        configuration is read from the tab and applied to the current via the
+        camera controller.
+        """
+        currentCamera = self.cameraActionGroup.checkedAction()
+        if currentCamera is None:
+            return
+        cameraName = currentCamera.objectName()
+        cameraConfigDialog = CameraConfigurationDialog(cameraName)
+        if cameraConfigDialog.exec_():
+            pass
 
     def updateOffset(self):
         """This function updates the camera offsets.
@@ -235,6 +254,18 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         frame = self.cameraController.getUpdateFrame()
         info = self.dataController.getCentroidForUpdate(frame)
         self.cameraController.updateCameraOffset(info.centerX, info.centerY)
+
+    def updatePlotConfiguration(self):
+        """This function handles plot configuration.
+
+        The plot configuration dialog is shown when the menu action is
+        triggered. If dialog is accepted (OK button pressed), then the
+        configuration is read from the tabs and applied to the plots via the
+        respective controllers.
+        """
+        plotConfigDialog = PlotConfigurationDialog()
+        if plotConfigDialog.exec_():
+            pass
 
     def updateStatusBar(self, message, timeout):
         """This function updates the application status bar.
