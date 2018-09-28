@@ -126,3 +126,15 @@ class TestPlotCentroidController:
         assert mockXSetArraySize.call_count == 1
         assert mockYSetArraySize.call_count == 1
         assert mockScatterSetArraySize.call_count == 1
+
+    def test_getPlotConfiguration(self, qtbot):
+        cxp = Centroid1dPlotWidget()
+        cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
+        qtbot.addWidget(cxp)
+        qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
+        p1cc = PlotCentroidController(cxp, cyp, csp)
+        currentConfig = p1cc.getPlotConfiguration()
+        assert len(currentConfig) == 3
+        assert list(currentConfig.keys()) == ['scatterPlot', 'xCentroid', 'yCentroid']

@@ -89,6 +89,18 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         self.pointPen = mkPen(*self.penColor)
         self.scatterPlotItem.setBrush(self.pointBrush)
 
+    def getConfiguration(self):
+        """Get the current plot configuration.
+
+        Returns
+        -------
+        dict
+            The set of current configuration parameters.
+        """
+        config = {}
+        config['numHistogramBins'] = self.numBins
+        return config
+
     def makeBrushes(self):
         """Make brushes for spots with differnet alpha factors.
         """

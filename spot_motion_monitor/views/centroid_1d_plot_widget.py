@@ -55,9 +55,28 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         self.rollArray = False
         self.dataCounter = 0
         self.roiFps = None
+        self.autoscale = True
         self.yRange = None
         self.pixelRangeAddition = 5
         self.numAccumFrames = 15
+
+    def getConfiguration(self):
+        """Get the current plot configuration.
+
+        Returns
+        -------
+        dict
+            The set of current configuration parameters.
+        """
+        config = {}
+        config['autoscale'] = self.autoscale
+        if self.yRange is not None:
+            config['minimum'] = self.yRange[0]
+            config['maximum'] = self.yRange[1]
+        else:
+            config['minimum'] = None
+            config['maximum'] = None
+        return config
 
     def setup(self, arraySize, axisLabel, roiFps):
         """Provide information for setting up the plot.
@@ -130,5 +149,6 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
             self.yRange = [cmean - self.pixelRangeAddition, cmean + self.pixelRangeAddition]
             self.plot.setRange(yRange=self.yRange)
             self.plot.disableAutoRange()
+            self.autoscale = False
 
         self.curve.setData(self.timeRange, self.data)

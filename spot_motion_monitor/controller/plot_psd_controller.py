@@ -30,6 +30,18 @@ class PlotPsdController:
         self.psdXPlot = psdx
         self.psdYPlot = psdy
 
+    def getPlotConfiguration(self):
+        """Get the current camera configuration.
+
+        Returns
+        -------
+        dict
+            The set of current camera configuration parameters.
+        """
+        config = {}
+        config['waterfall'] = self.psdXPlot.getConfiguration()
+        return config
+
     def setup(self, arraySize, timeScale):
         """Setup the controller's internal information.
 

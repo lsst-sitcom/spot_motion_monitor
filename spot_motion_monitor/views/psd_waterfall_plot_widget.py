@@ -48,6 +48,19 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         self.boundingRect = None
         self.timeScale = None
 
+    def getConfiguration(self):
+        """Get the current plot configuration.
+
+        Returns
+        -------
+        dict
+            The set of current configuration parameters.
+        """
+        config = {}
+        config['numBins'] = self.arraySize
+        config['colorMap'] = None
+        return config
+
     def setTimeScale(self, timeScale):
         """Update the stored timescale and invalidate data and bounding rect.
 

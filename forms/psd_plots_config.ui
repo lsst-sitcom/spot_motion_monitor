@@ -16,6 +16,9 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QCheckBox" name="autoScaleX1dCheckBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Auto Scale X 1D</string>
      </property>
@@ -25,18 +28,28 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="x1dMaximumLabel">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>X 1D Maximum:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="x1dMaximumLineEdit"/>
+      <widget class="QLineEdit" name="x1dMaximumLineEdit">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="autoScaleY1dCheckBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Auto Scale Y 1D</string>
      </property>
@@ -46,13 +59,20 @@
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QLabel" name="y1dMaximumLabel">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Y 1D Maximum:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="y1dMaximumLineEdit"/>
+      <widget class="QLineEdit" name="y1dMaximumLineEdit">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -60,6 +80,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="waterfallNumBinsLabel">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Waterfall Number of Bins:</string>
        </property>
@@ -74,13 +97,20 @@
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="waterfallColorMapLabel">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Waterfall Color Map:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="waterfallColorMapComboBox"/>
+      <widget class="QComboBox" name="waterfallColorMapComboBox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

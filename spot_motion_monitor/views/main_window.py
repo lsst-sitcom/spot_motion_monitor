@@ -266,6 +266,9 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         respective controllers.
         """
         plotConfigDialog = PlotConfigurationDialog()
+        currentCentroidConfig = self.plotCentroidController.getPlotConfiguration()
+        currentPsdConfig = self.plotPsdController.getPlotConfiguration()
+        plotConfigDialog.setPlotConfiguration(currentCentroidConfig, currentPsdConfig)
         if plotConfigDialog.exec_():
             pass
 

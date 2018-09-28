@@ -17,6 +17,7 @@ class TestCentroid1dPlotWidget():
         assert c1dpw.dataCounter == 0
         assert c1dpw.rollArray is False
         assert c1dpw.roiFps is None
+        assert c1dpw.autoscale is True
         assert c1dpw.yRange is None
         assert c1dpw.pixelRangeAddition == 5
         assert c1dpw.numAccumFrames == 15
@@ -90,3 +91,11 @@ class TestCentroid1dPlotWidget():
         assert c1dpw.timeRange.shape[0] == newArraySize
         assert c1dpw.timeRange[-1] == (newArraySize - 1) / roiFps
         assert c1dpw.rollArray is False
+
+    def test_getConfiguration(self, qtbot):
+        c1dpw = Centroid1dPlotWidget()
+        c1dpw.show()
+        qtbot.addWidget(c1dpw)
+        config = {'autoscale': True, 'minimum': None, 'maximum': None}
+        currentConfig = c1dpw.getConfiguration()
+        assert currentConfig == config

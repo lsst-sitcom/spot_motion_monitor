@@ -35,3 +35,17 @@ class PlotConfigurationDialog(QDialog, Ui_ConfigurationDialog):
 
         self.tabWidget.addTab(self.centroidPlotConfigTab, self.centroidPlotConfigTab.name)
         self.tabWidget.addTab(self.psdPlotConfigTab, self.psdPlotConfigTab.name)
+
+    def setPlotConfiguration(self, centroidConfig, psdConfig):
+        """Set the current plotting configuration in the plot tab's widgets.
+
+        Parameters
+        ----------
+        centroidConfig : dict
+          The current set of Centroid plot configuration parameters.
+        psdConfig : dict
+          The current set of Power Spectrum Distribution plot configuration
+          parameters.
+        """
+        self.centroidPlotConfigTab.setConfiguration(centroidConfig)
+        self.psdPlotConfigTab.setConfiguration(psdConfig)

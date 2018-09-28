@@ -110,3 +110,10 @@ class TestCentroidScatterPlotWidget:
         assert cspw.yData.shape[0] == 0
         assert len(cspw.brushes) == newArraySize
         assert cspw.rollArray is False
+
+    def test_getConfiguration(self, qtbot):
+        cspw = CentroidScatterPlotWidget()
+        qtbot.addWidget(cspw)
+        config = {'numHistogramBins': 40}
+        currentConfig = cspw.getConfiguration()
+        assert currentConfig == config
