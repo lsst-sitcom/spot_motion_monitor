@@ -19,3 +19,11 @@ class TestPsdPlotConfigTab:
         configTab.setConfiguration(config)
         assert int(configTab.waterfallNumBinsLineEdit.text()) == config['waterfall']['numBins']
         assert configTab.waterfallColorMapComboBox.currentText() == ''
+
+    def test_getParametersFromConfiguration(self, qtbot):
+        configTab = PsdPlotConfigTab()
+        qtbot.addWidget(configTab)
+        truthConfig = {'waterfall': {'numBins': 35, 'colorMap': None}}
+        configTab.waterfallNumBinsLineEdit.setText(str(truthConfig['waterfall']['numBins']))
+        config = configTab.getConfiguration()
+        assert config == truthConfig

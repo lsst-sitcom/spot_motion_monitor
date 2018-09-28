@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
 
-__all__ = ['boolToCheckState', 'checkStateToBool', 'noneToDefaultOrValue']
+__all__ = ['boolToCheckState', 'checkStateToBool', 'defaultToNoneOrValue', 'noneToDefaultOrValue']
 
 
 def boolToCheckState(value):
@@ -37,15 +37,32 @@ def checkStateToBool(value):
     """
     return True if value == Qt.Checked else False
 
+def defaultToNoneOrValue(value, default=''):
+    """Convert a value to NoneType if it matches a default.
+
+    Parameters
+    ----------
+    value : anything
+        The value to possibly convert.
+    default : anything, optional
+        The default to check if NoneType return is necessary.
+
+    Returns
+    -------
+    anything
+        The converted value.
+    """
+    return None if value == default else value
+
 def noneToDefaultOrValue(value, default=''):
     """Convert a NoneType to a default or pass back the value.
 
     Parameters
     ----------
     value : anything
-        The value to possibly convert
+        The value to possibly convert.
     default : anything, optional
-        The default to return if value is NoneType
+        The default to return if value is NoneType.
 
     Returns
     -------

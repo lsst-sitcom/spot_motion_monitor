@@ -33,6 +33,20 @@ class PsdPlotConfigTab(QTabWidget, Ui_PsdPlotConfigForm):
         self.waterfallNumBinsLineEdit.setValidator(QIntValidator(1, 1000))
         self.name = 'PSD'
 
+    def getConfiguration(self):
+        """Get the current configuration parameters from the tab's widgets.
+
+        Returns
+        -------
+        dict
+            The current set of configuration parameters.
+        """
+        config = {}
+        config['waterfall'] = {}
+        config['waterfall']['numBins'] = int(self.waterfallNumBinsLineEdit.text())
+        config['waterfall']['colorMap'] = None
+        return config
+
     def setConfiguration(self, config):
         """Set the configuration parameters into the tab's widgets.
 

@@ -16,10 +16,19 @@ class TestConfigHelpers:
         assert utils.checkStateToBool(Qt.Checked) is True
         assert utils.checkStateToBool(Qt.Unchecked) is False
 
-    def test_noneToDefault(self):
+    def test_noneToDefaultOrValue(self):
         value = None
         assert utils.noneToDefaultOrValue(value) == ''
         default = 'None'
         assert utils.noneToDefaultOrValue(value, default=default) == default
         value = 100
         assert utils.noneToDefaultOrValue(value) == value
+
+    def test_defaultToNoneOrValue(self):
+        value = ''
+        assert utils.defaultToNoneOrValue(value) is None
+        value = 'None'
+        default = 'None'
+        assert utils.defaultToNoneOrValue(value, default=default) is None
+        value = 100
+        assert utils.defaultToNoneOrValue(value) == value

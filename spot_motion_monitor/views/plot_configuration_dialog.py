@@ -36,6 +36,18 @@ class PlotConfigurationDialog(QDialog, Ui_ConfigurationDialog):
         self.tabWidget.addTab(self.centroidPlotConfigTab, self.centroidPlotConfigTab.name)
         self.tabWidget.addTab(self.psdPlotConfigTab, self.psdPlotConfigTab.name)
 
+    def getPlotConfiguration(self):
+        """Get the current plotting configuration from all the tabs.
+
+        Returns
+        -------
+        dict, dict
+            The current centroid and PSD plot configurations.
+        """
+        centroidConfig = self.centroidPlotConfigTab.getConfiguration()
+        psdConfig = self.psdPlotConfigTab.getConfiguration()
+        return centroidConfig, psdConfig
+
     def setPlotConfiguration(self, centroidConfig, psdConfig):
         """Set the current plotting configuration in the plot tab's widgets.
 
