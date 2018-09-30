@@ -185,6 +185,23 @@ class GaussianCamera(BaseCamera):
         """
         pass
 
+    def setConfiguration(self, config):
+        """Set the comfiguration on the camera.
+
+        Parameters
+        ----------
+        config : dict
+            The current configuration.
+        """
+        self.roiSize = config['roiSize']
+        self.doSpotOscillation = config['doSpotOscillation']
+        if self.doSpotOscillation:
+            self.xFreq = config['xFrequency']
+            self.xAmp = config['xAmplitude']
+            self.yFreq = config['yFrequency']
+            self.yAmp = config['yAmplitude']
+            self.deltaTime = config['deltaTime']
+
     def showFrameStatus(self):
         """Show frame status from the camera.
 
@@ -206,7 +223,8 @@ class GaussianCamera(BaseCamera):
         self.findInsertionPoint()
 
     def updateOffset(self, centroidX, centroidY):
-        """Update the camera's internal offset values from the provided centroid.
+        """Update the camera's internal offset values from the provided
+           centroid.
 
         For the Gaussian camera, this is a no-op, but helps test the mechanism.
 
@@ -217,7 +235,6 @@ class GaussianCamera(BaseCamera):
         centroidY : float
             The y component of the centroid for offset update.
         """
-        #print("Received centroid: ({}, {}), but not updating offsets.".format(centroidX, centroidY))
         pass
 
     def waitOnRoi(self):

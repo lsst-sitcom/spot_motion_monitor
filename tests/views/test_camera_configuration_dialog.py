@@ -31,3 +31,12 @@ class TestCameraConfigurationDialog:
         state = ccDialog.cameraConfigTab.spotOscillationCheckBox.checkState()
         boolState = True if state == Qt.Checked else False
         assert boolState == config['doSpotOscillation']
+
+    def test_getCameraConfiguration(self, qtbot, mocker):
+        ccDialog = CameraConfigurationDialog('GaussianCamera')
+        qtbot.addWidget(ccDialog)
+        ccDialog.show()
+        mockGetConfiguration = mocker.patch.object(ccDialog.cameraConfigTab, 'getConfiguration')
+
+        ccDialog.getCameraConfiguration()
+        assert mockGetConfiguration.call_count == 1

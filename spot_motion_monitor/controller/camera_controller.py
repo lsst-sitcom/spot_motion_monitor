@@ -242,6 +242,16 @@ class CameraController():
         self.camera.fpsRoiFrame = roiFps
         self.updater.roiFpsChanged.emit(roiFps)
 
+    def setCameraConfiguration(self, config):
+        """Set the current configuration on the camera.
+
+        Parameters
+        ----------
+        config : dict
+            The current configuration parameters.
+        """
+        self.camera.setConfiguration(config)
+
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.
 

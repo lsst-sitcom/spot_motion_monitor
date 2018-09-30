@@ -7,18 +7,31 @@ from spot_motion_monitor.views import VimbaCameraConfigTab
 class TestVimbaCameraConfigTab:
 
     def test_parametersAfterConstruction(self, qtbot):
-        gcConfigTab = VimbaCameraConfigTab()
-        qtbot.addWidget(gcConfigTab)
+        vcConfigTab = VimbaCameraConfigTab()
+        qtbot.addWidget(vcConfigTab)
 
-        assert gcConfigTab.name == 'Vimba'
+        assert vcConfigTab.name == 'Vimba'
 
     def test_setParametersFromConfiguration(self, qtbot):
-        gcConfigTab = VimbaCameraConfigTab()
-        qtbot.addWidget(gcConfigTab)
+        vcConfigTab = VimbaCameraConfigTab()
+        qtbot.addWidget(vcConfigTab)
 
         config = {'roiSize': 20, 'roiFluxMinimum': 1000, 'roiExposureTime': 5000}
-        gcConfigTab.setConfiguration(config)
+        vcConfigTab.setConfiguration(config)
 
-        assert int(gcConfigTab.roiSizeLineEdit.text()) == config['roiSize']
-        assert int(gcConfigTab.roiFluxMinLineEdit.text()) == config['roiFluxMinimum']
-        assert int(gcConfigTab.roiExposureTimeLineEdit.text()) == config['roiExposureTime']
+        assert int(vcConfigTab.roiSizeLineEdit.text()) == config['roiSize']
+        assert int(vcConfigTab.roiFluxMinLineEdit.text()) == config['roiFluxMinimum']
+        assert int(vcConfigTab.roiExposureTimeLineEdit.text()) == config['roiExposureTime']
+
+    def test_getParametersFromConfiguration(self, qtbot):
+        vcConfigTab = VimbaCameraConfigTab()
+        qtbot.addWidget(vcConfigTab)
+        vcConfigTab.show()
+
+        truthConfig = {'roiSize': 75, 'roiFluxMinimum': 1000, 'roiExposureTime': 3000}
+
+        vcConfigTab.roiSizeLineEdit.setText(str(truthConfig['roiSize']))
+        vcConfigTab.roiFluxMinLineEdit.setText(str(truthConfig['roiFluxMinimum']))
+        vcConfigTab.roiExposureTimeLineEdit.setText(str(truthConfig['roiExposureTime']))
+        config = vcConfigTab.getConfiguration()
+        assert config == truthConfig

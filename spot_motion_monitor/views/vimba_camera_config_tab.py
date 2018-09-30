@@ -33,6 +33,20 @@ class VimbaCameraConfigTab(QTabWidget, Ui_VimbaCameraConfigForm):
         self.roiExposureTimeLineEdit.setValidator(QIntValidator(500, 50000))
         self.name = 'Vimba'
 
+    def getConfiguration(self):
+        """Get the configuration parameter's from the tab's widgets.
+
+        Returns
+        -------
+        dict
+            The current set of configuration parameters.
+        """
+        config = {}
+        config['roiSize'] = int(self.roiSizeLineEdit.text())
+        config['roiFluxMinimum'] = int(self.roiFluxMinLineEdit.text())
+        config['roiExposureTime'] = int(self.roiExposureTimeLineEdit.text())
+        return config
+
     def setConfiguration(self, config):
         """Set the configuration parameters into the tab's widgets.
 

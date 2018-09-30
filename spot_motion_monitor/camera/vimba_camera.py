@@ -60,6 +60,7 @@ class VimbaCamera(BaseCamera):
         self.fpsFullFrame = 24
         self.fpsRoiFrame = 40
         self.roiSize = 50
+        self.roiExposureTime = 8000  # microseconds
         self.fluxMinRoi = 2000
         self.offsetX = 0
         self.offsetY = 0
@@ -111,7 +112,7 @@ class VimbaCamera(BaseCamera):
         config = {}
         config['roiSize'] = self.roiSize
         config['roiFluxMinimum'] = self.fluxMinRoi
-        config['roiExposureTime'] = self.cameraPtr.ExposureTimeAbs if self.cameraPtr is not None else None
+        config['roiExposureTime'] = self.roiExposureTime
         return config
 
     def getFullFrame(self):
@@ -190,6 +191,20 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.Height = self.height
         self.cameraPtr.Width = self.width
 
+    def setConfiguration(self, config):
+        """Set the comfiguration on the camera.
+
+        Parameters
+        ----------
+        config : dict
+            The current configuration.
+        """
+        self.roiSize = config['roiSize']
+        self.fluxMinRoi = config['roiFluxMinimum']
+        self.roiExposureTime = config['roiExposureTime']
+        if self.cameraPtr is not None:
+            self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
+
     def showFrameStatus(self):
         """Show frame status from the camera.
 
@@ -235,7 +250,7 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.AcquisitionMode = 'Continuous'
         self.cameraPtr.TriggerSource = 'Freerun'
         self.cameraPtr.PixelFormat = 'Mono12'
-        self.cameraPtr.ExposureTimeAbs = 3000  # microseconds
+        self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
 
         self.frame = self.cameraPtr.getFrame()
         self.frame.announceFrame()

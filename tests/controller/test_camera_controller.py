@@ -260,3 +260,15 @@ class TestCameraController():
         cc.setupCamera("GaussianCamera")
         config = cc.getCameraConfiguration()
         assert len(config) == 7
+
+    def test_setCameraConfiguration(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+
+        mockSetCameraConfiguration = mocker.patch.object(cc.camera, 'setConfiguration')
+
+        cc.setCameraConfiguration({})
+        assert mockSetCameraConfiguration.call_count == 1

@@ -113,6 +113,20 @@ class BaseCamera():
         """
         raise NotImplementedError
 
+    def setConfiguration(self, config):
+        """Set the comfiguration on the camera.
+
+        Parameters
+        ----------
+        config : dict
+            The current configuration.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
     def showFrameStatus(self):
         """Show frame status from the camera.
 

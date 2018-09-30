@@ -32,3 +32,11 @@ class TestConfigHelpers:
         assert utils.defaultToNoneOrValue(value, default=default) is None
         value = 100
         assert utils.defaultToNoneOrValue(value) == value
+
+    def test_convertValueOrNone(self):
+        value = None
+        assert utils.convertValueOrNone(value) == value
+        value = 10
+        assert utils.convertValueOrNone(value) == value
+        value = 14.42542
+        assert utils.convertValueOrNone(value, convert=float) == value

@@ -248,7 +248,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         currentConfig = self.cameraController.getCameraConfiguration()
         cameraConfigDialog.setCameraConfiguration(currentConfig)
         if cameraConfigDialog.exec_():
-            pass
+            config = cameraConfigDialog.getCameraConfiguration()
+            self.cameraController.setCameraConfiguration(config)
 
     def updateOffset(self):
         """This function updates the camera offsets.

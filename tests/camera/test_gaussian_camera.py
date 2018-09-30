@@ -66,3 +66,18 @@ class TestGaussianCamera():
                   'deltaTime': 200}
         currentConfig = self.camera.getConfiguration()
         assert currentConfig == config
+
+    def test_setConfiguration(self):
+        camera = GaussianCamera()
+        truthConfig = {'roiSize': 75, 'doSpotOscillation': True,
+                       'xAmplitude': 1, 'xFrequency': 40.0,
+                       'yAmplitude': 8, 'yFrequency': 75.0,
+                       'deltaTime': 350}
+        camera.setConfiguration(truthConfig)
+        assert camera.roiSize == truthConfig['roiSize']
+        assert camera.doSpotOscillation == truthConfig['doSpotOscillation']
+        assert camera.xAmp == truthConfig['xAmplitude']
+        assert camera.xFreq == truthConfig['xFrequency']
+        assert camera.yAmp == truthConfig['yAmplitude']
+        assert camera.yFreq == truthConfig['yFrequency']
+        assert camera.deltaTime == truthConfig['deltaTime']

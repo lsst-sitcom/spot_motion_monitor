@@ -34,8 +34,19 @@ class CameraConfigurationDialog(QDialog, Ui_ConfigurationDialog):
 
         self.tabWidget.addTab(self.cameraConfigTab, self.cameraConfigTab.name)
 
+    def getCameraConfiguration(self):
+        """Get the current camera configuration from the tab.
+
+        Returns
+        -------
+        dict
+            The current set of configuration parameters.
+        """
+        config = self.cameraConfigTab.getConfiguration()
+        return config
+
     def setCameraConfiguration(self, config):
-        """Set the current camera configuration in the tab's widgets.
+        """Set the current camera configuration in the tab.
 
         Parameters
         ----------
