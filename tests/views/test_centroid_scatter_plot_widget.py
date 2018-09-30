@@ -117,3 +117,10 @@ class TestCentroidScatterPlotWidget:
         config = {'numHistogramBins': 40}
         currentConfig = cspw.getConfiguration()
         assert currentConfig == config
+
+    def test_setConfiguration(self, qtbot):
+        cspw = CentroidScatterPlotWidget()
+        qtbot.addWidget(cspw)
+        truthConfig = {'numHistogramBins': 50}
+        cspw.setConfiguration(truthConfig)
+        cspw.numBins == truthConfig['numHistogramBins']

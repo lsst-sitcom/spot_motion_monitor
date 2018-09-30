@@ -61,6 +61,20 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         config['colorMap'] = None
         return config
 
+    def setConfiguration(self, config):
+        """Set the new parameters into the widget.
+
+        Parameters
+        ----------
+        config : dict
+            The new parameters to apply.
+        """
+        if self.arraySize != config['numBins']:
+            self.arraySize = config['numBins']
+            # Invalidate data
+            self.data = None
+            self.boundingRect = None
+
     def setTimeScale(self, timeScale):
         """Update the stored timescale and invalidate data and bounding rect.
 

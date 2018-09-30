@@ -49,6 +49,18 @@ class PlotCentroidController():
         config['yCentroid'] = self.y1dPlot.getConfiguration()
         return config
 
+    def setPlotConfiguration(self, config):
+        """Set a new configuration on the PSD plots.
+
+        Parameters
+        ----------
+        config : dict
+            The new configuration parameters.
+        """
+        self.x1dPlot.setConfiguration(config['xCentroid'])
+        self.y1dPlot.setConfiguration(config['yCentroid'])
+        self.scatterPlot.setConfiguration(config['scatterPlot'])
+
     def setup(self, arraySize, roiFps):
         """Pass along the requested array size to the contained plot widgets.
 

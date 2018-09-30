@@ -42,6 +42,17 @@ class PlotPsdController:
         config['waterfall'] = self.psdXPlot.getConfiguration()
         return config
 
+    def setPlotConfiguration(self, config):
+        """Set a new configuration on the PSD plots.
+
+        Parameters
+        ----------
+        config : dict
+            The new configuration parameters.
+        """
+        self.psdXPlot.setConfiguration(config['waterfall'])
+        self.psdYPlot.setConfiguration(config['waterfall'])
+
     def setup(self, arraySize, timeScale):
         """Setup the controller's internal information.
 

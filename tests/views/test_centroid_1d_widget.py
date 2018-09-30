@@ -99,3 +99,10 @@ class TestCentroid1dPlotWidget():
         config = {'autoscale': True, 'minimum': None, 'maximum': None}
         currentConfig = c1dpw.getConfiguration()
         assert currentConfig == config
+
+    def test_setConfiguration(self, qtbot):
+        c1dpw = Centroid1dPlotWidget()
+        c1dpw.show()
+        qtbot.addWidget(c1dpw)
+        truthConfig = {'autoscale': True, 'minimum': None, 'maximum': None}
+        c1dpw.setConfiguration(truthConfig)

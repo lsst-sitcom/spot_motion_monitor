@@ -138,3 +138,24 @@ class TestPlotCentroidController:
         currentConfig = p1cc.getPlotConfiguration()
         assert len(currentConfig) == 3
         assert list(currentConfig.keys()) == ['scatterPlot', 'xCentroid', 'yCentroid']
+
+    def test_setPlotConfiguration(self, qtbot, mocker):
+        cxp = Centroid1dPlotWidget()
+        cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
+        qtbot.addWidget(cxp)
+        qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
+        p1cc = PlotCentroidController(cxp, cyp, csp)
+        p1cc.setup(self.bufferSize, self.roiFps)
+        mockXSetConfiguration = mocker.patch.object(p1cc.x1dPlot, 'setConfiguration')
+        mockYSetConfiguration = mocker.patch.object(p1cc.y1dPlot, 'setConfiguration')
+        mockScatterSetConfiguration = mocker.patch.object(p1cc.scatterPlot, 'setConfiguration')
+
+        truthConfig = {'xCentroid': {'autoscale': False, 'minimum': 10, 'maximum': 1000},
+                       'yCentroid': {'autoscale': True, 'minimum': None, 'maximum': None},
+                       'scatterPlot': {'numHistogramBins': 50}}
+        p1cc.setPlotConfiguration(truthConfig)
+        assert mockXSetConfiguration.call_count == 1
+        assert mockYSetConfiguration.call_count == 1
+        assert mockScatterSetConfiguration.call_count == 1

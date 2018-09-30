@@ -270,7 +270,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         currentPsdConfig = self.plotPsdController.getPlotConfiguration()
         plotConfigDialog.setPlotConfiguration(currentCentroidConfig, currentPsdConfig)
         if plotConfigDialog.exec_():
-            pass
+            newCentroidConfig, newPsdConfig = plotConfigDialog.getPlotConfiguration()
+            self.plotPsdController.setPlotConfiguration(newPsdConfig)
 
     def updateStatusBar(self, message, timeout):
         """This function updates the application status bar.

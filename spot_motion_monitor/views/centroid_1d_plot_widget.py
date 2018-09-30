@@ -78,6 +78,16 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
             config['maximum'] = None
         return config
 
+    def setConfiguration(self, config):
+        """Set the new parameters into the widget.
+
+        Parameters
+        ----------
+        config : dict
+            The new parameters to apply.
+        """
+        pass
+
     def setup(self, arraySize, axisLabel, roiFps):
         """Provide information for setting up the plot.
 

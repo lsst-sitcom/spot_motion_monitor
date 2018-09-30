@@ -127,6 +127,16 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         self.makeBrushes()
         self.rollArray = False
 
+    def setConfiguration(self, config):
+        """Set the new parameters into the widget.
+
+        Parameters
+        ----------
+        config : dict
+            The new parameters to apply.
+        """
+        self.numBins = config['numHistogramBins']
+
     def setup(self, arraySize):
         """Provide information for setting up the plot.
 
