@@ -2,6 +2,14 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from .centroid_plot_config_tab import CentroidPlotConfigTab
+from .psd_plot_config_tab import PsdPlotConfigTab
+from .plot_configuration_dialog import PlotConfigurationDialog
+
+from .gaussian_camera_config_tab import GaussianCameraConfigTab
+from .vimba_camera_config_tab import VimbaCameraConfigTab
+from .camera_configuration_dialog import CameraConfigurationDialog
+
 from .ui_main_window import Ui_MainWindow
 from .main_window import main
 from .camera_data_widget import CameraDataWidget

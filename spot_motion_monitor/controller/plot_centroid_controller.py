@@ -35,6 +35,32 @@ class PlotCentroidController():
         self.y1dPlot = cyp
         self.scatterPlot = csp
 
+    def getPlotConfiguration(self):
+        """Get the current camera configuration.
+
+        Returns
+        -------
+        dict
+            The set of current camera configuration parameters.
+        """
+        config = {}
+        config['scatterPlot'] = self.scatterPlot.getConfiguration()
+        config['xCentroid'] = self.x1dPlot.getConfiguration()
+        config['yCentroid'] = self.y1dPlot.getConfiguration()
+        return config
+
+    def setPlotConfiguration(self, config):
+        """Set a new configuration on the PSD plots.
+
+        Parameters
+        ----------
+        config : dict
+            The new configuration parameters.
+        """
+        self.x1dPlot.setConfiguration(config['xCentroid'])
+        self.y1dPlot.setConfiguration(config['yCentroid'])
+        self.scatterPlot.setConfiguration(config['scatterPlot'])
+
     def setup(self, arraySize, roiFps):
         """Pass along the requested array size to the contained plot widgets.
 

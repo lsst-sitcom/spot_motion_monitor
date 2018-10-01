@@ -98,6 +98,18 @@ class TestMainWindow():
         qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
         assert mw.menuCamera.isEnabled() is False
 
+    def test_configurationMenu(self, qtbot):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+        assert mw.actionCameraConfig.isEnabled() is True
+        assert mw.actionPlotsConfig.isEnabled() is True
+        qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
+        assert mw.actionCameraConfig.isEnabled() is False
+        assert mw.actionPlotsConfig.isEnabled() is True
+
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()
     #     qtbot.addWidget(mw)

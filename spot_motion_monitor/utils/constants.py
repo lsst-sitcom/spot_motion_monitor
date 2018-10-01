@@ -1,3 +1,9 @@
+#------------------------------------------------------------------------------
+# Copyright (c) 2018 LSST Systems Engineering
+# Distributed under the MIT License. See LICENSE for more information.
+#------------------------------------------------------------------------------
+import enum
+
 """Contants for program use.
 
 Attributes
@@ -18,3 +24,19 @@ STATUSBAR_FAST_TIMEOUT = 100
 DEFAULT_FPS = 1
 NO_DATA_VALUE = " --- "
 DEFAULT_PSD_ARRAY_SIZE = 25
+
+class AutoscaleState(enum.Enum):
+    """Enumeration for handling autoscale states.
+
+    Attributes
+    ----------
+    OFF : int
+        Turn autoscaling off.
+    ON : int
+        Turn autoscaling on.
+    PARTIAL : int
+        Autoscaling is on until as number of frames recorded, then turned off.
+    """
+    OFF = 0
+    PARTIAL = 1
+    ON = 2

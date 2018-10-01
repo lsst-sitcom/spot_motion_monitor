@@ -80,3 +80,23 @@ class TestPsdWaterfallPlotWidget:
         assert rectCoords[1] == 0
         assert rectCoords[2] == 1.2
         assert rectCoords[3] == 60
+
+    def test_getConfiguration(self, qtbot):
+        self.pwpw1 = PsdWaterfallPlotWidget()
+        qtbot.addWidget(self.pwpw1)
+        arraySize = 5
+        self.pwpw1.setup(arraySize, self.timeScale, 'X')
+        config = {'numBins': 5, 'colorMap': None}
+        currentConfig = self.pwpw1.getConfiguration()
+        assert currentConfig == config
+
+    def test_setConfiguration(self, qtbot):
+        pwpw2 = PsdWaterfallPlotWidget()
+        qtbot.addWidget(pwpw2)
+        arraySize = 5
+        pwpw2.setup(arraySize, self.timeScale, 'X')
+        truthConfig = {'numBins': 10, 'colorMap': None}
+        pwpw2.setConfiguration(truthConfig)
+        assert pwpw2.arraySize == truthConfig['numBins']
+        assert pwpw2.data is None
+        assert pwpw2.boundingRect is None

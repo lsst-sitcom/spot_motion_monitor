@@ -86,3 +86,34 @@ class TestPlotPsdController:
 
         assert mockPsdXPlotSetTimeScale.call_count == 1
         assert mockPsdYPlotSetTimeScale.call_count == 1
+
+    def test_getPlotConfiguration(self, qtbot):
+        psdx = PsdWaterfallPlotWidget()
+        psdy = PsdWaterfallPlotWidget()
+        qtbot.addWidget(psdx)
+        qtbot.addWidget(psdy)
+
+        pfc = PlotPsdController(psdx, psdy)
+        pfc.setup(self.arraySize, self.timeScale)
+
+        currentConfig = pfc.getPlotConfiguration()
+        assert len(currentConfig) == 1
+        assert list(currentConfig.keys()) == ['waterfall']
+
+    def test_setPlotConfiguration(self, qtbot, mocker):
+        psdx = PsdWaterfallPlotWidget()
+        psdy = PsdWaterfallPlotWidget()
+        qtbot.addWidget(psdx)
+        qtbot.addWidget(psdy)
+
+        pfc = PlotPsdController(psdx, psdy)
+        pfc.setup(self.arraySize, self.timeScale)
+
+        mockPsdXWaterfallSetConfig = mocker.patch.object(pfc.psdXPlot, 'setConfiguration')
+        mockPsdYWaterfallSetConfig = mocker.patch.object(pfc.psdYPlot, 'setConfiguration')
+
+        truthConfig = {'waterfall': {'numBins': 10, 'colorMap': None}}
+        pfc.setPlotConfiguration(truthConfig)
+
+        assert mockPsdXWaterfallSetConfig.call_count == 1
+        assert mockPsdYWaterfallSetConfig.call_count == 1

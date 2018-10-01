@@ -5,6 +5,8 @@
 import numpy as np
 from pyqtgraph import GraphicsLayoutWidget
 
+from spot_motion_monitor.utils import AutoscaleState
+
 __all__ = ['Centroid1dPlotWidget']
 
 class Centroid1dPlotWidget(GraphicsLayoutWidget):
@@ -55,9 +57,51 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         self.rollArray = False
         self.dataCounter = 0
         self.roiFps = None
+        self.autoscale = AutoscaleState.PARTIAL
         self.yRange = None
-        self.pixelRangeAddition = 5
+        self.pixelRangeAddition = 10
         self.numAccumFrames = 15
+
+    def getConfiguration(self):
+        """Get the current plot configuration.
+
+        Returns
+        -------
+        dict
+            The set of current configuration parameters.
+        """
+        config = {}
+        config['autoscale'] = self.autoscale.name
+        if self.yRange is not None:
+            config['minimum'] = self.yRange[0]
+            config['maximum'] = self.yRange[1]
+        else:
+            config['minimum'] = None
+            config['maximum'] = None
+        config['pixelAddition'] = self.pixelRangeAddition
+        return config
+
+    def setConfiguration(self, config):
+        """Set the new parameters into the widget.
+
+        Parameters
+        ----------
+        config : dict
+            The new parameters to apply.
+        """
+        self.autoscale = getattr(AutoscaleState, config['autoscale'])
+        if self.autoscale == AutoscaleState.ON:
+            self.plot.enableAutoRange()
+            self.yRange = None
+        elif self.autoscale == AutoscaleState.PARTIAL:
+            self.yRange = None
+            self.pixelRangeAddition = config['pixelAddition']
+        else:
+            minimum = config['minimum'] if config['minimum'] is not None else 0
+            maximum = config['maximum'] if config['maximum'] is not None else 1000
+            self.yRange = [minimum, maximum]
+            self.plot.setRange(yRange=self.yRange)
+            self.plot.disableAutoRange()
 
     def setup(self, arraySize, axisLabel, roiFps):
         """Provide information for setting up the plot.
@@ -125,10 +169,11 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
             if self.dataCounter == self.dataSize:
                 self.rollArray = True
 
-        if self.dataCounter == self.numAccumFrames and self.yRange is None:
-            cmean = int(np.mean(self.data[0:self.numAccumFrames]))
-            self.yRange = [cmean - self.pixelRangeAddition, cmean + self.pixelRangeAddition]
-            self.plot.setRange(yRange=self.yRange)
-            self.plot.disableAutoRange()
+        if self.autoscale == AutoscaleState.PARTIAL:
+            if self.dataCounter == self.numAccumFrames and self.yRange is None:
+                cmean = int(np.mean(self.data[0:self.numAccumFrames]))
+                self.yRange = [cmean - self.pixelRangeAddition, cmean + self.pixelRangeAddition]
+                self.plot.setRange(yRange=self.yRange)
+                self.plot.disableAutoRange()
 
         self.curve.setData(self.timeRange, self.data)

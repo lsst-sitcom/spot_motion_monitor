@@ -68,6 +68,15 @@ class BaseCamera():
         """
         return True
 
+    def getConfiguration(self):
+        """Return the current camera configuration.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
     def getFullFrame(self):
         """Return a full CCD frame from the camera.
 
@@ -97,6 +106,20 @@ class BaseCamera():
 
     def resetOffset(self):
         """Reset the camera offsets back to zero.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
+    def setConfiguration(self, config):
+        """Set the comfiguration on the camera.
+
+        Parameters
+        ----------
+        config : dict
+            The current configuration.
 
         Raises
         ------

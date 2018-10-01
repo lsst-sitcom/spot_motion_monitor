@@ -182,8 +182,16 @@
      <string>Camera</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuConfigure">
+    <property name="title">
+     <string>Configure</string>
+    </property>
+    <addaction name="actionCameraConfig"/>
+    <addaction name="actionPlotsConfig"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuCamera"/>
+   <addaction name="menuConfigure"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -206,6 +214,16 @@
   <action name="actionDummy">
    <property name="text">
     <string>Dummy</string>
+   </property>
+  </action>
+  <action name="actionCameraConfig">
+   <property name="text">
+    <string>Camera</string>
+   </property>
+  </action>
+  <action name="actionPlotsConfig">
+   <property name="text">
+    <string>Plots</string>
    </property>
   </action>
  </widget>

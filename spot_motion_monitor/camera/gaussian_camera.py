@@ -69,6 +69,7 @@ class GaussianCamera(BaseCamera):
         self.xPoint = None
         self.yPoint = None
         # Parameters for spot oscillation.
+        self.doSpotOscillation = True
         self.counter = 0
         self.xFreq = 5.0
         self.xAmp = 10
@@ -92,6 +93,24 @@ class GaussianCamera(BaseCamera):
         self.xPointOriginal = self.xPoint
         self.yPointOriginal = self.yPoint
 
+    def getConfiguration(self):
+        """Get the current camera configuration.
+
+        Returns
+        -------
+        dict
+            The set of current configuration parameters.
+        """
+        config = {}
+        config['roiSize'] = self.roiSize
+        config['doSpotOscillation'] = self.doSpotOscillation
+        config['xAmplitude'] = self.xAmp
+        config['xFrequency'] = self.xFreq
+        config['yAmplitude'] = self.yAmp
+        config['yFrequency'] = self.yFreq
+        config['deltaTime'] = self.deltaTime
+        return config
+
     def getFullFrame(self):
         """Get the full frame from the CCD.
 
@@ -103,7 +122,8 @@ class GaussianCamera(BaseCamera):
         # Create base CCD frame
         ccd = np.random.poisson(20.0, (self.height, self.width))
 
-        self.oscillateSpot()
+        if self.doSpotOscillation:
+            self.oscillateSpot()
 
         # Merge CCD frame and postage stamp
         ccd[self.yPoint:self.yPoint + self.postageStamp.shape[1],
@@ -165,6 +185,23 @@ class GaussianCamera(BaseCamera):
         """
         pass
 
+    def setConfiguration(self, config):
+        """Set the comfiguration on the camera.
+
+        Parameters
+        ----------
+        config : dict
+            The current configuration.
+        """
+        self.roiSize = config['roiSize']
+        self.doSpotOscillation = config['doSpotOscillation']
+        if self.doSpotOscillation:
+            self.xFreq = config['xFrequency']
+            self.xAmp = config['xAmplitude']
+            self.yFreq = config['yFrequency']
+            self.yAmp = config['yAmplitude']
+            self.deltaTime = config['deltaTime']
+
     def showFrameStatus(self):
         """Show frame status from the camera.
 
@@ -186,7 +223,8 @@ class GaussianCamera(BaseCamera):
         self.findInsertionPoint()
 
     def updateOffset(self, centroidX, centroidY):
-        """Update the camera's internal offset values from the provided centroid.
+        """Update the camera's internal offset values from the provided
+           centroid.
 
         For the Gaussian camera, this is a no-op, but helps test the mechanism.
 
@@ -197,7 +235,6 @@ class GaussianCamera(BaseCamera):
         centroidY : float
             The y component of the centroid for offset update.
         """
-        #print("Received centroid: ({}, {}), but not updating offsets.".format(centroidX, centroidY))
         pass
 
     def waitOnRoi(self):

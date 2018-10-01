@@ -174,6 +174,16 @@ class CameraController():
                 pass
         return available
 
+    def getCameraConfiguration(self):
+        """Get the current camera configuration.
+
+        Returns
+        -------
+        dict
+            The set of current camera configuration parameters.
+        """
+        return self.camera.getConfiguration()
+
     def getFrame(self):
         """Get the frame from the camera.
 
@@ -231,6 +241,16 @@ class CameraController():
         """
         self.camera.fpsRoiFrame = roiFps
         self.updater.roiFpsChanged.emit(roiFps)
+
+    def setCameraConfiguration(self, config):
+        """Set the current configuration on the camera.
+
+        Parameters
+        ----------
+        config : dict
+            The current configuration parameters.
+        """
+        self.camera.setConfiguration(config)
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.
