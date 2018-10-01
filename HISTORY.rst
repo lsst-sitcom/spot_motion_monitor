@@ -3,6 +3,11 @@
 History
 -------
 
+0.7.0 (2018-09-30)
+~~~~~~~~~~~~~~~~~~
+
+* Added configuration dialogs for plots and camera
+
 0.6.0 (2018-09-14)
 ~~~~~~~~~~~~~~~~~~
 
