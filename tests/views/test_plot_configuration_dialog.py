@@ -14,8 +14,10 @@ class TestPlotConfigurationDialog:
 
         assert pcDialog.tabWidget.count() == 2
 
-    def test_setPlotConfiguration(self, qtbot):
+    def test_setPlotConfiguration(self, qtbot, mocker):
         pcDialog = PlotConfigurationDialog()
+        mockCentroidTabSetConfig = mocker.patch.object(pcDialog.centroidPlotConfigTab, 'setConfiguration')
+        mockPsdTabSetConfig = mocker.patch.object(pcDialog.psdPlotConfigTab, 'setConfiguration')
         qtbot.addWidget(pcDialog)
         pcDialog.show()
 
@@ -24,42 +26,23 @@ class TestPlotConfigurationDialog:
                           'yCentroid': {'autoscale': AutoscaleState.ON.name, 'pixelAddition': None,
                                         'minimum': None, 'maximum': None},
                           'scatterPlot': {'numHistogramBins': 50}}
-        psdConfig = {'waterfall': {'numBins': 15, 'colorMap': None}}
+        psdConfig = {'waterfall': {'numBins': 15, 'colorMap': None},
+                     'xPSD': {'autoscale': True},
+                     'yPSD': {'autoscale': False, 'maximum': 1320.0}}
 
         pcDialog.setPlotConfiguration(centroidConfig, psdConfig)
-        assert pcDialog.centroidPlotConfigTab.minYLimitLineEdit.isEnabled() is False
-        assert pcDialog.centroidPlotConfigTab.minYLimitLineEdit.text() == ''
-        value = int(pcDialog.psdPlotConfigTab.waterfallNumBinsLineEdit.text())
-        assert value == psdConfig['waterfall']['numBins']
+        assert mockCentroidTabSetConfig.call_count == 1
+        assert mockPsdTabSetConfig.call_count == 1
 
-    def test_getPlotConfiguration(self, qtbot):
+    def test_getPlotConfiguration(self, qtbot, mocker):
         pcDialog = PlotConfigurationDialog()
+        mockCentroidTabGetConfig = mocker.patch.object(pcDialog.centroidPlotConfigTab, 'getConfiguration')
+        mockPsdTabGetConfig = mocker.patch.object(pcDialog.psdPlotConfigTab, 'getConfiguration')
         qtbot.addWidget(pcDialog)
         pcDialog.show()
 
-        centroidTruthConfig = {'xCentroid': {'autoscale': AutoscaleState.OFF.name,
-                                             'minimum': 10, 'maximum': 1000},
-                               'yCentroid': {'autoscale': AutoscaleState.ON.name},
-                               'scatterPlot': {'numHistogramBins': 50}}
-        psdTruthConfig = {'waterfall': {'numBins': 15, 'colorMap': None}}
-
-        xAutoscale = centroidTruthConfig['xCentroid']['autoscale']
-        xMin = str(centroidTruthConfig['xCentroid']['minimum'])
-        xMax = str(centroidTruthConfig['xCentroid']['maximum'])
-        histBins = str(centroidTruthConfig['scatterPlot']['numHistogramBins'])
-        waterfallNumBins = str(psdTruthConfig['waterfall']['numBins'])
-
-        pcDialog.centroidPlotConfigTab.autoscaleXComboBox.setCurrentText(xAutoscale)
-        pcDialog.centroidPlotConfigTab.minXLimitLineEdit.setText(xMin)
-        pcDialog.centroidPlotConfigTab.maxXLimitLineEdit.setText(xMax)
-        pcDialog.centroidPlotConfigTab.numHistoBinsLineEdit.setText(histBins)
-        pcDialog.psdPlotConfigTab.waterfallNumBinsLineEdit.setText(waterfallNumBins)
-
         centroidConfig, psdConfig = pcDialog.getPlotConfiguration()
-        assert centroidConfig == centroidTruthConfig
-        assert psdConfig == psdTruthConfig
-
-        centroidTruthConfig['xCentroid']['minimum'] = None
-        pcDialog.centroidPlotConfigTab.minXLimitLineEdit.setText('')
-        centroidConfig, psdConfig = pcDialog.getPlotConfiguration()
-        assert centroidConfig == centroidTruthConfig
+        assert mockCentroidTabGetConfig.call_count == 1
+        assert mockPsdTabGetConfig.call_count == 1
+        assert centroidConfig is not None
+        assert psdConfig is not None

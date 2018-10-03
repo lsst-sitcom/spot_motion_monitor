@@ -62,7 +62,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotCentroidController = PlotCentroidController(self.centroidXPlot,
                                                              self.centroidYPlot,
                                                              self.scatterPlot)
-        self.plotPsdController = PlotPsdController(self.psdXPlot, self.psdYPlot)
+        self.plotPsdController = PlotPsdController(self.psdWaterfallXPlot,
+                                                   self.psdWaterfallYPlot,
+                                                   self.psd1dXPlot,
+                                                   self.psd1dYPlot)
 
         self.setupCameraMenu()
 

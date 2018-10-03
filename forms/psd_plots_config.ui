@@ -15,12 +15,15 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QCheckBox" name="autoScaleX1dCheckBox">
+    <widget class="QCheckBox" name="autoscaleX1dCheckBox">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Auto Scale X 1D</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -46,12 +49,15 @@
     </layout>
    </item>
    <item>
-    <widget class="QCheckBox" name="autoScaleY1dCheckBox">
+    <widget class="QCheckBox" name="autoscaleY1dCheckBox">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Auto Scale Y 1D</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
