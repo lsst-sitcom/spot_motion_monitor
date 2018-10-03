@@ -5,7 +5,7 @@
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QTabWidget
 
-from spot_motion_monitor.views.ui_vimba_camera_config import Ui_VimbaCameraConfigForm
+from spot_motion_monitor.views.forms.ui_vimba_camera_config import Ui_VimbaCameraConfigForm
 
 __all__ = ['VimbaCameraConfigTab']
 

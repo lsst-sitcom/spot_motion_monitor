@@ -5,7 +5,7 @@
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QWidget
 
-from spot_motion_monitor.views.ui_camera_control import Ui_CameraControl
+from spot_motion_monitor.views.forms.ui_camera_control import Ui_CameraControl
 
 __all__ = ['CameraControlWidget']
 

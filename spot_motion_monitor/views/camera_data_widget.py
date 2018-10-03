@@ -5,7 +5,7 @@
 from PyQt5.QtWidgets import QWidget
 
 from spot_motion_monitor.utils import NO_DATA_VALUE
-from spot_motion_monitor.views.ui_camera_data import Ui_CameraData
+from spot_motion_monitor.views.forms.ui_camera_data import Ui_CameraData
 
 __all__ = ["CameraDataWidget"]
 

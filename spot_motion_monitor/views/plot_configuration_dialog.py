@@ -5,7 +5,7 @@
 from PyQt5.QtWidgets import QDialog
 
 from spot_motion_monitor.views import CentroidPlotConfigTab, PsdPlotConfigTab
-from spot_motion_monitor.views.ui_configuration_dialog import Ui_ConfigurationDialog
+from spot_motion_monitor.views.forms.ui_configuration_dialog import Ui_ConfigurationDialog
 
 __all__ = ['PlotConfigurationDialog']
 

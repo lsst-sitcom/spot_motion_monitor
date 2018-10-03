@@ -6,7 +6,7 @@ import numpy as np
 from PyQt5.QtWidgets import QWidget
 from pyqtgraph import mkBrush, mkPen, ScatterPlotItem
 
-from spot_motion_monitor.views.ui_scatter_plot import Ui_ScatterPlot
+from spot_motion_monitor.views.forms.ui_scatter_plot import Ui_ScatterPlot
 
 __all__ = ['CentroidScatterPlotWidget']
 

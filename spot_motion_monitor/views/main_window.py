@@ -16,7 +16,8 @@ from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
 from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE
-from spot_motion_monitor.views import CameraConfigurationDialog, PlotConfigurationDialog, Ui_MainWindow
+from spot_motion_monitor.views import CameraConfigurationDialog, PlotConfigurationDialog
+from spot_motion_monitor.views.forms import Ui_MainWindow
 from spot_motion_monitor import __version__
 
 __all__ = ['main']

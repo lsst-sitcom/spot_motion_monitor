@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QTabWidget
 
 import spot_motion_monitor.utils as utils
-from spot_motion_monitor.views.ui_psd_plots_config import Ui_PsdPlotConfigForm
+from spot_motion_monitor.views.forms.ui_psd_plots_config import Ui_PsdPlotConfigForm
 
 __all__ = ['PsdPlotConfigTab']
 
