@@ -34,6 +34,8 @@ class PsdPlotConfigTab(QTabWidget, Ui_PsdPlotConfigForm):
         self.waterfallNumBinsLineEdit.setValidator(QIntValidator(1, 1000))
         self.name = 'PSD'
 
+        self.waterfallColorMapComboBox.addItems(utils.COLORMAPS)
+
         self.autoscaleX1dCheckBox.stateChanged.connect(self.handleAutoscaleChange)
         self.autoscaleY1dCheckBox.stateChanged.connect(self.handleAutoscaleChange)
 
@@ -48,7 +50,7 @@ class PsdPlotConfigTab(QTabWidget, Ui_PsdPlotConfigForm):
         config = {}
         config['waterfall'] = {}
         config['waterfall']['numBins'] = int(self.waterfallNumBinsLineEdit.text())
-        config['waterfall']['colorMap'] = None
+        config['waterfall']['colorMap'] = self.waterfallColorMapComboBox.currentText()
         config['xPSD'] = {}
         xAutoscale = utils.checkStateToBool(self.autoscaleX1dCheckBox.checkState())
         config['xPSD']['autoscale'] = xAutoscale

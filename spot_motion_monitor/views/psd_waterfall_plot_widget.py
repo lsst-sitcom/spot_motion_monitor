@@ -6,6 +6,8 @@ import numpy as np
 from PyQt5 import QtCore
 from pyqtgraph import GraphicsLayoutWidget, ImageItem
 
+from spot_motion_monitor.utils import getLutFromColorMap
+
 __all__ = ['PsdWaterfallPlotWidget']
 
 class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
@@ -47,6 +49,8 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         self.arraySize = None
         self.boundingRect = None
         self.timeScale = None
+        self.colorMap = 'viridis'
+        self.image.setLookupTable(getLutFromColorMap(self.colorMap))
 
     def getConfiguration(self):
         """Get the current plot configuration.
@@ -58,7 +62,7 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         """
         config = {}
         config['numBins'] = self.arraySize
-        config['colorMap'] = None
+        config['colorMap'] = self.colorMap
         return config
 
     def setConfiguration(self, config):
@@ -74,6 +78,10 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
             # Invalidate data
             self.data = None
             self.boundingRect = None
+
+        if self.colorMap != config['colorMap']:
+            self.colorMap = config['colorMap']
+            self.image.setLookupTable(getLutFromColorMap(self.colorMap))
 
     def setTimeScale(self, timeScale):
         """Update the stored timescale and invalidate data and bounding rect.

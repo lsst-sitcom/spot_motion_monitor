@@ -24,6 +24,7 @@ STATUSBAR_FAST_TIMEOUT = 100
 DEFAULT_FPS = 1
 NO_DATA_VALUE = " --- "
 DEFAULT_PSD_ARRAY_SIZE = 25
+COLORMAPS = ('viridis', 'plasma', 'inferno', 'magma', 'cividis')
 
 class AutoscaleState(enum.Enum):
     """Enumeration for handling autoscale states.
