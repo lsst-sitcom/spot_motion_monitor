@@ -32,7 +32,9 @@ class TestRoiFrameModel():
         assert info.flux == 2592.2000000000003
         assert info.maxAdc == 125.30000000000001
         assert info.objectSize == 54
-        assert info.stdNoObjects == 5.1785375980622534
+        #assert info.stdNoObjects == 5.1785375980622534
+        # See speed improvement in RoiFrameModel::calculateCentroid
+        assert info.stdNoObjects == -999
 
     def test_failedFrameCheck(self):
         # This test requires the generation of a CCD frame which will be

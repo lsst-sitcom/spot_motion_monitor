@@ -58,7 +58,9 @@ class RoiFrameModel():
             comY, comX = ndimage.center_of_mass(newFrame)
             objectSize = np.count_nonzero(newFrame)
             # Get standard deviation of original image without object pixels
-            maxStd = np.std(np.ma.masked_array(roiFrame, mask=newFrame))
+            # Removing this for speed improvement. MAR 2018/10/05
+            # maxStd = np.std(np.ma.masked_array(roiFrame, mask=newFrame))
+            maxStd = -999
             return GenericFrameInformation(comX, comY, flux, maxAdc, objectSize, maxStd)
         else:
             raise FrameRejected('ROI frame rejected due to low flux')
