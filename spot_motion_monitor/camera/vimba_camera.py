@@ -266,6 +266,7 @@ class VimbaCamera(BaseCamera):
         except pv.VimbaException:
             pass
         self.vimba.shutdown()
+        self.cameraPtr = None
 
     def updateOffset(self, centroidX, centroidY):
         """Update the camera's internal offset values from the provided centroid.
