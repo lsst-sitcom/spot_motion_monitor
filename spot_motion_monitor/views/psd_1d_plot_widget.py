@@ -85,6 +85,7 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
             The label for the axis.
         """
         self.plot = self.addPlot()
+        self.plot.setLogMode(y=True)
         self.curve = self.plot.plot([], [])
         self.plot.setLabel('bottom', '{} &#969;'.format(axisLabel), units='Hz')
         self.plot.setLabel('left', axisLabel)
