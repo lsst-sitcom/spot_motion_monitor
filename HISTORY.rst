@@ -3,6 +3,15 @@
 History
 -------
 
+0.8.0 (2018-10-24)
+~~~~~~~~~~~~~~~~~~
+
+* Added 1D Power Spectrum Distribution plots
+* Rearranged plots on UI
+* Added color map to PSD Waterfall plots
+* Change data widget to only update once per buffer fill
+* Speed improvement work to obtain 150 FPS for Vimba camera
+
 0.7.0 (2018-09-30)
 ~~~~~~~~~~~~~~~~~~
 
