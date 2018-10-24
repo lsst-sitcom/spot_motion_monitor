@@ -40,6 +40,7 @@ class DataController():
         self.roiFrameModel = RoiFrameModel()
         self.bufferModel = BufferModel()
         self.updater = InformationUpdater()
+        self.roiResetDone = False
 
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
@@ -119,11 +120,15 @@ class DataController():
             return
         try:
             if currentStatus.isRoiMode:
+                if not self.roiResetDone:
+                    self.cameraDataWidget.reset()
+                    self.roiResetDone = True
                 genericFrameInfo = self.roiFrameModel.calculateCentroid(frame)
                 self.bufferModel.updateInformation(genericFrameInfo, currentStatus.frameOffset)
-                roiFrameInfo = self.bufferModel.getInformation(currentStatus.currentFps)
-                self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
             else:
+                if self.roiResetDone:
+                    self.cameraDataWidget.reset()
+                    self.roiResetDone = False
                 genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
                 fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX),
                                                      int(genericFrameInfo.centerY),
@@ -154,3 +159,17 @@ class DataController():
         """
         self.fullFrameModel.frameCheck = fullFrameCheck
         self.roiFrameModel.frameCheck = roiFrameCheck
+
+    def showRoiInformation(self, show, currentFps):
+        """Display the current ROI information on camera data widget.
+
+        Parameters
+        ----------
+        show : bool
+            Flag that determines if information is shown.
+        currentFps : int
+            The current camera FPS.
+        """
+        if show:
+            roiFrameInfo = self.bufferModel.getInformation(currentFps)
+            self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)

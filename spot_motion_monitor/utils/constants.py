@@ -8,6 +8,8 @@ import enum
 
 Attributes
 ----------
+COLORMAPS : tuple
+    Set of colormaps provided by the program.
 DEFAULT_FPS : int
     The default Frames per Second.
 DEFAULT_PSD_ARRAY_SIZE : int
@@ -18,12 +20,16 @@ ONE_SECOND_IN_MILLISECONDS : int
     One second expressed in milliseconds.
 STATUSBAR_FAST_TIMEOUT : int
     A fast timeout for the status bar.
+TIMEFMT : str
+    Formatting for date/time strings.
 """
 ONE_SECOND_IN_MILLISECONDS = 1000
 STATUSBAR_FAST_TIMEOUT = 100
 DEFAULT_FPS = 1
 NO_DATA_VALUE = " --- "
 DEFAULT_PSD_ARRAY_SIZE = 25
+COLORMAPS = ('viridis', 'plasma', 'inferno', 'magma', 'cividis')
+TIMEFMT = '%Y-%m-%d %H:%M:%S'
 
 class AutoscaleState(enum.Enum):
     """Enumeration for handling autoscale states.

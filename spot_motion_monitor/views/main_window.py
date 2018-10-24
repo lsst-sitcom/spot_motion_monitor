@@ -16,7 +16,8 @@ from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
 from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE
-from spot_motion_monitor.views import CameraConfigurationDialog, PlotConfigurationDialog, Ui_MainWindow
+from spot_motion_monitor.views import CameraConfigurationDialog, PlotConfigurationDialog
+from spot_motion_monitor.views.forms import Ui_MainWindow
 from spot_motion_monitor import __version__
 
 __all__ = ['main']
@@ -61,7 +62,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotCentroidController = PlotCentroidController(self.centroidXPlot,
                                                              self.centroidYPlot,
                                                              self.scatterPlot)
-        self.plotPsdController = PlotPsdController(self.psdXPlot, self.psdYPlot)
+        self.plotPsdController = PlotPsdController(self.psdWaterfallXPlot,
+                                                   self.psdWaterfallYPlot,
+                                                   self.psd1dXPlot,
+                                                   self.psd1dYPlot)
 
         self.setupCameraMenu()
 
@@ -108,8 +112,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         centroids = self.dataController.getCentroids(cameraStatus.isRoiMode)
         self.plotCentroidController.update(centroids[0], centroids[1])
         psdData = self.dataController.getPsd(cameraStatus.isRoiMode, cameraStatus.currentFps)
-        self.plotCentroidController.showScatterPlots(psdData[0] is not None)
-        self.cameraController.showFrameStatus(psdData[0] is not None)
+        bufferReady = psdData[0] is not None
+        self.plotCentroidController.showScatterPlots(bufferReady)
+        self.cameraController.showFrameStatus(bufferReady)
+        self.dataController.showRoiInformation(bufferReady, cameraStatus.currentFps)
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
 
     def closeEvent(self, event):

@@ -6,7 +6,7 @@ from PyQt5.QtGui import QDoubleValidator, QIntValidator
 from PyQt5.QtWidgets import QTabWidget
 
 import spot_motion_monitor.utils as utils
-from spot_motion_monitor.views.ui_gaussian_camera_config import Ui_GaussianCameraConfigForm
+from spot_motion_monitor.views.forms.ui_gaussian_camera_config import Ui_GaussianCameraConfigForm
 
 __all__ = ['GaussianCameraConfigTab']
 

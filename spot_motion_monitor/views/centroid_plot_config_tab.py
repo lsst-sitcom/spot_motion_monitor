@@ -8,7 +8,7 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QTabWidget
 
 import spot_motion_monitor.utils as utils
-from spot_motion_monitor.views.ui_centroid_plots_config import Ui_CentroidPlotsConfigForm
+from spot_motion_monitor.views.forms.ui_centroid_plots_config import Ui_CentroidPlotsConfigForm
 
 __all__ = ['CentroidPlotConfigTab']
 

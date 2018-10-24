@@ -2,10 +2,12 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from datetime import datetime
+
 from PyQt5.QtWidgets import QWidget
 
-from spot_motion_monitor.utils import NO_DATA_VALUE
-from spot_motion_monitor.views.ui_camera_data import Ui_CameraData
+from spot_motion_monitor.utils import NO_DATA_VALUE, TIMEFMT
+from spot_motion_monitor.views.forms.ui_camera_data import Ui_CameraData
 
 __all__ = ["CameraDataWidget"]
 
@@ -41,6 +43,18 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         """
         return "{:.2f}".format(value)
 
+    def reset(self):
+        """Set all of the labels to the default no value.
+        """
+        self.bufferUpdatedValueLabel.setText(NO_DATA_VALUE)
+        self.accumPeriodValueLabel.setText(NO_DATA_VALUE)
+        self.centroidXLabel.setText(NO_DATA_VALUE)
+        self.centroidYLabel.setText(NO_DATA_VALUE)
+        self.rmsXLabel.setText(NO_DATA_VALUE)
+        self.rmsYLabel.setText(NO_DATA_VALUE)
+        self.fluxValueLabel.setText(NO_DATA_VALUE)
+        self.maxAdcValueLabel.setText(NO_DATA_VALUE)
+
     def updateFullFrameData(self, fullFrameInfo):
         """Update the labels with full frame information.
 
@@ -70,6 +84,7 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         if roiFrameInfo is None:
             return
 
+        self.bufferUpdatedValueLabel.setText(datetime.now().strftime(TIMEFMT))
         self.accumPeriodValueLabel.setText(self.formatFloat(roiFrameInfo.validFrames[1]))
         self.centroidXLabel.setText(self.formatFloat(roiFrameInfo.centerX))
         self.centroidYLabel.setText(self.formatFloat(roiFrameInfo.centerY))

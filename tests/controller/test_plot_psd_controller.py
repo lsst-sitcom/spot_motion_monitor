@@ -5,7 +5,7 @@
 import numpy as np
 
 from spot_motion_monitor.controller import PlotPsdController
-from spot_motion_monitor.views import PsdWaterfallPlotWidget
+from spot_motion_monitor.views import PsdWaterfallPlotWidget, Psd1dPlotWidget
 
 class TestPlotPsdController:
 
@@ -14,33 +14,51 @@ class TestPlotPsdController:
         cls.timeScale = 10
 
     def test_parametersAfterContruction(self, qtbot):
-        psdx = PsdWaterfallPlotWidget()
-        psdy = PsdWaterfallPlotWidget()
-        qtbot.addWidget(psdx)
-        qtbot.addWidget(psdy)
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
 
-        pfc = PlotPsdController(psdx, psdy)
-        assert pfc.psdXPlot is not None
-        assert pfc.psdYPlot is not None
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
+        assert pfc.psdWaterfallXPlot is not None
+        assert pfc.psdWaterfallYPlot is not None
+        assert pfc.psd1dXPlot is not None
+        assert pfc.psd1dYPlot is not None
 
-    def test_parametersAfterSetup(self, qtbot):
-        psdx = PsdWaterfallPlotWidget()
-        psdy = PsdWaterfallPlotWidget()
-        qtbot.addWidget(psdx)
-        qtbot.addWidget(psdy)
+    def test_parametersAfterSetup(self, qtbot, mocker):
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
 
-        pfc = PlotPsdController(psdx, psdy)
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
+        mockSetup1dXPlot = mocker.patch.object(pfc.psd1dXPlot, 'setup')
+        mockSetup1dYPlot = mocker.patch.object(pfc.psd1dYPlot, 'setup')
         pfc.setup(self.arraySize, self.timeScale)
-        assert pfc.psdXPlot.arraySize == self.arraySize
-        assert pfc.psdYPlot.arraySize == self.arraySize
+        assert pfc.psdWaterfallXPlot.arraySize == self.arraySize
+        assert pfc.psdWaterfallYPlot.arraySize == self.arraySize
+        assert mockSetup1dXPlot.call_count == 1
+        assert mockSetup1dYPlot.call_count == 1
 
     def test_update(self, qtbot, mocker):
-        psdx = PsdWaterfallPlotWidget()
-        psdy = PsdWaterfallPlotWidget()
-        qtbot.addWidget(psdx)
-        qtbot.addWidget(psdy)
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
 
-        pfc = PlotPsdController(psdx, psdy)
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
         pfc.setup(self.arraySize, self.timeScale)
 
         np.random.seed(3000)
@@ -48,72 +66,103 @@ class TestPlotPsdController:
         psdDataY = np.random.random(7)
         freqs = np.random.random(7)
 
-        mockPsdXPlotUpdatePlot = mocker.patch.object(pfc.psdXPlot, 'updatePlot')
-        mockPsdYPlotUpdatePlot = mocker.patch.object(pfc.psdYPlot, 'updatePlot')
+        mockPsdWaterfallXPlotUpdatePlot = mocker.patch.object(pfc.psdWaterfallXPlot, 'updatePlot')
+        mockPsdWaterfallYPlotUpdatePlot = mocker.patch.object(pfc.psdWaterfallYPlot, 'updatePlot')
+        mockPsd1dXPlotUpdatePlot = mocker.patch.object(pfc.psd1dXPlot, 'updatePlot')
+        mockPsd1dYPlotUpdatePlot = mocker.patch.object(pfc.psd1dYPlot, 'updatePlot')
+
         pfc.update(psdDataX, psdDataY, freqs)
 
-        assert mockPsdXPlotUpdatePlot.call_count == 1
-        assert mockPsdYPlotUpdatePlot.call_count == 1
+        assert mockPsdWaterfallXPlotUpdatePlot.call_count == 1
+        assert mockPsdWaterfallYPlotUpdatePlot.call_count == 1
+        assert mockPsd1dXPlotUpdatePlot.call_count == 1
+        assert mockPsd1dYPlotUpdatePlot.call_count == 1
 
     def test_badFftData(self, qtbot, mocker):
-        psdx = PsdWaterfallPlotWidget()
-        psdy = PsdWaterfallPlotWidget()
-        qtbot.addWidget(psdx)
-        qtbot.addWidget(psdy)
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
 
-        pfc = PlotPsdController(psdx, psdy)
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
         pfc.setup(self.arraySize, self.timeScale)
 
-        mockPsdXPlotUpdatePlot = mocker.patch.object(pfc.psdXPlot, 'updatePlot')
-        mockPsdYPlotUpdatePlot = mocker.patch.object(pfc.psdYPlot, 'updatePlot')
+        mockPsdXPlotUpdatePlot = mocker.patch.object(pfc.psdWaterfallXPlot, 'updatePlot')
+        mockPsdYPlotUpdatePlot = mocker.patch.object(pfc.psdWaterfallYPlot, 'updatePlot')
+        mockPsd1dXPlotUpdatePlot = mocker.patch.object(pfc.psd1dXPlot, 'updatePlot')
+        mockPsd1dYPlotUpdatePlot = mocker.patch.object(pfc.psd1dYPlot, 'updatePlot')
         pfc.update(None, None, None)
 
         assert mockPsdXPlotUpdatePlot.call_count == 0
         assert mockPsdYPlotUpdatePlot.call_count == 0
+        assert mockPsd1dXPlotUpdatePlot.call_count == 0
+        assert mockPsd1dYPlotUpdatePlot.call_count == 0
 
     def test_updateTimeScale(self, qtbot, mocker):
-        psdx = PsdWaterfallPlotWidget()
-        psdy = PsdWaterfallPlotWidget()
-        qtbot.addWidget(psdx)
-        qtbot.addWidget(psdy)
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
 
-        pfc = PlotPsdController(psdx, psdy)
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
         pfc.setup(self.arraySize, self.timeScale)
 
-        mockPsdXPlotSetTimeScale = mocker.patch.object(pfc.psdXPlot, 'setTimeScale')
-        mockPsdYPlotSetTimeScale = mocker.patch.object(pfc.psdYPlot, 'setTimeScale')
+        mockPsdXPlotSetTimeScale = mocker.patch.object(pfc.psdWaterfallXPlot, 'setTimeScale')
+        mockPsdYPlotSetTimeScale = mocker.patch.object(pfc.psdWaterfallYPlot, 'setTimeScale')
         pfc.updateTimeScale(100)
 
         assert mockPsdXPlotSetTimeScale.call_count == 1
         assert mockPsdYPlotSetTimeScale.call_count == 1
 
     def test_getPlotConfiguration(self, qtbot):
-        psdx = PsdWaterfallPlotWidget()
-        psdy = PsdWaterfallPlotWidget()
-        qtbot.addWidget(psdx)
-        qtbot.addWidget(psdy)
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
 
-        pfc = PlotPsdController(psdx, psdy)
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
         pfc.setup(self.arraySize, self.timeScale)
 
         currentConfig = pfc.getPlotConfiguration()
-        assert len(currentConfig) == 1
-        assert list(currentConfig.keys()) == ['waterfall']
+        assert len(currentConfig) == 3
+        assert list(currentConfig.keys()) == ['waterfall', 'xPSD', 'yPSD']
 
     def test_setPlotConfiguration(self, qtbot, mocker):
-        psdx = PsdWaterfallPlotWidget()
-        psdy = PsdWaterfallPlotWidget()
-        qtbot.addWidget(psdx)
-        qtbot.addWidget(psdy)
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
 
-        pfc = PlotPsdController(psdx, psdy)
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
         pfc.setup(self.arraySize, self.timeScale)
 
-        mockPsdXWaterfallSetConfig = mocker.patch.object(pfc.psdXPlot, 'setConfiguration')
-        mockPsdYWaterfallSetConfig = mocker.patch.object(pfc.psdYPlot, 'setConfiguration')
+        mockPsdXWaterfallSetConfig = mocker.patch.object(pfc.psdWaterfallXPlot, 'setConfiguration')
+        mockPsdYWaterfallSetConfig = mocker.patch.object(pfc.psdWaterfallYPlot, 'setConfiguration')
+        mockPsdX1dSetConfig = mocker.patch.object(pfc.psd1dXPlot, 'setConfiguration')
+        mockPsdY1dSetConfig = mocker.patch.object(pfc.psd1dYPlot, 'setConfiguration')
 
-        truthConfig = {'waterfall': {'numBins': 10, 'colorMap': None}}
+        truthConfig = {'waterfall': {'numBins': 10, 'colorMap': None},
+                       'xPSD': {'autoscale': True},
+                       'yPSD': {'autoscale': True}}
         pfc.setPlotConfiguration(truthConfig)
 
         assert mockPsdXWaterfallSetConfig.call_count == 1
         assert mockPsdYWaterfallSetConfig.call_count == 1
+        assert mockPsdX1dSetConfig.call_count == 1
+        assert mockPsdY1dSetConfig.call_count == 1

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>962</width>
-    <height>685</height>
+    <width>1064</width>
+    <height>765</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,36 +17,75 @@
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <layout class="QHBoxLayout" name="horizontalLayout_5">
     <property name="spacing">
-     <number>2</number>
-    </property>
-    <property name="leftMargin">
-     <number>2</number>
-    </property>
-    <property name="topMargin">
-     <number>2</number>
-    </property>
-    <property name="rightMargin">
-     <number>2</number>
-    </property>
-    <property name="bottomMargin">
-     <number>2</number>
+     <number>1</number>
     </property>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
       <property name="spacing">
-       <number>2</number>
+       <number>1</number>
       </property>
       <item>
-       <widget class="CameraPlotWidget" name="cameraPlot">
-        <property name="minimumSize">
-         <size>
-          <width>400</width>
-          <height>300</height>
-         </size>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <property name="spacing">
+         <number>1</number>
         </property>
-       </widget>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="CameraPlotWidget" name="cameraPlot">
+            <property name="minimumSize">
+             <size>
+              <width>250</width>
+              <height>200</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>1</number>
+          </property>
+          <item>
+           <widget class="Centroid1dPlotWidget" name="centroidXPlot">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>150</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Centroid1dPlotWidget" name="centroidYPlot">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>150</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="CentroidScatterPlotWidget" name="scatterPlot">
@@ -61,9 +100,9 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">
-       <number>2</number>
+       <number>1</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -71,21 +110,21 @@
          <number>2</number>
         </property>
         <item>
-         <widget class="Centroid1dPlotWidget" name="centroidXPlot">
+         <widget class="Psd1dPlotWidget" name="psd1dXPlot">
           <property name="minimumSize">
            <size>
             <width>250</width>
-            <height>200</height>
+            <height>150</height>
            </size>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="Centroid1dPlotWidget" name="centroidYPlot">
+         <widget class="Psd1dPlotWidget" name="psd1dYPlot">
           <property name="minimumSize">
            <size>
             <width>250</width>
-            <height>200</height>
+            <height>150</height>
            </size>
           </property>
          </widget>
@@ -98,21 +137,21 @@
          <number>2</number>
         </property>
         <item>
-         <widget class="PsdWaterfallPlotWidget" name="psdXPlot">
+         <widget class="PsdWaterfallPlotWidget" name="psdWaterfallXPlot">
           <property name="minimumSize">
            <size>
             <width>250</width>
-            <height>200</height>
+            <height>250</height>
            </size>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="PsdWaterfallPlotWidget" name="psdYPlot">
+         <widget class="PsdWaterfallPlotWidget" name="psdWaterfallYPlot">
           <property name="minimumSize">
            <size>
             <width>250</width>
-            <height>200</height>
+            <height>250</height>
            </size>
           </property>
          </widget>
@@ -161,7 +200,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>962</width>
+     <width>1064</width>
      <height>22</height>
     </rect>
    </property>
@@ -259,6 +298,11 @@
    <class>PsdWaterfallPlotWidget</class>
    <extends>QGraphicsView</extends>
    <header>spot_motion_monitor.views.psd_waterfall_plot_widget</header>
+  </customwidget>
+  <customwidget>
+   <class>Psd1dPlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>spot_motion_monitor.views.psd_1d_plot_widget</header>
   </customwidget>
  </customwidgets>
  <resources/>

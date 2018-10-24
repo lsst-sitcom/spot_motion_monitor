@@ -11,24 +11,34 @@ class PlotPsdController:
 
     Attributes
     ----------
-    psdXPlot : PsdWaterfallPlotWidget
+    psd1dXPlot : Psd1dPlotWidget
+        The instance of the 1d plot for the PSD x coordinates.
+    psd1dYPlot : Psd1dPlotWidget
+        The instance of the 1d plot for the PSD y coordinates.
+    psdWaterfallXPlot : PsdWaterfallPlotWidget
         The instance of the waterfall plot for the PSD x coordinates.
-    psdYPlot : PsdWaterfallPlotWidget
+    psdWaterfallYPlot : PsdWaterfallPlotWidget
         The instance of the waterfall plot for the PSD y coordinates.
     """
 
-    def __init__(self, psdx, psdy):
+    def __init__(self, psdwfx, psdwfy, psd1dx, psd1dy):
         """Initialize the class.
 
         Parameters
         ----------
-        psdx : PsdWaterfallPlotWidget
+        psdwfx : PsdWaterfallPlotWidget
             The instance of the waterfall plot for the PSD x coordinates.
-        psdy : PsdWaterfallPlotWidget
+        psdwfy : PsdWaterfallPlotWidget
             The instance of the waterfall plot for the PSD y coordinates.
+        psd1dx : Psd1dPlotWidget
+            The instance of the 1d plot for the PSD x coordinates.
+        psd1dy : Psd1dPlotWidget
+            The instance of the 1d plot for the PSD y coordinates.
         """
-        self.psdXPlot = psdx
-        self.psdYPlot = psdy
+        self.psdWaterfallXPlot = psdwfx
+        self.psdWaterfallYPlot = psdwfy
+        self.psd1dXPlot = psd1dx
+        self.psd1dYPlot = psd1dy
 
     def getPlotConfiguration(self):
         """Get the current camera configuration.
@@ -39,7 +49,9 @@ class PlotPsdController:
             The set of current camera configuration parameters.
         """
         config = {}
-        config['waterfall'] = self.psdXPlot.getConfiguration()
+        config['waterfall'] = self.psdWaterfallXPlot.getConfiguration()
+        config['xPSD'] = self.psd1dXPlot.getConfiguration()
+        config['yPSD'] = self.psd1dYPlot.getConfiguration()
         return config
 
     def setPlotConfiguration(self, config):
@@ -50,8 +62,10 @@ class PlotPsdController:
         config : dict
             The new configuration parameters.
         """
-        self.psdXPlot.setConfiguration(config['waterfall'])
-        self.psdYPlot.setConfiguration(config['waterfall'])
+        self.psdWaterfallXPlot.setConfiguration(config['waterfall'])
+        self.psdWaterfallYPlot.setConfiguration(config['waterfall'])
+        self.psd1dXPlot.setConfiguration(config['xPSD'])
+        self.psd1dYPlot.setConfiguration(config['yPSD'])
 
     def setup(self, arraySize, timeScale):
         """Setup the controller's internal information.
@@ -63,8 +77,10 @@ class PlotPsdController:
         timeScale : float
             The total accumulation time from the buffer size and ROI FPS.
         """
-        self.psdXPlot.setup(arraySize, timeScale, 'X')
-        self.psdYPlot.setup(arraySize, timeScale, 'Y')
+        self.psdWaterfallXPlot.setup(arraySize, timeScale, 'X')
+        self.psdWaterfallYPlot.setup(arraySize, timeScale, 'Y')
+        self.psd1dXPlot.setup('X')
+        self.psd1dYPlot.setup('Y')
 
     def update(self, psdDataX, psdDataY, frequencies):
         """Update the controller's plot widgets with the data provided.
@@ -79,12 +95,19 @@ class PlotPsdController:
             The array of the PSD y coordinate data.
         frequencies : numpy.array
             The frequency array associated with the PSD data.
+
+        Returns
+        -------
+        TYPE
+            Description
         """
         if psdDataX is None or psdDataY is None or frequencies is None:
             return
 
-        self.psdXPlot.updatePlot(psdDataX, frequencies)
-        self.psdYPlot.updatePlot(psdDataY, frequencies)
+        self.psdWaterfallXPlot.updatePlot(psdDataX, frequencies)
+        self.psdWaterfallYPlot.updatePlot(psdDataY, frequencies)
+        self.psd1dXPlot.updatePlot(psdDataX, frequencies)
+        self.psd1dYPlot.updatePlot(psdDataY, frequencies)
 
     def updateTimeScale(self, newTimeScale):
         """Update the stored timescale in the plot widgets.
@@ -94,5 +117,5 @@ class PlotPsdController:
         newTimeScale : float
             The new timescale.
         """
-        self.psdXPlot.setTimeScale(newTimeScale)
-        self.psdYPlot.setTimeScale(newTimeScale)
+        self.psdWaterfallXPlot.setTimeScale(newTimeScale)
+        self.psdWaterfallYPlot.setTimeScale(newTimeScale)
