@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
 
@@ -18,16 +20,24 @@ class DataController():
 
     Attributes
     ----------
-    bufferModel : TYPE
-        Description
+    bufferModel : .BufferModel
+        An instance of the buffer model.
     cameraDataWidget : .CameraDataWidget
         An instance of the camera data widget.
+    centroidFilename : str
+        The current name for the centroid output file.
+    filesCreated : bool
+        Whether or not the output files have been created.
     fullFrameModel : .FullFrameModel
         An instance of the full frame calculation model.
+    psdFilename : str
+        The current name for the PSD output file.
     roiFrameModel : .RoiFrameModel
         An instance of the ROI frame calculation model.
     updater : .InformationUpdater
         An instance of the information updater.
+    writeData : bool
+        Whether or not data writing is available.
     """
 
     def __init__(self, cdw):
@@ -45,6 +55,9 @@ class DataController():
         self.updater = InformationUpdater()
         self.roiResetDone = False
         self.writeData = False
+        self.filesCreated = False
+        self.centroidFilename = None
+        self.psdFilename = None
 
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
@@ -216,7 +229,12 @@ class DataController():
         centroidX = np.array(self.bufferModel.centerX)
         centroidY = np.array(self.bufferModel.centerY)
 
-        outputFile = 'smm.h5'
+        if not self.filesCreated:
+            dateTag = datetime.now().strftime('%Y%m%d_%H%M%S')
+            self.centroidFilename = 'smm_centroid_{}.h5'.format(dateTag)
+            self.psdFilename = 'smm_psd_{}.h5'.format(dateTag)
+            self.filesCreated = True
+
         centDf = pd.DataFrame({
                               'X': centroidX,
                               'Y': centroidY
@@ -226,5 +244,7 @@ class DataController():
                              'X': psd[0],
                              'Y': psd[1]
                              })
-        centDf.to_hdf(outputFile, key='centroid', append=True)
-        psdDf.to_hdf(outputFile, key='psd', append=True)
+        dateKey = 'DT_{}'.format(datetime.now().strftime('%Y%m%d_%H%M%S'))
+
+        centDf.to_hdf(self.centroidFilename, key=dateKey)
+        psdDf.to_hdf(self.psdFilename, key=dateKey)

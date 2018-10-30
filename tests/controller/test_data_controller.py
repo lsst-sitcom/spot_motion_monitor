@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import os
 
+from freezegun import freeze_time
 import numpy as np
 
 from spot_motion_monitor.camera import CameraStatus
@@ -30,6 +31,9 @@ class TestDataController():
         assert dc.bufferModel is not None
         assert dc.roiResetDone is False
         assert dc.writeData is False
+        assert dc.filesCreated is False
+        assert dc.centroidFilename is None
+        assert dc.psdFilename is None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -166,6 +170,7 @@ class TestDataController():
         dc.showRoiInformation(False, currentFps)
         assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
 
+<<<<<<< HEAD
     def test_setDataConfiguration(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
@@ -183,10 +188,14 @@ class TestDataController():
         dc.setDataConfiguration(truthConfig)
         assert dc.bufferModel.pixelScale == truthConfig['pixelScale']
 
+=======
+    @freeze_time('2018-10-30 22:30:15')
+>>>>>>> Splitting saved files.
     def test_writingData(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
+        assert dc.filesCreated is False
         dc.writeData = True
         # Setup buffer model
         dc.setBufferSize(4)
@@ -203,8 +212,14 @@ class TestDataController():
                                                                  32043.42, 143.422,
                                                                  70, None), (0, 0))
         assert dc.bufferModel.rollBuffer is True
-        outputFile = 'smm.h5'
+        centroidOutputFile = 'smm_centroid_20181030_223015.h5'
+        psdOutputFile = 'smm_psd_20181030_223015.h5'
         psdInfo = dc.bufferModel.getPsd(40)
         dc.writeDataToFile(psdInfo)
-        assert os.path.exists(outputFile)
-        #os.remove(outputFile)
+        assert dc.filesCreated is True
+        assert dc.centroidFilename == centroidOutputFile
+        assert dc.psdFilename == psdOutputFile
+        assert os.path.exists(centroidOutputFile)
+        assert os.path.exists(psdOutputFile)
+        os.remove(centroidOutputFile)
+        os.remove(psdOutputFile)
