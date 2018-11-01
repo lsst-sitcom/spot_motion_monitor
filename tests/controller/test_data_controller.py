@@ -6,6 +6,7 @@ import os
 
 from freezegun import freeze_time
 import numpy as np
+from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.camera import CameraStatus
 from spot_motion_monitor.controller import DataController
@@ -195,8 +196,21 @@ class TestDataController():
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
+        assert dc.cameraDataWidget.saveDataCheckBox.isChecked() is False
+        assert dc.writeData is False
         assert dc.filesCreated is False
-        dc.writeData = True
+
+        nonePsd = (None, None, None)
+
+        dc.writeDataToFile(nonePsd)
+        assert dc.filesCreated is False
+
+        qtbot.mouseClick(cdw.saveDataCheckBox, Qt.LeftButton)
+        assert dc.writeData is True
+
+        dc.writeDataToFile(nonePsd)
+        assert dc.filesCreated is False
+
         # Setup buffer model
         dc.setBufferSize(4)
         dc.bufferModel.updateInformation(GenericFrameInformation(300.3, 400.2,

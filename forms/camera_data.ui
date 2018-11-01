@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>230</width>
-    <height>260</height>
+    <height>283</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,6 +26,13 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="saveDataCheckBox">
+     <property name="text">
+      <string>Save Buffer Data</string>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">

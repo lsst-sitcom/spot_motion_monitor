@@ -59,6 +59,8 @@ class DataController():
         self.centroidFilename = None
         self.psdFilename = None
 
+        self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
+
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
 
@@ -135,6 +137,9 @@ class DataController():
             return psd
         else:
             return (None, None, None)
+
+    def handleSaveData(self, checked):
+        self.writeData = checked
 
     def passFrame(self, frame, currentStatus):
         """Get a frame, do calculations and update information.
@@ -222,8 +227,10 @@ class DataController():
         psd : tuple
             The PSDX. PSDY and Frequency components.
         """
+        if not self.writeData:
+            return
+
         if psd[0] is None:
-            print(self.bufferModel.rollBuffer)
             return
 
         centroidX = np.array(self.bufferModel.centerX)
