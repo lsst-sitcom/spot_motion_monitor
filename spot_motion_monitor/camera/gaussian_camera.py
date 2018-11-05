@@ -17,8 +17,6 @@ class GaussianCamera(BaseCamera):
     ----------
     counter : int
         The progress of the oscillation in time.
-    deltaTime : int
-        The number of segments in a full oscillation cycle.
     fpsFullFrame : int
         The Frames per Second rate in full frame mode.
     fpsRoiFrame : int
@@ -53,6 +51,7 @@ class GaussianCamera(BaseCamera):
         The y-coordinate of the original postage stamp insertion point.
     """
 
+    TWO_PI = 2.0 * np.pi
     seed = None
 
     def __init__(self):
@@ -71,11 +70,10 @@ class GaussianCamera(BaseCamera):
         # Parameters for spot oscillation.
         self.doSpotOscillation = True
         self.counter = 0
-        self.xFreq = 5.0
+        self.xFreq = 1.0
         self.xAmp = 10
-        self.yFreq = 10.0
+        self.yFreq = 2.0
         self.yAmp = 5
-        self.deltaTime = 200
         self.xPointOriginal = None
         self.yPointOriginal = None
 
@@ -108,7 +106,6 @@ class GaussianCamera(BaseCamera):
         config['xFrequency'] = self.xFreq
         config['yAmplitude'] = self.yAmp
         config['yFrequency'] = self.yFreq
-        config['deltaTime'] = self.deltaTime
         return config
 
     def getFullFrame(self):
@@ -173,9 +170,9 @@ class GaussianCamera(BaseCamera):
         """Calculate the oscillation of the spot.
         """
         self.xPoint = int(self.xPointOriginal +
-                          self.xAmp * np.sin(self.xFreq * (self.counter / self.deltaTime)))
+                          self.xAmp * np.sin(self.TWO_PI * self.xFreq * (self.counter / self.fpsRoiFrame)))
         self.yPoint = int(self.yPointOriginal +
-                          self.yAmp * np.sin(self.yFreq * (self.counter / self.deltaTime)))
+                          self.yAmp * np.sin(self.TWO_PI * self.yFreq * (self.counter / self.fpsRoiFrame)))
         self.counter += 1
 
     def resetOffset(self):
@@ -200,7 +197,6 @@ class GaussianCamera(BaseCamera):
             self.xAmp = config['xAmplitude']
             self.yFreq = config['yFrequency']
             self.yAmp = config['yAmplitude']
-            self.deltaTime = config['deltaTime']
 
     def showFrameStatus(self):
         """Show frame status from the camera.
