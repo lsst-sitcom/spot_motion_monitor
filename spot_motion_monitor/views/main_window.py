@@ -120,7 +120,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.showFrameStatus(bufferReady)
         self.dataController.showRoiInformation(bufferReady, cameraStatus.currentFps)
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
-        self.dataController.writeDataToFile(psdData)
+        self.dataController.writeDataToFile(psdData, cameraStatus.currentFps)
 
     def closeEvent(self, event):
         """Handle saving settings on shutdown.

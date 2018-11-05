@@ -2,6 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from datetime import timedelta
 import os
 
 from freezegun import freeze_time
@@ -11,7 +12,7 @@ from PyQt5.QtCore import Qt
 from spot_motion_monitor.camera import CameraStatus
 from spot_motion_monitor.controller import DataController
 from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, RoiFrameInformation
-from spot_motion_monitor.utils import passFrame
+from spot_motion_monitor.utils import getTimestamp, passFrame
 from spot_motion_monitor.views import CameraDataWidget
 
 class TestDataController():
@@ -20,6 +21,8 @@ class TestDataController():
         cls.frame = np.ones((3, 5))
         cls.fullFrameStatus = CameraStatus(24, False, (0, 0), True)
         cls.roiFrameStatus = CameraStatus(40, True, (264, 200), True)
+        cls.timestamp = getTimestamp()
+        cls.deltaTime = timedelta(seconds=1)
 
     def test_parametersAfterConstruction(self, qtbot):
         cdw = CameraDataWidget()
@@ -42,7 +45,8 @@ class TestDataController():
         dc = DataController(cdw)
         mockCameraDataWidgetReset = mocker.patch.object(cdw, 'reset')
         mocker.patch('spot_motion_monitor.views.camera_data_widget.CameraDataWidget.updateFullFrameData')
-        dc.fullFrameModel.calculateCentroid = mocker.Mock(return_value=GenericFrameInformation(300.3,
+        dc.fullFrameModel.calculateCentroid = mocker.Mock(return_value=GenericFrameInformation(self.timestamp,
+                                                                                               300.3,
                                                                                                400.2,
                                                                                                32042.42,
                                                                                                145.422,
@@ -72,7 +76,8 @@ class TestDataController():
         dc = DataController(cdw)
         mockCameraDataWidgetReset = mocker.patch.object(cdw, 'reset')
         mockBufferModelUpdateInfo = mocker.patch.object(dc.bufferModel, 'updateInformation')
-        dc.roiFrameModel.calculateCentroid = mocker.Mock(return_value=GenericFrameInformation(242.3,
+        dc.roiFrameModel.calculateCentroid = mocker.Mock(return_value=GenericFrameInformation(self.timestamp,
+                                                                                              242.3,
                                                                                               286.2,
                                                                                               2519.534,
                                                                                               104.343,
@@ -146,7 +151,7 @@ class TestDataController():
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
-        truthInfo = GenericFrameInformation(300.3, 400.2, 32042.42, 145.422, 70, None)
+        truthInfo = GenericFrameInformation(self.timestamp, 300.3, 400.2, 32042.42, 145.422, 70, None)
         dc.fullFrameModel.calculateCentroid = mocker.Mock(return_value=truthInfo)
         info = dc.getCentroidForUpdate(self.frame)
         assert info.centerX == truthInfo.centerX
@@ -195,6 +200,7 @@ class TestDataController():
     def test_writingData(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
+        currentFps = 40
         dc = DataController(cdw)
         assert dc.cameraDataWidget.saveDataCheckBox.isChecked() is False
         assert dc.writeData is False
@@ -202,34 +208,38 @@ class TestDataController():
 
         nonePsd = (None, None, None)
 
-        dc.writeDataToFile(nonePsd)
+        dc.writeDataToFile(nonePsd, currentFps)
         assert dc.filesCreated is False
 
         qtbot.mouseClick(cdw.saveDataCheckBox, Qt.LeftButton)
         assert dc.writeData is True
 
-        dc.writeDataToFile(nonePsd)
+        dc.writeDataToFile(nonePsd, currentFps)
         assert dc.filesCreated is False
 
         # Setup buffer model
         dc.setBufferSize(4)
-        dc.bufferModel.updateInformation(GenericFrameInformation(300.3, 400.2,
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp,
+                                                                 300.3, 400.2,
                                                                  32042.42, 145.422,
                                                                  70, None), (0, 0))
-        dc.bufferModel.updateInformation(GenericFrameInformation(300.4, 400.4,
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime,
+                                                                 300.4, 400.4,
                                                                  32045.42, 146.422,
                                                                  70, None), (0, 0))
-        dc.bufferModel.updateInformation(GenericFrameInformation(300.2, 400.5,
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 2,
+                                                                 300.2, 400.5,
                                                                  32040.42, 142.422,
                                                                  70, None), (0, 0))
-        dc.bufferModel.updateInformation(GenericFrameInformation(300.1, 400.3,
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 3,
+                                                                 300.1, 400.3,
                                                                  32043.42, 143.422,
                                                                  70, None), (0, 0))
         assert dc.bufferModel.rollBuffer is True
         centroidOutputFile = 'smm_centroid_20181030_223015.h5'
         psdOutputFile = 'smm_psd_20181030_223015.h5'
-        psdInfo = dc.bufferModel.getPsd(40)
-        dc.writeDataToFile(psdInfo)
+        psdInfo = dc.bufferModel.getPsd(currentFps)
+        dc.writeDataToFile(psdInfo, currentFps)
         assert dc.filesCreated is True
         assert dc.centroidFilename == centroidOutputFile
         assert dc.psdFilename == psdOutputFile

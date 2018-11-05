@@ -36,6 +36,8 @@ class BufferModel():
         Flag to determine if rolling buffer mode is active.
     stdMax : list
         Array of standard deviations of ROI frames without object pixels.
+    timestamp : list
+        Array of measurement date/times.
     """
 
     def __init__(self):
@@ -45,6 +47,7 @@ class BufferModel():
         self.rollBuffer = False
         self.counter = 0
         self.pixelScale = 1.0
+        self.timestamp = []
         self.maxAdc = []
         self.flux = []
         self.centerX = []
@@ -118,6 +121,7 @@ class BufferModel():
         """
         self.rollBuffer = False
         self.counter = 0
+        self.timestamp = []
         self.maxAdc = []
         self.flux = []
         self.centerX = []
@@ -136,6 +140,7 @@ class BufferModel():
             The x, y pixel coordinates of the frame offset.
         """
         if self.rollBuffer:
+            self.timestamp.pop(0)
             self.maxAdc.pop(0)
             self.flux.pop(0)
             self.centerX.pop(0)
@@ -143,6 +148,7 @@ class BufferModel():
             self.objectSize.pop(0)
             self.stdMax.pop(0)
 
+        self.timestamp.append(info.timestamp)
         self.maxAdc.append(info.maxAdc)
         self.flux.append(info.flux)
         self.centerX.append(info.centerX + offset[0])

@@ -18,6 +18,7 @@ FullFrameInformation : namedtuple
     * maxAdc (float) - The maximum ADC in the frame
 GenericFrameInformation : namedtuple
     Information describing a generic CCD frame
+    * timestamp (datetime.datetime) - The date/time when measurement was made
     * centerX (float) - The calculated x pixel value of the frame centroid
     * centerY (float) - The calculated y pixel value of the frame centroid
     * flux (float) - The sum total ADC count for the frame
@@ -38,6 +39,6 @@ RoiFrameInformation : namedtuple
 FullFrameInformation = namedtuple('FullFrameInformation', 'centerX centerY flux maxAdc')
 
 GenericFrameInformation = namedtuple('GenericFrameInformation',
-                                     'centerX centerY flux maxAdc objectSize stdNoObjects')
+                                     'timestamp centerX centerY flux maxAdc objectSize stdNoObjects')
 
 RoiFrameInformation = namedtuple('RoiFrameInformation', 'centerX centerY flux maxAdc rmsX rmsY validFrames')

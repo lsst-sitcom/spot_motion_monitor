@@ -6,6 +6,7 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
+import tables
 
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
@@ -139,6 +140,13 @@ class DataController():
             return (None, None, None)
 
     def handleSaveData(self, checked):
+        """Deal with changes in the Save Buffer Data checkbox.
+
+        Parameters
+        ----------
+        checked : bool
+            State of the Save Buffer Data checkbox.
+        """
         self.writeData = checked
 
     def passFrame(self, frame, currentStatus):
@@ -219,13 +227,15 @@ class DataController():
             roiFrameInfo = self.bufferModel.getInformation(currentFps)
             self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
 
-    def writeDataToFile(self, psd):
+    def writeDataToFile(self, psd, currentFps):
         """Write centroid and power spectrum distributions to a file.
 
         Parameters
         ----------
         psd : tuple
             The PSDX. PSDY and Frequency components.
+        currentFps : int
+            The current camera FPS.
         """
         if not self.writeData:
             return
@@ -233,25 +243,39 @@ class DataController():
         if psd[0] is None:
             return
 
+        timestamp = np.array(self.bufferModel.timestamp)
         centroidX = np.array(self.bufferModel.centerX)
         centroidY = np.array(self.bufferModel.centerY)
 
         if not self.filesCreated:
-            dateTag = datetime.now().strftime('%Y%m%d_%H%M%S')
+            dateTag = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
             self.centroidFilename = 'smm_centroid_{}.h5'.format(dateTag)
             self.psdFilename = 'smm_psd_{}.h5'.format(dateTag)
             self.filesCreated = True
 
+            centroidFile = tables.open_file(self.centroidFilename, 'a')
+            cameraGroup = centroidFile.create_group('/', 'camera', 'Camera Information')
+
+            class CameraInfo(tables.IsDescription):
+                roiFramesPerSecond = tables.IntCol(pos=1)
+
+            cameraInfo = centroidFile.create_table(cameraGroup, 'info', CameraInfo)
+            info = cameraInfo.row
+            info['roiFramesPerSecond'] = currentFps
+            info.append()
+            cameraInfo.flush()
+            centroidFile.close()
+
         centDf = pd.DataFrame({
                               'X': centroidX,
                               'Y': centroidY
-                              })
+                              }, index=timestamp)
         psdDf = pd.DataFrame({
                              'Frequencies': psd[2],
                              'X': psd[0],
                              'Y': psd[1]
                              })
-        dateKey = 'DT_{}'.format(datetime.now().strftime('%Y%m%d_%H%M%S'))
+        dateKey = 'DT_{}'.format(datetime.utcnow().strftime('%Y%m%d_%H%M%S'))
 
         centDf.to_hdf(self.centroidFilename, key=dateKey)
         psdDf.to_hdf(self.psdFilename, key=dateKey)
