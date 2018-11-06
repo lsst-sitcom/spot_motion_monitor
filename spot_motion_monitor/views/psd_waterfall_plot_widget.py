@@ -124,10 +124,9 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         """
         if self.data is None:
             self.data = np.zeros((self.arraySize, psd.size))
-            self.data[0, ...] = psd
         else:
             self.data[1:, ...] = self.data[:-1, ...]
-            self.data[0, ...] = psd
+        self.data[0, ...] = np.log(psd)
 
         self.image.setImage(self.data)
         if self.boundingRect is None:

@@ -16,8 +16,8 @@ class TestPsdWaterfallPlotWidget:
     def setup_class(cls):
         cls.pwpw1 = PsdWaterfallPlotWidget()
         cls.timeScale = 10
-        cls.p1 = np.arange(5, dtype=float)
-        cls.p2 = np.arange(5, 10, dtype=float)
+        cls.p1 = np.arange(5, dtype=float) + 1
+        cls.p2 = np.arange(5, 10, dtype=float) + 1
         cls.p3 = np.linspace(0.2, 1.2, 5)
 
     def test_parametersAfterConstruction(self, qtbot):
@@ -47,7 +47,7 @@ class TestPsdWaterfallPlotWidget:
 
         self.pwpw1.updatePlot(self.p1, self.p3)
         assert self.pwpw1.data.shape == (arraySize, self.p1.size)
-        assert (self.pwpw1.data[0, ...] == self.p1).all()
+        assert (self.pwpw1.data[0, ...] == np.log(self.p1)).all()
         assert mockSetImage.call_count == 1
         rectCoords = self.pwpw1.boundingRect.getCoords()
         assert rectCoords[0] == 0
@@ -56,8 +56,8 @@ class TestPsdWaterfallPlotWidget:
         assert rectCoords[3] == 30
 
         self.pwpw1.updatePlot(self.p2, self.p3)
-        assert (self.pwpw1.data[0, ...] == self.p2).all()
-        assert (self.pwpw1.data[1, ...] == self.p1).all()
+        assert (self.pwpw1.data[0, ...] == np.log(self.p2)).all()
+        assert (self.pwpw1.data[1, ...] == np.log(self.p1)).all()
         assert mockSetImage.call_count == 2
 
     def test_updateTimeScale(self, qtbot, mocker):
