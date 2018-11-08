@@ -48,5 +48,6 @@ output/*/index.html
 docs/_build
 docs/modules.rst
 
-# Saved date
+# Saved data
 *.h5
+dsm_telemetry

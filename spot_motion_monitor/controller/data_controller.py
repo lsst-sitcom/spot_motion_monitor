@@ -2,7 +2,9 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import csv
 from datetime import datetime
+import os
 
 import numpy as np
 import pandas as pd
@@ -10,7 +12,7 @@ import tables
 
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
-from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT
+from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, getTimestamp
 
 __all__ = ["DataController"]
 
@@ -35,11 +37,20 @@ class DataController():
         The current name for the PSD output file.
     roiFrameModel : .RoiFrameModel
         An instance of the ROI frame calculation model.
+    roiResetDone : bool
+        Reset the camera data widget to no information based on flag.
+    TELEMETRY_SAVEDIR : str
+        The default name for the directory to save telemetry files in.
+    telemetrySavePath : str
+        The location to add the TELEMETRY_SAVEDIR to. Default is the current
+        running directory.
     updater : .InformationUpdater
         An instance of the information updater.
     writeData : bool
         Whether or not data writing is available.
     """
+
+    TELEMETRY_SAVEDIR = 'dsm_telemetry'
 
     def __init__(self, cdw):
         """Initialize the class.
@@ -59,8 +70,20 @@ class DataController():
         self.filesCreated = False
         self.centroidFilename = None
         self.psdFilename = None
+        self.telemetrySavePath = None
+        self.telemetrySetup = False
+        self.fullTelemetrySavePath = None
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
+
+    def cleanTelemetry(self):
+        """Remove all saved telemetry files and save directory.
+        """
+        if self.fullTelemetrySavePath is not None:
+            saveDir = os.path.join(self.fullTelemetrySavePath, self.TELEMETRY_SAVEDIR)
+            for tfile in os.listdir(saveDir):
+                os.remove(os.path.join(saveDir, tfile))
+            os.rmdir(saveDir)
 
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
@@ -226,6 +249,7 @@ class DataController():
         if show:
             roiFrameInfo = self.bufferModel.getInformation(currentFps)
             self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
+            self.writeTelemetryFile(roiFrameInfo)
 
     def writeDataToFile(self, psd, currentFps):
         """Write centroid and power spectrum distributions to a file.
@@ -279,3 +303,31 @@ class DataController():
 
         centDf.to_hdf(self.centroidFilename, key=dateKey)
         psdDf.to_hdf(self.psdFilename, key=dateKey)
+
+    def writeTelemetryFile(self, roiInfo):
+        """Write the current info to a telemetry file.
+
+        Parameters
+        ----------
+        roiInfo : .RoiFrameInformation
+            The current ROI frame information.
+        """
+        if not self.telemetrySetup:
+            if self.telemetrySavePath is None:
+                self.fullTelemetrySavePath = os.path.abspath(os.path.curdir)
+            else:
+                self.fullTelemetrySavePath = self.telemetrySavePath
+            os.mkdir(os.path.join(self.fullTelemetrySavePath, self.TELEMETRY_SAVEDIR))
+            self.telemetrySetup = True
+
+        currentTimestamp = getTimestamp()
+        telemetryFile = 'dsm_{}.dat'.format(currentTimestamp.strftime('%Y%m%d_%H%M%S'))
+        output = [currentTimestamp.timestamp(),
+                  self.bufferModel.timestamp[0].timestamp(),
+                  self.bufferModel.timestamp[-1].timestamp(),
+                  roiInfo.rmsX, roiInfo.rmsY]
+
+        with open(os.path.join(self.fullTelemetrySavePath,
+                               self.TELEMETRY_SAVEDIR, telemetryFile), 'w') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerow(output)

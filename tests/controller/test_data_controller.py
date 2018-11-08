@@ -38,6 +38,9 @@ class TestDataController():
         assert dc.filesCreated is False
         assert dc.centroidFilename is None
         assert dc.psdFilename is None
+        assert dc.telemetrySavePath is None
+        assert dc.telemetrySetup is False
+        assert dc.fullTelemetrySavePath is None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -163,6 +166,7 @@ class TestDataController():
         dc = DataController(cdw)
         currentFps = 40
         mockCameraDataWidgetUpdateRoiInfo = mocker.patch.object(cdw, 'updateRoiFrameData')
+        mockWriteTelemetryFile = mocker.patch.object(dc, 'writeTelemetryFile')
         dc.bufferModel.getInformation = mocker.Mock(return_value=RoiFrameInformation(242.5,
                                                                                      286.3,
                                                                                      2501.42,
@@ -173,8 +177,10 @@ class TestDataController():
 
         dc.showRoiInformation(True, currentFps)
         assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
+        assert mockWriteTelemetryFile.call_count == 1
         dc.showRoiInformation(False, currentFps)
         assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
+        assert mockWriteTelemetryFile.call_count == 1
 
     def test_setDataConfiguration(self, qtbot):
         cdw = CameraDataWidget()
@@ -244,3 +250,39 @@ class TestDataController():
         assert os.path.exists(psdOutputFile)
         os.remove(centroidOutputFile)
         os.remove(psdOutputFile)
+
+    @freeze_time('2018-10-30 22:30:15')
+    def test_writeTelemetryFile(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        currentFps = 40
+        telemetryOutputDir = 'dsm_telemetry'
+        dc = DataController(cdw)
+        assert os.path.exists(telemetryOutputDir) is False
+
+        # Setup buffer model
+        dc.setBufferSize(4)
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp,
+                                                                 300.3, 400.2,
+                                                                 32042.42, 145.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime,
+                                                                 300.4, 400.4,
+                                                                 32045.42, 146.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 2,
+                                                                 300.2, 400.5,
+                                                                 32040.42, 142.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 3,
+                                                                 300.1, 400.3,
+                                                                 32043.42, 143.422,
+                                                                 70, None), (0, 0))
+        telemetryFile = 'dsm_20181030_223015.dat'
+        roiInfo = dc.bufferModel.getInformation(currentFps)
+        dc.writeTelemetryFile(roiInfo)
+        assert os.path.exists(telemetryOutputDir) is True
+        assert os.path.exists(os.path.join(telemetryOutputDir, telemetryFile)) is True
+        dc.cleanTelemetry()
+        assert os.path.exists(os.path.join(telemetryOutputDir, telemetryFile)) is False
+        assert os.path.exists(telemetryOutputDir) is False
