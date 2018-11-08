@@ -2,6 +2,10 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from .data_config_tab import DataConfigTab
+from .general_configuration_dialog import GeneralConfigurationDialog
+
+
 from .centroid_plot_config_tab import CentroidPlotConfigTab
 from .psd_plot_config_tab import PsdPlotConfigTab
 from .plot_configuration_dialog import PlotConfigurationDialog

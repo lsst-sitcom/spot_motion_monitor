@@ -162,3 +162,20 @@ class TestDataController():
         assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
         dc.showRoiInformation(False, currentFps)
         assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
+
+    def test_setDataConfiguration(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        currentConfig = dc.getDataConfiguration()
+        assert len(currentConfig) == 1
+        assert currentConfig == {'pixelScale': 1.0}
+
+    def test_getDataConfiguration(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+
+        truthConfig = {'pixelScale': 0.5}
+        dc.setDataConfiguration(truthConfig)
+        assert dc.bufferModel.pixelScale == truthConfig['pixelScale']

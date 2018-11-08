@@ -86,6 +86,18 @@ class DataController():
         else:
             return (None, None)
 
+    def getDataConfiguration(self):
+        """Get the current data configuration.
+
+        Returns
+        -------
+        dict
+            The set of current data configuration parameters.
+        """
+        config = {}
+        config['pixelScale'] = self.bufferModel.pixelScale
+        return config
+
     def getPsd(self, isRoiMode, currentFps):
         """Return the power spectrum distribution (PSD).
 
@@ -146,6 +158,16 @@ class DataController():
             The requested buffer size.
         """
         self.bufferModel.bufferSize = value
+
+    def setDataConfiguration(self, config):
+        """Set a new configuration for the data controller.
+
+        Parameters
+        ----------
+        config : dict
+            The new configuration parameters.
+        """
+        self.bufferModel.pixelScale = config['pixelScale']
 
     def setFrameChecks(self, fullFrameCheck, roiFrameCheck):
         """Set the frame checks to the corresponding models.

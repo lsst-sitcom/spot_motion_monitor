@@ -16,7 +16,9 @@ from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
 from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE
-from spot_motion_monitor.views import CameraConfigurationDialog, PlotConfigurationDialog
+from spot_motion_monitor.views import CameraConfigurationDialog
+from spot_motion_monitor.views import GeneralConfigurationDialog
+from spot_motion_monitor.views import PlotConfigurationDialog
 from spot_motion_monitor.views.forms import Ui_MainWindow
 from spot_motion_monitor import __version__
 
@@ -83,6 +85,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionAbout.triggered.connect(self.about)
         self.actionPlotsConfig.triggered.connect(self.updatePlotConfiguration)
         self.actionCameraConfig.triggered.connect(self.updateCameraConfiguration)
+        self.actionGeneralConfig.triggered.connect(self.updateGeneralConfiguration)
 
     def about(self):
         """This function presents the about dialog box.
@@ -256,6 +259,14 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         if cameraConfigDialog.exec_():
             config = cameraConfigDialog.getCameraConfiguration()
             self.cameraController.setCameraConfiguration(config)
+
+    def updateGeneralConfiguration(self):
+        generalConfigDialog = GeneralConfigurationDialog()
+        currentDataConfig = self.dataController.getDataConfiguration()
+        generalConfigDialog.setConfiguration(currentDataConfig)
+        if generalConfigDialog.exec_():
+            newDataConfig = generalConfigDialog.getConfiguration()
+            self.dataController.setDataConfiguration(newDataConfig)
 
     def updateOffset(self):
         """This function updates the camera offsets.
