@@ -176,7 +176,6 @@ class TestDataController():
         dc.showRoiInformation(False, currentFps)
         assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
 
-<<<<<<< HEAD
     def test_setDataConfiguration(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
@@ -194,9 +193,7 @@ class TestDataController():
         dc.setDataConfiguration(truthConfig)
         assert dc.bufferModel.pixelScale == truthConfig['pixelScale']
 
-=======
     @freeze_time('2018-10-30 22:30:15')
->>>>>>> Splitting saved files.
     def test_writingData(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
