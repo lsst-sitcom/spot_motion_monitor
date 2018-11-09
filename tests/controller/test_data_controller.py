@@ -256,9 +256,11 @@ class TestDataController():
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         currentFps = 40
+        saveTelemetryDir = os.path.join(os.path.abspath(os.path.curdir), 'temp')
         telemetryOutputDir = 'dsm_telemetry'
+        fullSaveDir = os.path.join(saveTelemetryDir, telemetryOutputDir)
         dc = DataController(cdw)
-        assert os.path.exists(telemetryOutputDir) is False
+        dc.telemetrySavePath = saveTelemetryDir
 
         # Setup buffer model
         dc.setBufferSize(4)
@@ -281,8 +283,8 @@ class TestDataController():
         telemetryFile = 'dsm_20181030_223015.dat'
         roiInfo = dc.bufferModel.getInformation(currentFps)
         dc.writeTelemetryFile(roiInfo)
-        assert os.path.exists(telemetryOutputDir) is True
-        assert os.path.exists(os.path.join(telemetryOutputDir, telemetryFile)) is True
+        assert os.path.exists(fullSaveDir) is True
+        assert os.path.exists(os.path.join(fullSaveDir, telemetryFile)) is True
         dc.cleanTelemetry()
-        assert os.path.exists(os.path.join(telemetryOutputDir, telemetryFile)) is False
-        assert os.path.exists(telemetryOutputDir) is False
+        assert os.path.exists(os.path.join(fullSaveDir, telemetryFile)) is False
+        assert os.path.exists(fullSaveDir) is False

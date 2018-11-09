@@ -83,7 +83,7 @@ class DataController():
             saveDir = os.path.join(self.fullTelemetrySavePath, self.TELEMETRY_SAVEDIR)
             for tfile in os.listdir(saveDir):
                 os.remove(os.path.join(saveDir, tfile))
-            os.rmdir(saveDir)
+            os.removedirs(saveDir)
 
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
@@ -317,7 +317,9 @@ class DataController():
                 self.fullTelemetrySavePath = os.path.abspath(os.path.curdir)
             else:
                 self.fullTelemetrySavePath = self.telemetrySavePath
-            os.mkdir(os.path.join(self.fullTelemetrySavePath, self.TELEMETRY_SAVEDIR))
+            savePath = os.path.join(self.fullTelemetrySavePath, self.TELEMETRY_SAVEDIR)
+            if not os.path.exists(savePath):
+                os.makedirs(savePath)
             self.telemetrySetup = True
 
         currentTimestamp = getTimestamp()
