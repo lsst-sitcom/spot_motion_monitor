@@ -10,4 +10,5 @@ Table of Contents
 
    installation
    usage
+   development
    history
