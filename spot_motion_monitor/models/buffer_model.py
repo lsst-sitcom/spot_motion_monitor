@@ -2,7 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from datetime import datetime
+#from datetime import datetime
 import numpy as np
 
 from spot_motion_monitor.utils import psd_calculator
@@ -111,7 +111,7 @@ class BufferModel():
             If not rolling buffer return (None, None, None)
         """
         if self.rollBuffer and self.counter % self.bufferSize == 0:
-            print("Buffer ready: {}".format(datetime.now()))
+            #print("Buffer ready: {}".format(datetime.now()))
             return psd_calculator(np.array(self.centerX), np.array(self.centerY), currentFps)
         else:
             return (None, None, None)

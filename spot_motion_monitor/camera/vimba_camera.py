@@ -211,7 +211,8 @@ class VimbaCamera(BaseCamera):
         The camera reports the number of good, bad and total frames to the
         system.
         """
-        print("{} {}, {}, {}".format(datetime.now(), self.goodFrames, self.badFrames, self.totalFrames))
+        if self.badFrames:
+            print("{} {}, {}, {}".format(datetime.now(), self.goodFrames, self.badFrames, self.totalFrames))
 
     def startup(self):
         """Handle the startup of the camera.
