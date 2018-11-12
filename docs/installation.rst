@@ -18,4 +18,4 @@ real camera system. The one supported by this interface is the
 `Allied Vision Technologies <https://www.alliedvision.com/en/digital-industrial-camera-solutions.html>`_ Prosilica GigE cameras. This requires the ``pymba`` package which
 can be found `here <https://github.com/morefigs/pymba>`_. Follow the
 installation instructions there. For clarity, the installation of ``pymba``
-requires a clone of the repository.
+requires a clone of the repository. The ``pymba`` package available from PyPI is NOT correct.
