@@ -5,7 +5,7 @@
 import numpy as np
 from scipy import ndimage
 
-from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, passFrame
+from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, getTimestamp, passFrame
 
 __all__ = ['RoiFrameModel']
 
@@ -61,6 +61,6 @@ class RoiFrameModel():
             # Removing this for speed improvement. MAR 2018/10/05
             # maxStd = np.std(np.ma.masked_array(roiFrame, mask=newFrame))
             maxStd = -999
-            return GenericFrameInformation(comX, comY, flux, maxAdc, objectSize, maxStd)
+            return GenericFrameInformation(getTimestamp(), comX, comY, flux, maxAdc, objectSize, maxStd)
         else:
             raise FrameRejected('ROI frame rejected due to low flux')

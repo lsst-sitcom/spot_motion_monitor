@@ -23,8 +23,7 @@ class TestGaussianCameraConfigTab:
 
         config = {'roiSize': 30, 'doSpotOscillation': False,
                   'xAmplitude': 2, 'xFrequency': 50.0,
-                  'yAmplitude': 7, 'yFrequency': 25.0,
-                  'deltaTime': 300}
+                  'yAmplitude': 7, 'yFrequency': 25.0}
 
         gcConfigTab.setConfiguration(config)
         assert int(gcConfigTab.roiSizeLineEdit.text()) == config['roiSize']
@@ -35,7 +34,6 @@ class TestGaussianCameraConfigTab:
         assert float(gcConfigTab.xFreqLineEdit.text()) == config['xFrequency']
         assert int(gcConfigTab.yAmpLineEdit.text()) == config['yAmplitude']
         assert float(gcConfigTab.yFreqLineEdit.text()) == config['yFrequency']
-        assert int(gcConfigTab.deltaTimeLineEdit.text()) == config['deltaTime']
 
     def test_getParametersFromConfiguration(self, qtbot):
         gcConfigTab = GaussianCameraConfigTab()
@@ -44,8 +42,7 @@ class TestGaussianCameraConfigTab:
 
         truthConfig = {'roiSize': 30, 'doSpotOscillation': True,
                        'xAmplitude': 2, 'xFrequency': 50.0,
-                       'yAmplitude': 7, 'yFrequency': 25.0,
-                       'deltaTime': 300}
+                       'yAmplitude': 7, 'yFrequency': 25.0}
 
         gcConfigTab.roiSizeLineEdit.setText(str(truthConfig['roiSize']))
         gcConfigTab.spotOscillationCheckBox.setChecked(boolToCheckState(truthConfig['doSpotOscillation']))
@@ -53,7 +50,6 @@ class TestGaussianCameraConfigTab:
         gcConfigTab.xFreqLineEdit.setText(str(truthConfig['xFrequency']))
         gcConfigTab.yAmpLineEdit.setText(str(truthConfig['yAmplitude']))
         gcConfigTab.yFreqLineEdit.setText(str(truthConfig['yFrequency']))
-        gcConfigTab.deltaTimeLineEdit.setText(str(truthConfig['deltaTime']))
 
         config = gcConfigTab.getConfiguration()
         assert config == truthConfig

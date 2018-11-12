@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 from pyqtgraph import GraphicsLayoutWidget
 
-from spot_motion_monitor.utils import noneToDefaultOrValue
+from spot_motion_monitor.utils import HTML_NU, noneToDefaultOrValue
 
 __all__ = ['Psd1dPlotWidget']
 
@@ -87,8 +87,8 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
         self.plot = self.addPlot()
         self.plot.setLogMode(y=True)
         self.curve = self.plot.plot([], [])
-        self.plot.setLabel('bottom', '{} &#969;'.format(axisLabel), units='Hz')
-        self.plot.setLabel('left', axisLabel)
+        self.plot.setLabel('bottom', '{} {}'.format(axisLabel, HTML_NU), units='Hz')
+        self.plot.setLabel('left', 'PSD', units='pixel^2 s')
 
     def updatePlot(self, psdData, frequencies):
         """Update the plot with new PSD and frequency arrays.

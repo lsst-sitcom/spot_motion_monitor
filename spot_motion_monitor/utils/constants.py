@@ -14,6 +14,8 @@ DEFAULT_FPS : int
     The default Frames per Second.
 DEFAULT_PSD_ARRAY_SIZE : int
     The default size of the Power Spectrum Distribution plot vertical axis.
+HTML_NU : str
+    The HTML string representation for the Greek letter nu.
 NO_DATA_VALUE : str
     Default text for no camera data value.
 ONE_SECOND_IN_MILLISECONDS : int
@@ -30,6 +32,7 @@ NO_DATA_VALUE = " --- "
 DEFAULT_PSD_ARRAY_SIZE = 25
 COLORMAPS = ('viridis', 'plasma', 'inferno', 'magma', 'cividis')
 TIMEFMT = '%Y-%m-%d %H:%M:%S'
+HTML_NU = '&#957;'
 
 class AutoscaleState(enum.Enum):
     """Enumeration for handling autoscale states.

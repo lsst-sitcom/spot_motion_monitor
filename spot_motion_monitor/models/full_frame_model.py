@@ -5,7 +5,7 @@
 import numpy as np
 from scipy import ndimage
 
-from spot_motion_monitor.utils import GenericFrameInformation, FrameRejected, passFrame
+from spot_motion_monitor.utils import GenericFrameInformation, FrameRejected, getTimestamp, passFrame
 
 __all__ = ["FullFrameModel"]
 
@@ -85,7 +85,8 @@ class FullFrameModel():
             if self.frameCheck(flux, maxAdc, comX, comY):
                 centerX = comX + xSlice.start
                 centerY = comY + ySlice.start
-                return GenericFrameInformation(centerX, centerY, flux, maxAdc, objectSize, None)
+                return GenericFrameInformation(getTimestamp(), centerX, centerY,
+                                               flux, maxAdc, objectSize, None)
             else:
                 msg = 'Full frame rejected: flux = {}, maxAdc = {}, centroid = ({}, {})'.format(flux,
                                                                                                 maxAdc,

@@ -6,7 +6,7 @@ import numpy as np
 from PyQt5 import QtCore
 from pyqtgraph import GraphicsLayoutWidget, ImageItem
 
-from spot_motion_monitor.utils import getLutFromColorMap
+from spot_motion_monitor.utils import HTML_NU, getLutFromColorMap
 
 __all__ = ['PsdWaterfallPlotWidget']
 
@@ -109,7 +109,7 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         """
         self.arraySize = arraySize
         self.timeScale = timeScale
-        self.plot.setLabel('bottom', '{} &#969;'.format(axisLabel), units='Hz')
+        self.plot.setLabel('bottom', '{} {}'.format(axisLabel, HTML_NU), units='Hz')
         self.plot.setLabel('left', 'Time', units='s')
 
     def updatePlot(self, psd, freqs):
@@ -124,10 +124,9 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         """
         if self.data is None:
             self.data = np.zeros((self.arraySize, psd.size))
-            self.data[0, ...] = psd
         else:
             self.data[1:, ...] = self.data[:-1, ...]
-            self.data[0, ...] = psd
+        self.data[0, ...] = np.log(psd)
 
         self.image.setImage(self.data)
         if self.boundingRect is None:

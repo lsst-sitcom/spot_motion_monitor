@@ -259,7 +259,7 @@ class TestCameraController():
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
         config = cc.getCameraConfiguration()
-        assert len(config) == 7
+        assert len(config) == 6
 
     def test_setCameraConfiguration(self, qtbot, mocker):
         ccWidget = CameraControlWidget()

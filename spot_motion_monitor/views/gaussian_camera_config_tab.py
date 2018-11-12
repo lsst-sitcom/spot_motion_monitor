@@ -35,7 +35,6 @@ class GaussianCameraConfigTab(QTabWidget, Ui_GaussianCameraConfigForm):
         self.xFreqLineEdit.setValidator(QDoubleValidator(0.1, 100.0, 1))
         self.yAmpLineEdit.setValidator(QIntValidator(1, 20))
         self.yFreqLineEdit.setValidator(QDoubleValidator(0.1, 100.0, 1))
-        self.deltaTimeLineEdit.setValidator(QIntValidator(10, 1000))
         self.spotOscillationCheckBox.toggled.connect(self.changeGroupBoxState)
 
     def changeGroupBoxState(self, checked):
@@ -69,8 +68,6 @@ class GaussianCameraConfigTab(QTabWidget, Ui_GaussianCameraConfigForm):
             config['yAmplitude'] = utils.convertValueOrNone(yAmp)
             yFreq = utils.defaultToNoneOrValue(self.yFreqLineEdit.text())
             config['yFrequency'] = utils.convertValueOrNone(yFreq, convert=float)
-            deltaTime = utils.defaultToNoneOrValue(self.deltaTimeLineEdit.text())
-            config['deltaTime'] = utils.convertValueOrNone(deltaTime)
         return config
 
     def setConfiguration(self, config):
@@ -87,4 +84,3 @@ class GaussianCameraConfigTab(QTabWidget, Ui_GaussianCameraConfigForm):
         self.xFreqLineEdit.setText(str(config['xFrequency']))
         self.yAmpLineEdit.setText(str(config['yAmplitude']))
         self.yFreqLineEdit.setText(str(config['yFrequency']))
-        self.deltaTimeLineEdit.setText(str(config['deltaTime']))

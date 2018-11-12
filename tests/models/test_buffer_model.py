@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from datetime import datetime
+
 import numpy as np
 
 from spot_motion_monitor.models.buffer_model import BufferModel
@@ -11,6 +13,7 @@ class TestBufferModel():
 
     def setup_class(cls):
         cls.offset = (264, 200)
+        cls.timestamp = datetime(2018, 10, 24, 1, 30, 0)
 
     def test_parametersAfterConstruction(self):
         model = BufferModel()
@@ -18,6 +21,7 @@ class TestBufferModel():
         assert model.pixelScale == 1.0
         assert model.rollBuffer is False
         assert model.counter == 0
+        assert model.timestamp is not None
         assert model.maxAdc is not None
         assert model.flux is not None
         assert model.centerX is not None
@@ -27,8 +31,9 @@ class TestBufferModel():
 
     def test_listsAfterPassingGenericFrameInfo(self):
         model = BufferModel()
-        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
         model.updateInformation(info, self.offset)
+        assert model.timestamp == [info.timestamp]
         assert model.maxAdc == [info.maxAdc]
         assert model.flux == [info.flux]
         assert model.centerX == [info.centerX + self.offset[0]]
@@ -43,7 +48,7 @@ class TestBufferModel():
         bufferSize = 3
         model.bufferSize = bufferSize
         assert model.counter == 0
-        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
         for i in range(bufferSize):
             model.updateInformation(info, self.offset)
         assert model.rollBuffer is True
@@ -58,10 +63,11 @@ class TestBufferModel():
         model = BufferModel()
         bufferSize = 3
         model.bufferSize = bufferSize
-        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
         for i in range(bufferSize):
             model.updateInformation(info, self.offset)
         model.reset()
+        assert len(model.timestamp) == 0
         assert len(model.maxAdc) == 0
         assert len(model.flux) == 0
         assert len(model.centerX) == 0
@@ -114,7 +120,7 @@ class TestBufferModel():
         model.bufferSize = bufferSize
         centroids = model.getCentroids()
         assert centroids == (None, None)
-        info = GenericFrameInformation(20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
         model.updateInformation(info, self.offset)
         centroidX = info.centerX + self.offset[0]
         centroidY = info.centerY + self.offset[1]
@@ -134,6 +140,7 @@ class TestBufferModel():
         np.random.seed(2000)
         x = np.random.random(3)
         model.rollBuffer = True
+        model.timestamp = [self.timestamp] * 3
         model.maxAdc = (119.53 + x).tolist()
         model.flux = (2434.35 + x).tolist()
         model.centerX = (200 + x).tolist()
@@ -149,7 +156,7 @@ class TestBufferModel():
         assert psd[2] is not None
 
         # Update by hand
-        info = GenericFrameInformation(200.1423, 321.583, 2434.35982, 119.5382, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 200.1423, 321.583, 2434.35982, 119.5382, 60, 1.432435)
         model.updateInformation(info, self.offset)
 
         assert model.counter == bufferSize + 1

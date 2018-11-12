@@ -24,10 +24,9 @@ class TestGaussianCamera():
         assert self.camera.yPoint is None
         assert self.camera.doSpotOscillation is True
         assert self.camera.xAmp == 10
-        assert self.camera.xFreq == 5.0
+        assert self.camera.xFreq == 1.0
         assert self.camera.yAmp == 5
-        assert self.camera.yFreq == 10.0
-        assert self.camera.deltaTime == 200
+        assert self.camera.yFreq == 2.0
 
     def test_parametersAfterStartup(self):
         self.camera.startup()
@@ -50,8 +49,8 @@ class TestGaussianCamera():
         frame = self.camera.getRoiFrame()
         assert frame.shape == (50, 50)
         max_point1, max_point2 = np.where(frame == np.max(frame))
-        assert max_point1[0] == 25
-        assert max_point2[0] == 24
+        assert max_point1[0] == 26
+        assert max_point2[0] == 26
 
     def test_getOffset(self):
         self.camera.seed = 1000
@@ -61,9 +60,8 @@ class TestGaussianCamera():
 
     def test_getConfiguration(self):
         config = {'roiSize': 50, 'doSpotOscillation': True,
-                  'xAmplitude': 10, 'xFrequency': 5.0,
-                  'yAmplitude': 5, 'yFrequency': 10.0,
-                  'deltaTime': 200}
+                  'xAmplitude': 10, 'xFrequency': 1.0,
+                  'yAmplitude': 5, 'yFrequency': 2.0}
         currentConfig = self.camera.getConfiguration()
         assert currentConfig == config
 
@@ -71,8 +69,7 @@ class TestGaussianCamera():
         camera = GaussianCamera()
         truthConfig = {'roiSize': 75, 'doSpotOscillation': True,
                        'xAmplitude': 1, 'xFrequency': 40.0,
-                       'yAmplitude': 8, 'yFrequency': 75.0,
-                       'deltaTime': 350}
+                       'yAmplitude': 8, 'yFrequency': 75.0}
         camera.setConfiguration(truthConfig)
         assert camera.roiSize == truthConfig['roiSize']
         assert camera.doSpotOscillation == truthConfig['doSpotOscillation']
@@ -80,4 +77,3 @@ class TestGaussianCamera():
         assert camera.xFreq == truthConfig['xFrequency']
         assert camera.yAmp == truthConfig['yAmplitude']
         assert camera.yFreq == truthConfig['yFrequency']
-        assert camera.deltaTime == truthConfig['deltaTime']
