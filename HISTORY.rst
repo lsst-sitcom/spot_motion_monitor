@@ -3,6 +3,15 @@
 History
 -------
 
+1.0.0 (2018-11-12)
+~~~~~~~~~~~~~~~~~~
+
+* Add telemetry information file creation
+* Allow saving centroid and power spectrum distributions on a per buffer basis
+* Waterfall PSD plots now log y
+* Fixed Gaussian spot oscillation issue
+* Write documentation for adding a new camera interface
+
 0.8.0 (2018-10-24)
 ~~~~~~~~~~~~~~~~~~
 
