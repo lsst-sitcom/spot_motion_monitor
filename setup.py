@@ -33,22 +33,13 @@ Documentation
 The full documentation is at http://spot_motion_monitor.rtfd.org."""
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
-requirements = [
-    "numpy",
-    "PyQt5",
-    "scipy",
-    "pyqtgraph"
-]
+requirements = None
+with open('requirements/prod.txt') as prodFile:
+    requirements = [x.strip() for x in prodFile]
 
-test_requirements = [
-    "flake8",
-    "coverage",
-    "pytest",
-    "pytest-qt",
-    "pytest-flake8",
-    "pytest-mock",
-    "distutils_ui"
-]
+test_requirements = None
+with open('requirements/test.txt') as testFile:
+    test_requirements = [x.strip() for x in testFile]
 
 setup(
     name='spot_motion_monitor',
@@ -80,7 +71,7 @@ setup(
     zip_safe=False,
     keywords='spot_motion_monitor',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
