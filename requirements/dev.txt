@@ -2,8 +2,6 @@
 -r test.txt
 wheel>=0.22
 bumpversion
-flake8
-coverage
 Sphinx
 sphinx_rtd_theme
 cryptography

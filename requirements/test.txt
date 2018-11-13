@@ -1,3 +1,5 @@
+flake8
+coverage
 distutils_ui
 pytest
 pytest-qt
