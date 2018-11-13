@@ -71,7 +71,7 @@ setup(
     zip_safe=False,
     keywords='spot_motion_monitor',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
