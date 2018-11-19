@@ -34,8 +34,9 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
             Top-level widget.
         """
         super().__init__(parent)
-        self.plot = None
-        self.curve = None
+        self.plot = self.addPlot()
+        self.plot.setLogMode(y=True)
+        self.curve = self.plot.plot([], [])
         self.autoscale = True
         self.yRange = None
 
@@ -84,9 +85,6 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
         axisLabel : str
             The label for the axis.
         """
-        self.plot = self.addPlot()
-        self.plot.setLogMode(y=True)
-        self.curve = self.plot.plot([], [])
         self.plot.setLabel('bottom', '{} {}'.format(axisLabel, HTML_NU), units='Hz')
         self.plot.setLabel('left', 'PSD', units='pixel^2 s')
 
