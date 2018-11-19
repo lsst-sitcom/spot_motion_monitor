@@ -11,17 +11,10 @@ class TestPsd1dPlotWidget:
     def test_parametersAfterConstruction(self, qtbot):
         p1dpw = Psd1dPlotWidget()
         qtbot.addWidget(p1dpw)
-        assert p1dpw.plot is None
-        assert p1dpw.curve is None
-        assert p1dpw.autoscale is True
-        assert p1dpw.yRange is None
-
-    def test_parametersAfterSetup(self, qtbot):
-        p1dpw = Psd1dPlotWidget()
-        qtbot.addWidget(p1dpw)
-        p1dpw.setup('X')
         assert p1dpw.plot is not None
         assert p1dpw.curve is not None
+        assert p1dpw.autoscale is True
+        assert p1dpw.yRange is None
 
     def test_updatePlot(self, qtbot, mocker):
         p1dpw = Psd1dPlotWidget()
