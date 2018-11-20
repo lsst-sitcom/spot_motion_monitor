@@ -3,6 +3,11 @@
 History
 -------
 
+1.0.2 (2018-11-20)
+~~~~~~~~~~~~~~~~~~
+
+* Fix getting additional 1D PSD plots when switching camera
+
 1.0.1 (2018-11-13)
 ~~~~~~~~~~~~~~~~~~
 
