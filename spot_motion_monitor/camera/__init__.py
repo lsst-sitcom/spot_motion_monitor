@@ -9,5 +9,5 @@ from .camera_status import CameraStatus
 from .gaussian_camera import GaussianCamera
 try:
     from .vimba_camera import VimbaCamera
-except ImportError:
+except AssertionError:
     pass
