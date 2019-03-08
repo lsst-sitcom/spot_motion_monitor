@@ -130,14 +130,14 @@ class VimbaCamera(BaseCamera):
             requested.
         """
         try:
-            self.frame.queueFrameCapture()
+            self.frame.queue_for_capture()
         except pv.VimbaException as err:
             raise FrameCaptureFailed("{} Full frame capture failed: {}".format(datetime.now(), str(err)))
 
-        self.cameraPtr.runFeatureCommand('AcquisitionStart')
-        #self.cameraPtr.runFeatureCommand('AcquisitionStop')
-        self.frame.waitFrameCapture(1000)
-        frameData = self.frame.getBufferByteData()
+        self.cameraPtr.run_feature_command('AcquisitionStart')
+        #self.cameraPtr.run_feature_command('AcquisitionStop')
+        self.frame.wait_for_capture(1000)
+        frameData = self.frame.buffer_data()
 
         img = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.height, self.width))
         return img
@@ -168,15 +168,15 @@ class VimbaCamera(BaseCamera):
         """
         self.totalFrames += 1
         try:
-            self.frame.queueFrameCapture()
+            self.frame.queue_frame_capture()
         except pv.VimbaException as err:
             self.badFrames += 1
             raise FrameCaptureFailed("{} ROI frame capture failed: {}".format(datetime.now(), str(err)))
         self.goodFrames += 1
-        self.cameraPtr.runFeatureCommand('AcquisitionStart')
-        self.cameraPtr.runFeatureCommand('AcquisitionStop')
-        self.frame.waitFrameCapture(1)
-        frameData = self.frame.getBufferByteData()
+        self.cameraPtr.run_feature_command('AcquisitionStart')
+        self.cameraPtr.run_feature_command('AcquisitionStop')
+        self.frame.wait_for_capture(1)
+        frameData = self.frame.buffer_data()
 
         img = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.roiSize, self.roiSize))
         return img
@@ -227,16 +227,16 @@ class VimbaCamera(BaseCamera):
         self.totalFrames = 0
         self.vimba = pv.Vimba()
         self.vimba.startup()
-        system = self.vimba.getSystem()
-        system.runFeatureCommand('GeVDiscoveryAllOnce')
+        system = self.vimba.system()
+        system.run_feature_command('GeVDiscoveryAllOnce')
         time.sleep(0.2)
-        cameraIds = self.vimba.getCameraIds()
+        cameraIds = self.vimba.camera_ids()
         try:
-            self.cameraPtr = self.vimba.getCamera(cameraIds[0])
+            self.cameraPtr = self.vimba.camera(cameraIds[0])
         except IndexError:
             raise CameraNotFound('Camera not found ... check power or connection!')
 
-        self.cameraPtr.openCamera()
+        self.cameraPtr.open()
         self.cameraPtr.GevSCPSPacketSize = 1500
         self.cameraPtr.StreamBytesPerSecond = 124000000
         self.height = self.cameraPtr.HeightMax
@@ -253,17 +253,17 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.PixelFormat = 'Mono12'
         self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
 
-        self.frame = self.cameraPtr.getFrame()
-        self.frame.announceFrame()
-        self.cameraPtr.startCapture()
+        self.frame = self.cameraPtr.new_frame()
+        self.frame.announce()
+        self.cameraPtr.start_capture()
 
     def shutdown(self):
         """Handle the shutdown of the camera.
         """
         try:
-            self.cameraPtr.endCapture()
-            self.cameraPtr.revokeAllFrames()
-            self.cameraPtr.closeCamera()
+            self.cameraPtr.end_capture()
+            self.cameraPtr.revoke_all_frames()
+            self.cameraPtr.close()
         except pv.VimbaException:
             pass
         self.vimba.shutdown()
