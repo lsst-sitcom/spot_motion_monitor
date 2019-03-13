@@ -2,8 +2,6 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-import sys
-
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QTabWidget
 
@@ -32,11 +30,11 @@ class CentroidPlotConfigTab(QTabWidget, Ui_CentroidPlotsConfigForm):
         super().__init__(parent)
         self.setupUi(self)
         self.pixelAdditionXLineEdit.setValidator(QIntValidator(1, 10000))
-        self.minXLimitLineEdit.setValidator(QIntValidator(0, 10e10))
-        self.maxXLimitLineEdit.setValidator(QIntValidator(0, sys.maxsize))
+        self.minXLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
+        self.maxXLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
         self.pixelAdditionYLineEdit.setValidator(QIntValidator(1, 10000))
-        self.minYLimitLineEdit.setValidator(QIntValidator(0, 10e10))
-        self.maxYLimitLineEdit.setValidator(QIntValidator(0, sys.maxsize))
+        self.minYLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
+        self.maxYLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
         self.name = 'Centroid'
 
         self.autoscaleXComboBox.currentIndexChanged.connect(self.handleAutoscaleChange)

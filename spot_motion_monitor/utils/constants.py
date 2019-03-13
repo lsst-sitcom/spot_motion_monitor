@@ -16,6 +16,8 @@ DEFAULT_PSD_ARRAY_SIZE : int
     The default size of the Power Spectrum Distribution plot vertical axis.
 HTML_NU : str
     The HTML string representation for the Greek letter nu.
+LARGE_VALUE_FOR_VALIDATOR
+    Default value for QIntValidators.
 NO_DATA_VALUE : str
     Default text for no camera data value.
 ONE_SECOND_IN_MILLISECONDS : int
@@ -33,6 +35,7 @@ DEFAULT_PSD_ARRAY_SIZE = 25
 COLORMAPS = ('viridis', 'plasma', 'inferno', 'magma', 'cividis')
 TIMEFMT = '%Y-%m-%d %H:%M:%S'
 HTML_NU = '&#957;'
+LARGE_VALUE_FOR_VALIDATOR = 1e9
 
 class AutoscaleState(enum.Enum):
     """Enumeration for handling autoscale states.

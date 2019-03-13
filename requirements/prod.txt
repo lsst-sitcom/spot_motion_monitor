@@ -4,4 +4,5 @@ scipy
 pandas
 pyqtgraph
 matplotlib
-tables
+tables==3.4.4
+pymba==0.3.1

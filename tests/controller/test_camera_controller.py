@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 try:
     import pymba  # noqa
     VimbaFound = True
-except ImportError:
+except AssertionError:
     VimbaFound = False
 
 from spot_motion_monitor.controller.camera_controller import CameraController
