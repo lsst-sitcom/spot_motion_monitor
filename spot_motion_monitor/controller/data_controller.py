@@ -324,9 +324,9 @@ class DataController():
 
         currentTimestamp = getTimestamp()
         telemetryFile = 'dsm_{}.dat'.format(currentTimestamp.strftime('%Y%m%d_%H%M%S'))
-        output = [currentTimestamp.timestamp(),
-                  self.bufferModel.timestamp[0].timestamp(),
-                  self.bufferModel.timestamp[-1].timestamp(),
+        output = [currentTimestamp.isoformat(),
+                  self.bufferModel.timestamp[0].isoformat(),
+                  self.bufferModel.timestamp[-1].isoformat(),
                   roiInfo.rmsX, roiInfo.rmsY]
 
         with open(os.path.join(self.fullTelemetrySavePath,
