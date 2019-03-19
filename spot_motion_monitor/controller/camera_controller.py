@@ -99,6 +99,7 @@ class CameraController():
             self.camera.resetOffset()
             if self.cameraControlWidget.acquireFramesButton.isChecked():
                 self.acquireFrame(True)
+        self.updater.acquireRoiState.emit(state)
 
     def bufferSize(self, value):
         """Rebroadcast a buffer size change request.

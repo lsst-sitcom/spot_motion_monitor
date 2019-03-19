@@ -84,6 +84,7 @@ class DataController():
             for tfile in os.listdir(saveDir):
                 os.remove(os.path.join(saveDir, tfile))
             os.removedirs(saveDir)
+            self.telemetrySetup = False
 
     def getBufferSize(self):
         """Get the buffer size of the buffer data model.
@@ -161,6 +162,17 @@ class DataController():
             return psd
         else:
             return (None, None, None)
+
+    def handleAcquireRoiStateChange(self, checked):
+        """Deal with changes in the Acquire ROI checkbox.
+
+        Parameters
+        ----------
+        checked : bool
+            State of the Acquire ROI checkbox.
+        """
+        if not checked:
+            self.cleanTelemetry()
 
     def handleSaveData(self, checked):
         """Deal with changes in the Save Buffer Data checkbox.

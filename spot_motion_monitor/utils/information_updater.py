@@ -13,6 +13,8 @@ class InformationUpdater(QObject):
 
     Attributes
     ----------
+    acquireRoiState : pyqtSignal
+        Signal used to update data controller on acquire ROI state changes.
     bufferSizeChanged : pyqtSignal
         Signal used to update data controller with a new buffer size.
     cameraState : pyqtSignal
@@ -23,6 +25,7 @@ class InformationUpdater(QObject):
         Signal used to update controllers with a new ROI FPS.
     """
 
+    acquireRoiState = pyqtSignal(bool)
     bufferSizeChanged = pyqtSignal(int)
     cameraState = pyqtSignal(bool)
     roiFpsChanged = pyqtSignal(int)

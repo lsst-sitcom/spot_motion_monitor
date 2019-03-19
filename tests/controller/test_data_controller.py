@@ -288,3 +288,12 @@ class TestDataController():
         dc.cleanTelemetry()
         assert os.path.exists(os.path.join(fullSaveDir, telemetryFile)) is False
         assert os.path.exists(fullSaveDir) is False
+        assert dc.telemetrySetup is False
+
+    def test_handleAcquireRoiStateChange(self, qtbot, mocker):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        mockCleanTelemetry = mocker.patch.object(dc, 'cleanTelemetry')
+        dc.handleAcquireRoiStateChange(Qt.Unchecked)
+        assert mockCleanTelemetry.call_count == 1
