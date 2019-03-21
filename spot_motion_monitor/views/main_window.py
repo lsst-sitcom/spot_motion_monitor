@@ -119,7 +119,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         bufferReady = psdData[0] is not None
         self.plotCentroidController.showScatterPlots(bufferReady)
         self.cameraController.showFrameStatus(bufferReady)
-        self.dataController.showRoiInformation(bufferReady, cameraStatus.currentFps)
+        self.dataController.showRoiInformation(bufferReady, cameraStatus)
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
         self.dataController.writeDataToFile(psdData, cameraStatus.currentFps)
 
@@ -177,6 +177,16 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             self.plotCentroidController.setup(bufferSize, roiFps)
             self.cameraSwitched = True
         self.plotPsdController.setup(DEFAULT_PSD_ARRAY_SIZE, bufferSize / roiFps)
+
+    def handleConfig(self, options):
+        """Call controller configuration functions.
+
+        Parameters
+        ----------
+        options : Namespace
+            The options from command-line arguments.
+        """
+        self.dataController.setCommandLineConfig(options)
 
     def handleRoiFpsChanged(self, newRoiFps):
         """Update the necessary controllers when the ROI FPS changes.
@@ -321,6 +331,7 @@ def launch(opts):
     app.setOrganizationDomain("lsst.org")
     app.setApplicationName("Spot Motion Monitor")
     form = SpotMotionMonitor()
+    form.handleConfig(opts)
     form.show()
     app.exec_()
 

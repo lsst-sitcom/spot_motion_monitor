@@ -13,6 +13,8 @@ import tables
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
 from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, getTimestamp
+from spot_motion_monitor.utils import writeYamlFile
+from spot_motion_monitor import __version__ as version
 
 __all__ = ["DataController"]
 
@@ -33,6 +35,8 @@ class DataController():
         Whether or not the output files have been created.
     fullFrameModel : .FullFrameModel
         An instance of the full frame calculation model.
+    fullTelemetrySavePath : str
+        The full path for where to save the telemetry files.
     psdFilename : str
         The current name for the PSD output file.
     roiFrameModel : .RoiFrameModel
@@ -44,6 +48,8 @@ class DataController():
     telemetrySavePath : str
         The location to add the TELEMETRY_SAVEDIR to. Default is the current
         running directory.
+    telemetrySetup : bool
+        Description
     updater : .InformationUpdater
         An instance of the information updater.
     writeData : bool
@@ -51,6 +57,7 @@ class DataController():
     """
 
     TELEMETRY_SAVEDIR = 'dsm_telemetry'
+    UI_CONFIG_FILE = 'dsm_ui_config.yaml'
 
     def __init__(self, cdw):
         """Initialize the class.
@@ -80,10 +87,9 @@ class DataController():
         """Remove all saved telemetry files and save directory.
         """
         if self.fullTelemetrySavePath is not None:
-            saveDir = os.path.join(self.fullTelemetrySavePath, self.TELEMETRY_SAVEDIR)
-            for tfile in os.listdir(saveDir):
-                os.remove(os.path.join(saveDir, tfile))
-            os.removedirs(saveDir)
+            for tfile in os.listdir(self.fullTelemetrySavePath):
+                os.remove(os.path.join(self.fullTelemetrySavePath, tfile))
+            os.removedirs(self.fullTelemetrySavePath)
             self.telemetrySetup = False
 
     def getBufferSize(self):
@@ -225,6 +231,17 @@ class DataController():
         """
         self.bufferModel.bufferSize = value
 
+    def setCommandLineConfig(self, options):
+        """Set new configurations based on command-line options.
+
+        Parameters
+        ----------
+        options : Namespace
+            The options from command-line arguments.
+        """
+        if options.telemetry_dir is not None:
+            self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(options.telemetry_dir))
+
     def setDataConfiguration(self, config):
         """Set a new configuration for the data controller.
 
@@ -248,20 +265,20 @@ class DataController():
         self.fullFrameModel.frameCheck = fullFrameCheck
         self.roiFrameModel.frameCheck = roiFrameCheck
 
-    def showRoiInformation(self, show, currentFps):
+    def showRoiInformation(self, show, currentStatus):
         """Display the current ROI information on camera data widget.
 
         Parameters
         ----------
         show : bool
             Flag that determines if information is shown.
-        currentFps : int
-            The current camera FPS.
+        currentStatus : .CameraStatus
+            The current camera status.
         """
         if show:
-            roiFrameInfo = self.bufferModel.getInformation(currentFps)
+            roiFrameInfo = self.bufferModel.getInformation(currentStatus.currentFps)
             self.cameraDataWidget.updateRoiFrameData(roiFrameInfo)
-            self.writeTelemetryFile(roiFrameInfo)
+            self.writeTelemetryFile(roiFrameInfo, currentStatus)
 
     def writeDataToFile(self, psd, currentFps):
         """Write centroid and power spectrum distributions to a file.
@@ -316,22 +333,34 @@ class DataController():
         centDf.to_hdf(self.centroidFilename, key=dateKey)
         psdDf.to_hdf(self.psdFilename, key=dateKey)
 
-    def writeTelemetryFile(self, roiInfo):
+    def writeTelemetryFile(self, roiInfo, currentStatus):
         """Write the current info to a telemetry file.
 
         Parameters
         ----------
         roiInfo : .RoiFrameInformation
             The current ROI frame information.
+        currentStatus : .CameraStatus
+            The current camera status.
         """
         if not self.telemetrySetup:
-            if self.telemetrySavePath is None:
-                self.fullTelemetrySavePath = os.path.abspath(os.path.curdir)
-            else:
-                self.fullTelemetrySavePath = self.telemetrySavePath
-            savePath = os.path.join(self.fullTelemetrySavePath, self.TELEMETRY_SAVEDIR)
-            if not os.path.exists(savePath):
-                os.makedirs(savePath)
+            if self.fullTelemetrySavePath is None:
+                if self.telemetrySavePath is None:
+                    savePath = os.path.abspath(os.path.curdir)
+                else:
+                    savePath = self.telemetrySavePath
+                self.fullTelemetrySavePath = os.path.join(savePath, self.TELEMETRY_SAVEDIR)
+
+            if not os.path.exists(self.fullTelemetrySavePath):
+                os.makedirs(self.fullTelemetrySavePath)
+
+            content = {'ui_versions': {'code': version, 'config': None},
+                       'camera': {'name': currentStatus.name,
+                                  'fps': currentStatus.currentFps},
+                       'data': {'buffer_size': roiInfo.validFrames[0],
+                                'acquisition_time': roiInfo.validFrames[1]}}
+            writeYamlFile(os.path.join(self.fullTelemetrySavePath, self.UI_CONFIG_FILE), content)
+
             self.telemetrySetup = True
 
         currentTimestamp = getTimestamp()
@@ -341,7 +370,6 @@ class DataController():
                   self.bufferModel.timestamp[-1].isoformat(),
                   roiInfo.rmsX, roiInfo.rmsY]
 
-        with open(os.path.join(self.fullTelemetrySavePath,
-                               self.TELEMETRY_SAVEDIR, telemetryFile), 'w') as csvFile:
+        with open(os.path.join(self.fullTelemetrySavePath, telemetryFile), 'w') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(output)

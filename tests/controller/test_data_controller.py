@@ -2,6 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import collections
 from datetime import timedelta
 import os
 
@@ -19,8 +20,8 @@ class TestDataController():
 
     def setup_class(cls):
         cls.frame = np.ones((3, 5))
-        cls.fullFrameStatus = CameraStatus(24, False, (0, 0), True)
-        cls.roiFrameStatus = CameraStatus(40, True, (264, 200), True)
+        cls.fullFrameStatus = CameraStatus('Gaussian', 24, False, (0, 0), True)
+        cls.roiFrameStatus = CameraStatus('Gaussian', 40, True, (264, 200), True)
         cls.timestamp = getTimestamp()
         cls.deltaTime = timedelta(seconds=1)
 
@@ -164,23 +165,26 @@ class TestDataController():
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
-        currentFps = 40
         mockCameraDataWidgetUpdateRoiInfo = mocker.patch.object(cdw, 'updateRoiFrameData')
         mockWriteTelemetryFile = mocker.patch.object(dc, 'writeTelemetryFile')
-        dc.bufferModel.getInformation = mocker.Mock(return_value=RoiFrameInformation(242.5,
-                                                                                     286.3,
-                                                                                     2501.42,
-                                                                                     104.753,
-                                                                                     2.5432,
-                                                                                     2.2353,
-                                                                                     (1000, 25)))
+        roiInfo = RoiFrameInformation(242.5,
+                                      286.3,
+                                      2501.42,
+                                      104.753,
+                                      2.5432,
+                                      2.2353,
+                                      (1000, 25))
+        dc.bufferModel.getInformation = mocker.Mock(return_value=roiInfo)
 
-        dc.showRoiInformation(True, currentFps)
+        dc.showRoiInformation(True, self.roiFrameStatus)
+        assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
+        mockCameraDataWidgetUpdateRoiInfo.assert_called_with(roiInfo)
+        assert mockWriteTelemetryFile.call_count == 1
+        mockWriteTelemetryFile.assert_called_with(roiInfo, self.roiFrameStatus)
+        dc.showRoiInformation(False, self.roiFrameStatus)
         assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
         assert mockWriteTelemetryFile.call_count == 1
-        dc.showRoiInformation(False, currentFps)
-        assert mockCameraDataWidgetUpdateRoiInfo.call_count == 1
-        assert mockWriteTelemetryFile.call_count == 1
+        mockWriteTelemetryFile.assert_called_once_with(roiInfo, self.roiFrameStatus)
 
     def test_setDataConfiguration(self, qtbot):
         cdw = CameraDataWidget()
@@ -255,7 +259,6 @@ class TestDataController():
     def test_writeTelemetryFile(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
-        currentFps = 40
         saveTelemetryDir = os.path.join(os.path.abspath(os.path.curdir), 'temp')
         telemetryOutputDir = 'dsm_telemetry'
         fullSaveDir = os.path.join(saveTelemetryDir, telemetryOutputDir)
@@ -281,12 +284,15 @@ class TestDataController():
                                                                  32043.42, 143.422,
                                                                  70, None), (0, 0))
         telemetryFile = 'dsm_20181030_223015.dat'
-        roiInfo = dc.bufferModel.getInformation(currentFps)
-        dc.writeTelemetryFile(roiInfo)
+        configFile = 'dsm_ui_config.yaml'
+        roiInfo = dc.bufferModel.getInformation(self.roiFrameStatus.currentFps)
+        dc.writeTelemetryFile(roiInfo, self.roiFrameStatus)
         assert os.path.exists(fullSaveDir) is True
         assert os.path.exists(os.path.join(fullSaveDir, telemetryFile)) is True
+        assert os.path.exists(os.path.join(fullSaveDir, configFile)) is True
         dc.cleanTelemetry()
         assert os.path.exists(os.path.join(fullSaveDir, telemetryFile)) is False
+        assert os.path.exists(os.path.join(fullSaveDir, configFile)) is False
         assert os.path.exists(fullSaveDir) is False
         assert dc.telemetrySetup is False
 
@@ -297,3 +303,14 @@ class TestDataController():
         mockCleanTelemetry = mocker.patch.object(dc, 'cleanTelemetry')
         dc.handleAcquireRoiStateChange(Qt.Unchecked)
         assert mockCleanTelemetry.call_count == 1
+
+    def test_setCommandLineConfig(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+
+        args = collections.namedtuple('args', ['telemetry_dir'])
+        args.telemetry_dir = '/new/path/for/telemetry'
+
+        dc.setCommandLineConfig(args)
+        assert dc.fullTelemetrySavePath == args.telemetry_dir

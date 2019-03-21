@@ -21,5 +21,7 @@ def create_parser():
 
     parser.add_argument('--profile', dest='profile', action='store_true',
                         help='Supply a filename to trigger profiling the code.')
+    parser.add_argument('-t', '--telemetry_dir', dest='telemetry_dir',
+                        help='Provide an alternater full path for telemetry saving.')
 
     return parser

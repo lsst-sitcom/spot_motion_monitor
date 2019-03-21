@@ -6,8 +6,9 @@ from datetime import datetime
 
 from matplotlib import cm
 import numpy as np
+import yaml
 
-__all__ = ['getLutFromColorMap', 'getTimestamp', 'passFrame']
+__all__ = ['getLutFromColorMap', 'getTimestamp', 'passFrame', 'writeYamlFile']
 
 def getLutFromColorMap(name):
     """Get a LUT from a color map.
@@ -50,3 +51,16 @@ def passFrame(*args):
         Always True to pass the frame check.
     """
     return True
+
+def writeYamlFile(filename, content):
+    """Write a YAML file with the provided content.
+
+    Parameters
+    ----------
+    filename : str
+        The name of the YAML file to write.
+    content : dict
+        The content to write to the YAML file.
+    """
+    with open(filename, 'w') as ofile:
+        yaml.dump(content, ofile)
