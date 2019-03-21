@@ -18,6 +18,7 @@ class TestArgumentParser():
     def test_behaviorWithNoArguments(self):
         args = self.parser.parse_args([])
         assert args.profile is False
+        assert args.config_file is None
 
     def test_profileFlag(self):
         args = self.parser.parse_args(['--profile'])
@@ -30,3 +31,11 @@ class TestArgumentParser():
         assert args.telemetry_dir == telem_dir1
         args = self.parser.parse_args(['--telemetry_dir', telem_dir2])
         assert args.telemetry_dir == telem_dir2
+
+    def test_configFileFlag(self):
+        conf_file1 = 'test.yaml'
+        conf_file2 = 'another.yaml'
+        args = self.parser.parse_args(['-c', conf_file1])
+        assert args.config_file == conf_file1
+        args = self.parser.parse_args(['--config', conf_file2])
+        assert args.config_file == conf_file2
