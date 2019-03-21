@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import collections
+
 import numpy as np
 
 from PyQt5.QtCore import Qt
@@ -63,7 +65,8 @@ class TestMainWindow():
         mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.getFullFrame')
         mockCamCont.getFrame = mocker.MagicMock(return_value=np.ones((3, 5)))
         emessage = "Frame failed!"
-        mw.cameraController.currentStatus = mocker.Mock(return_value=CameraStatus(24, False, (0, 0), True))
+        mw.cameraController.currentStatus = mocker.Mock(return_value=CameraStatus('Gaussian', 24, False,
+                                                                                  (0, 0), True))
         mw.dataController.fullFrameModel.calculateCentroid = mocker.Mock(side_effect=FrameRejected(emessage))
         mw.plotController.passFrame = mocker.Mock(return_value=None)
         mw.acquireFrame()
@@ -111,6 +114,20 @@ class TestMainWindow():
         assert mw.actionCameraConfig.isEnabled() is False
         assert mw.actionPlotsConfig.isEnabled() is True
         assert mw.actionGeneralConfig.isEnabled() is True
+
+    def test_commandLineConfiguration(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+        mockDataContollerSetCliConf = mocker.patch.object(mw.dataController, 'setCommandLineConfig')
+
+        args = collections.namedtuple('args', ['profile', 'telemetry_dir'])
+        args.telemetry_dir = None
+
+        mw.handleConfig(args)
+        assert mockDataContollerSetCliConf.call_count == 1
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()

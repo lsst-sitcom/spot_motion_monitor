@@ -32,6 +32,18 @@ class BaseCamera():
         """
         pass
 
+    @property
+    def name(self):
+        """Get the name of the camera type.
+
+        Returns
+        -------
+        str
+            The name of the camera type.
+        """
+        cname = self.__class__.__name__
+        return cname.split('Camera')[0]
+
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
 

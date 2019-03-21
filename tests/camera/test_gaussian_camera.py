@@ -12,6 +12,7 @@ class TestGaussianCamera():
         self.camera = GaussianCamera()
 
     def test_parametersAfterConstruction(self):
+        assert self.camera.name == 'Gaussian'
         assert self.camera.seed is None
         assert self.camera.height == 480
         assert self.camera.width == 640

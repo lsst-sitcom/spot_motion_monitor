@@ -22,3 +22,11 @@ class TestArgumentParser():
     def test_profileFlag(self):
         args = self.parser.parse_args(['--profile'])
         assert args.profile is True
+
+    def test_telemetryDirectory(self):
+        telem_dir1 = '/test/it/out'
+        telem_dir2 = '/another/to/try'
+        args = self.parser.parse_args(['-t', telem_dir1])
+        assert args.telemetry_dir == telem_dir1
+        args = self.parser.parse_args(['--telemetry_dir', telem_dir2])
+        assert args.telemetry_dir == telem_dir2

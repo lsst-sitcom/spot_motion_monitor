@@ -99,6 +99,7 @@ class CameraController():
             self.camera.resetOffset()
             if self.cameraControlWidget.acquireFramesButton.isChecked():
                 self.acquireFrame(True)
+        self.updater.acquireRoiState.emit(state)
 
     def bufferSize(self, value):
         """Rebroadcast a buffer size change request.
@@ -151,11 +152,12 @@ class CameraController():
         .CameraStatus
             The instance containing all of the current camera status.
         """
+        name = self.camera.name
         fps = self.currentCameraFps()
         mode = self.isRoiMode()
         offset = self.currentOffset()
         showFrames = self.cameraControlWidget.showFramesCheckBox.isChecked()
-        return spot_motion_monitor.camera.CameraStatus(fps, mode, offset, showFrames)
+        return spot_motion_monitor.camera.CameraStatus(name, fps, mode, offset, showFrames)
 
     def getAvailableCameras(self):
         """Determine which cameras are available.
