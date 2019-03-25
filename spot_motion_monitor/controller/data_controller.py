@@ -239,6 +239,18 @@ class DataController():
         options : Namespace
             The options from command-line arguments.
         """
+        try:
+            ps = options.config['general']['pixel_scale']
+            self.bufferModel.pixelScale = ps
+        except KeyError:
+            pass
+
+        try:
+            td = options.config['general']['telemetry_dir']
+            self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(td))
+        except KeyError:
+            pass
+
         if options.telemetry_dir is not None:
             self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(options.telemetry_dir))
 

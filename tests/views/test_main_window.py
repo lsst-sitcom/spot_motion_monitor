@@ -5,9 +5,9 @@
 import collections
 
 import numpy as np
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMainWindow
+import pytest
 
 from spot_motion_monitor.camera import CameraStatus
 from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
@@ -123,11 +123,14 @@ class TestMainWindow():
         mw.cameraController.setupCamera('GaussianCamera')
         mockDataContollerSetCliConf = mocker.patch.object(mw.dataController, 'setCommandLineConfig')
 
-        args = collections.namedtuple('args', ['profile', 'telemetry_dir'])
+        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file'])
         args.telemetry_dir = None
 
         mw.handleConfig(args)
         assert mockDataContollerSetCliConf.call_count == 1
+        assert args.config is None
+        with pytest.raises(AttributeError):
+            args.config_file
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()

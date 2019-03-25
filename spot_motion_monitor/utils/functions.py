@@ -66,8 +66,11 @@ def readYamlFile(filename):
         The configuration from the YAML file.
     """
     content = None
-    with open(filename, 'r') as ifile:
-        content = yaml.safe_load(ifile)
+    try:
+        with open(filename, 'r') as ifile:
+            content = yaml.safe_load(ifile)
+    except TypeError:
+        pass
     return content
 
 def writeYamlFile(filename, content):

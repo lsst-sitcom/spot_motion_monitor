@@ -309,8 +309,16 @@ class TestDataController():
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
 
-        args = collections.namedtuple('args', ['telemetry_dir'])
+        args = collections.namedtuple('args', ['telemetry_dir', 'config'])
         args.telemetry_dir = '/new/path/for/telemetry'
+        content = {'general': {'pixel_scale': 0.1, 'telemetry_dir': '/other/path/for/telemetry'}}
+        args.config = content
 
         dc.setCommandLineConfig(args)
         assert dc.fullTelemetrySavePath == args.telemetry_dir
+        assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
+
+        args.telemetry_dir = None
+        dc.setCommandLineConfig(args)
+        assert dc.fullTelemetrySavePath == content['general']['telemetry_dir']
+        assert dc.bufferModel.pixelScale == content['general']['pixel_scale']

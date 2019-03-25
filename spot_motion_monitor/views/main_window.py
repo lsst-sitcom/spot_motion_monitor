@@ -15,7 +15,7 @@ from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
-from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE
+from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE, readYamlFile
 from spot_motion_monitor.views import CameraConfigurationDialog
 from spot_motion_monitor.views import GeneralConfigurationDialog
 from spot_motion_monitor.views import PlotConfigurationDialog
@@ -186,6 +186,9 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         options : Namespace
             The options from command-line arguments.
         """
+        config = readYamlFile(options.config_file)
+        del options.config_file
+        options.config = config
         self.dataController.setCommandLineConfig(options)
 
     def handleRoiFpsChanged(self, newRoiFps):

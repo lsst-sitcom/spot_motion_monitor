@@ -31,3 +31,7 @@ class TestYamlFiles:
         new_content = readYamlFile(output)
         assert new_content == self.content
         os.remove(output)
+
+    def test_getNoneContentforNoneFile(self):
+        new_content = readYamlFile(None)
+        assert new_content is None
