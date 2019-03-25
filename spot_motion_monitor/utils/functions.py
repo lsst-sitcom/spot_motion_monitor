@@ -8,7 +8,7 @@ from matplotlib import cm
 import numpy as np
 import yaml
 
-__all__ = ['getLutFromColorMap', 'getTimestamp', 'passFrame', 'writeYamlFile']
+__all__ = ['getLutFromColorMap', 'getTimestamp', 'passFrame', 'readYamlFile', 'writeYamlFile']
 
 def getLutFromColorMap(name):
     """Get a LUT from a color map.
@@ -51,6 +51,24 @@ def passFrame(*args):
         Always True to pass the frame check.
     """
     return True
+
+def readYamlFile(filename):
+    """Read a YAML configuration file.
+
+    Parameters
+    ----------
+    filename : str
+        The name of the YAML file to read.
+
+    Returns
+    -------
+    dict
+        The configuration from the YAML file.
+    """
+    content = None
+    with open(filename, 'r') as ifile:
+        content = yaml.safe_load(ifile)
+    return content
 
 def writeYamlFile(filename, content):
     """Write a YAML file with the provided content.

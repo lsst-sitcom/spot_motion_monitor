@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 import os
 
-from spot_motion_monitor.utils import getLutFromColorMap, writeYamlFile
+from spot_motion_monitor.utils import getLutFromColorMap, readYamlFile, writeYamlFile
 
 class TestGetLutFromColorMap:
 
@@ -23,4 +23,11 @@ class TestYamlFiles:
         output = 'test_write.yaml'
         writeYamlFile(output, self.content)
         assert os.path.exists(output) is True
+        os.remove(output)
+
+    def test_readYamlFile(self):
+        output = 'test2_write.yaml'
+        writeYamlFile(output, self.content)
+        new_content = readYamlFile(output)
+        assert new_content == self.content
         os.remove(output)
