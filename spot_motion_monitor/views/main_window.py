@@ -276,6 +276,11 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             self.cameraController.setCameraConfiguration(config)
 
     def updateGeneralConfiguration(self):
+        """This function handles general configuration.
+
+        The configuration is centered on the data structures used for the
+        calculations.
+        """
         generalConfigDialog = GeneralConfigurationDialog()
         currentDataConfig = self.dataController.getDataConfiguration()
         generalConfigDialog.setConfiguration(currentDataConfig)
