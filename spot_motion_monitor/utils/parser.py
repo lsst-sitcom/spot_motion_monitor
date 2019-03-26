@@ -23,5 +23,7 @@ def create_parser():
                         help='Supply a filename to trigger profiling the code.')
     parser.add_argument('-t', '--telemetry_dir', dest='telemetry_dir',
                         help='Provide an alternater full path for telemetry saving.')
+    parser.add_argument('-c', '--config', dest='config_file',
+                        help='Supply a YAML configuration file.')
 
     return parser

@@ -10,5 +10,6 @@ Table of Contents
 
    installation
    usage
+   configuration
    development
    history
