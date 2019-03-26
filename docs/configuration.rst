@@ -16,6 +16,11 @@ General
 This section, specified by the ``general`` heading, handles modification to the program's
 data controller. The following variables are configured under this section.
 
+version
+  This represents the version of the configuration file being used. The telemetry system places
+  this information in a generated output configuration file. The value should be recorded as a
+  string.
+
 telemetry_dir
   This is a path where the resulting telemetry data is to be stored. This parameter can
   be overridden from the command line using the ``-t`` or ``--telemetry_dir`` flag.
@@ -35,5 +40,6 @@ here.
 ::
 
     general:
+      version: '1.0'
       telemetry_dir: /path/to/output/directory
       pixel_scale: 0.1

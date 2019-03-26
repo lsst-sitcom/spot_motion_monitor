@@ -31,6 +31,8 @@ class DataController():
         An instance of the camera data widget.
     centroidFilename : str
         The current name for the centroid output file.
+    configVersion : str
+        The current version of a configration file. None if not used.
     filesCreated : bool
         Whether or not the output files have been created.
     fullFrameModel : .FullFrameModel
@@ -49,6 +51,8 @@ class DataController():
         The location to add the TELEMETRY_SAVEDIR to. Default is the current
         running directory.
     telemetrySetup : bool
+        Description
+    UI_CONFIG_FILE : str
         Description
     updater : .InformationUpdater
         An instance of the information updater.
@@ -80,6 +84,7 @@ class DataController():
         self.telemetrySavePath = None
         self.telemetrySetup = False
         self.fullTelemetrySavePath = None
+        self.configVersion = None
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -251,6 +256,12 @@ class DataController():
         except KeyError:
             pass
 
+        try:
+            cv = options.config['general']['version']
+            self.configVersion = cv
+        except KeyError:
+            pass
+
         if options.telemetry_dir is not None:
             self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(options.telemetry_dir))
 
@@ -366,7 +377,7 @@ class DataController():
             if not os.path.exists(self.fullTelemetrySavePath):
                 os.makedirs(self.fullTelemetrySavePath)
 
-            content = {'ui_versions': {'code': version, 'config': None},
+            content = {'ui_versions': {'code': version, 'config': self.configVersion},
                        'camera': {'name': currentStatus.name,
                                   'fps': currentStatus.currentFps},
                        'data': {'buffer_size': roiInfo.validFrames[0],
