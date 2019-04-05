@@ -30,8 +30,10 @@ install:
   - pip install -U PyQt5==5.10.1
   - python setup.py build_ui
   - python setup.py install
+dist: xenial
 language: python
 python:
   - '3.6'
+  - '3.7'
 script: xvfb-run pytest
 sudo: false
