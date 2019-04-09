@@ -62,6 +62,17 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         self.pixelRangeAddition = 10
         self.numAccumFrames = 15
 
+    def clearPlot(self):
+        """Reset all data and clear the plot.
+        """
+        self.rollArray = False
+        self.dataCounter = 0
+        self.data = np.zeros(self.dataSize)
+        self.curve.clear()
+        self.plot.enableAutoRange()
+        self.yRange = None
+        self.plot.setRange(yRange=(-0.5, 0.5))
+
     def getConfiguration(self):
         """Get the current plot configuration.
 

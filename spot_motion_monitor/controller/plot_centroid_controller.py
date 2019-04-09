@@ -61,6 +61,19 @@ class PlotCentroidController():
         self.y1dPlot.setConfiguration(config['yCentroid'])
         self.scatterPlot.setConfiguration(config['scatterPlot'])
 
+    def handleAcquireRoiStateChange(self, checked):
+        """Deal with changes in the Acquire ROI checkbox.
+
+        Parameters
+        ----------
+        checked : bool
+            State of the Acquire ROI checkbox.
+        """
+        if not checked:
+            print("Got here")
+            self.x1dPlot.clearPlot()
+            self.y1dPlot.clearPlot()
+
     def setup(self, arraySize, roiFps):
         """Pass along the requested array size to the contained plot widgets.
 

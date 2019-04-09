@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from PyQt5.QtCore import Qt
+
 from spot_motion_monitor.controller import PlotCentroidController
 from spot_motion_monitor.views import Centroid1dPlotWidget, CentroidScatterPlotWidget
 
@@ -159,3 +161,18 @@ class TestPlotCentroidController:
         assert mockXSetConfiguration.call_count == 1
         assert mockYSetConfiguration.call_count == 1
         assert mockScatterSetConfiguration.call_count == 1
+
+    def test_handleAcquireRoiStateChange(self, qtbot, mocker):
+        cxp = Centroid1dPlotWidget()
+        cyp = Centroid1dPlotWidget()
+        csp = CentroidScatterPlotWidget()
+        qtbot.addWidget(cxp)
+        qtbot.addWidget(cyp)
+        qtbot.addWidget(csp)
+        p1cc = PlotCentroidController(cxp, cyp, csp)
+        p1cc.setup(self.bufferSize, self.roiFps)
+        mockXClearPlot = mocker.patch.object(p1cc.x1dPlot, 'clearPlot')
+        mockYClearPlot = mocker.patch.object(p1cc.y1dPlot, 'clearPlot')
+        p1cc.handleAcquireRoiStateChange(Qt.Unchecked)
+        assert mockXClearPlot.call_count == 1
+        assert mockYClearPlot.call_count == 1
