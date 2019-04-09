@@ -302,8 +302,10 @@ class TestDataController():
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         mockCleanTelemetry = mocker.patch.object(dc, 'cleanTelemetry')
+        mockBufferModelReset = mocker.patch.object(dc.bufferModel, 'reset')
         dc.handleAcquireRoiStateChange(Qt.Unchecked)
         assert mockCleanTelemetry.call_count == 1
+        assert mockBufferModelReset.call_count == 1
 
     def test_setCommandLineConfig(self, qtbot):
         cdw = CameraDataWidget()
