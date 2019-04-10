@@ -70,9 +70,9 @@ class PlotCentroidController():
             State of the Acquire ROI checkbox.
         """
         if not checked:
-            print("Got here")
             self.x1dPlot.clearPlot()
             self.y1dPlot.clearPlot()
+            self.scatterPlot.clearPlot()
 
     def setup(self, arraySize, roiFps):
         """Pass along the requested array size to the contained plot widgets.

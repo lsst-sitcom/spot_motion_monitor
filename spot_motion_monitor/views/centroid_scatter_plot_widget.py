@@ -89,6 +89,20 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         self.pointPen = mkPen(*self.penColor)
         self.scatterPlotItem.setBrush(self.pointBrush)
 
+    def clearPlot(self):
+        """Reset all data and clear the plot.
+        """
+        self.rollArray = False
+        self.dataCounter = 0
+        self.xData = np.array([])
+        self.yData = np.array([])
+        self.scatterPlotItem.setData(self.xData, self.yData)
+        self.xHistogramItem.setData([], [], stepMode=False)
+        self.yHistogramItem.setData([], [], stepMode=False)
+        self.scatterPlotItem.getViewBox().setRange(xRange=(0, 1), yRange=(0, 1), disableAutoRange=False)
+        self.xHistogramItem.getViewBox().setRange(xRange=(0, 1), yRange=(0, 1), disableAutoRange=False)
+        self.yHistogramItem.getViewBox().setRange(xRange=(0, 1), yRange=(0, 1), disableAutoRange=False)
+
     def getConfiguration(self):
         """Get the current plot configuration.
 

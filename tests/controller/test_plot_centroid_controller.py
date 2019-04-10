@@ -173,6 +173,8 @@ class TestPlotCentroidController:
         p1cc.setup(self.bufferSize, self.roiFps)
         mockXClearPlot = mocker.patch.object(p1cc.x1dPlot, 'clearPlot')
         mockYClearPlot = mocker.patch.object(p1cc.y1dPlot, 'clearPlot')
+        mockScatterClearPlot = mocker.patch.object(p1cc.scatterPlot, 'clearPlot')
         p1cc.handleAcquireRoiStateChange(Qt.Unchecked)
         assert mockXClearPlot.call_count == 1
         assert mockYClearPlot.call_count == 1
+        assert mockScatterClearPlot.call_count == 1

@@ -124,3 +124,18 @@ class TestCentroidScatterPlotWidget:
         truthConfig = {'numHistogramBins': 50}
         cspw.setConfiguration(truthConfig)
         cspw.numBins == truthConfig['numHistogramBins']
+
+    def test_clearPlot(self, qtbot, mocker):
+        cspw = CentroidScatterPlotWidget()
+        qtbot.addWidget(cspw)
+        arraySize = 3
+        cspw.setup(arraySize)
+        valuesX = [254.43, 254.86, 253.91, 254.21]
+        valuesY = [355.25, 355.10, 354.89, 355.57]
+        for x, y in zip(valuesX, valuesY):
+            cspw.updateData(x, y)
+        cspw.clearPlot()
+        assert cspw.rollArray is False
+        assert cspw.dataCounter == 0
+        assert len(cspw.xData) == 0
+        assert len(cspw.yData) == 0
