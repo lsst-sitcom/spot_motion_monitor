@@ -54,6 +54,18 @@ class PlotPsdController:
         config['yPSD'] = self.psd1dYPlot.getConfiguration()
         return config
 
+    def handleAcquireRoiStateChange(self, checked):
+        """Deal with changes in the Acquire ROI checkbox.
+
+        Parameters
+        ----------
+        checked : bool
+            State of the Acquire ROI checkbox.
+        """
+        if not checked:
+            self.psd1dXPlot.clearPlot()
+            self.psd1dYPlot.clearPlot()
+
     def setPlotConfiguration(self, config):
         """Set a new configuration on the PSD plots.
 

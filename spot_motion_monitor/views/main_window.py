@@ -82,6 +82,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.updater.acquireRoiState.connect(self.dataController.handleAcquireRoiStateChange)
         ccUpdArs = self.cameraController.updater.acquireRoiState.connect
         ccUpdArs(self.plotCentroidController.handleAcquireRoiStateChange)
+        ccUpdArs(self.plotPsdController.handleAcquireRoiStateChange)
         self.plotController.updater.displayStatus.connect(self.updateStatusBar)
         self.dataController.updater.displayStatus.connect(self.updateStatusBar)
         self.actionExit.triggered.connect(self.close)
