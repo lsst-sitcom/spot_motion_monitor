@@ -20,7 +20,6 @@ Spot Motion Monitor
 
 |license| |python| |version| |travis|
 
-
-User interface for Dome Seeing Monitor.
+User interface for a Dome Seeing Monitor.
 
 **NOTE**: This package only supports Python 3 and PyQt5.
