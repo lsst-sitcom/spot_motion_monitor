@@ -40,6 +40,12 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
         self.autoscale = True
         self.yRange = None
 
+    def clearPlot(self):
+        """Reset all data and clear the plot.
+        """
+        self.curve.setData([], [])
+        self.plot.setRange(xRange=(0, 1), yRange=(0.1, 1), padding=0, disableAutoRange=False)
+
     def getConfiguration(self):
         """Get the current plot configuration.
 

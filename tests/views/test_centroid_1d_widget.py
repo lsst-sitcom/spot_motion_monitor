@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+import numpy as np
+
 from spot_motion_monitor.utils import AutoscaleState
 from spot_motion_monitor.views import Centroid1dPlotWidget
 
@@ -122,3 +124,22 @@ class TestCentroid1dPlotWidget():
         c1dpw.autoscale == AutoscaleState.PARTIAL
         c1dpw.pixelRangeAddition == truthConfig['pixelAddition']
         c1dpw.yRange is None
+
+    def test_clearPlot(self, qtbot, mocker):
+        c1dpw = Centroid1dPlotWidget()
+        c1dpw.show()
+        qtbot.addWidget(c1dpw)
+        arraySize = 3
+        currentFps = 2
+        c1dpw.numAccumFrames = 2
+        c1dpw.setup(arraySize, 'X', currentFps)
+        values = [254.43, 254.86, 253.91, 254.21]
+        c1dpw.updatePlot(values[0])
+        c1dpw.updatePlot(values[1])
+        c1dpw.updatePlot(values[2])
+        c1dpw.updatePlot(values[3])
+        c1dpw.clearPlot()
+        assert c1dpw.rollArray is False
+        assert c1dpw.dataCounter == 0
+        assert np.all(c1dpw.data == 0)
+        assert c1dpw.yRange is None

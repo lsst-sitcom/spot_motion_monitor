@@ -3,6 +3,7 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import numpy as np
+from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.controller import PlotPsdController
 from spot_motion_monitor.views import PsdWaterfallPlotWidget, Psd1dPlotWidget
@@ -166,3 +167,28 @@ class TestPlotPsdController:
         assert mockPsdYWaterfallSetConfig.call_count == 1
         assert mockPsdX1dSetConfig.call_count == 1
         assert mockPsdY1dSetConfig.call_count == 1
+
+    def test_handleAcquireRoiStateChange(self, qtbot, mocker):
+        psdwfx = PsdWaterfallPlotWidget()
+        psdwfy = PsdWaterfallPlotWidget()
+        psd1dx = Psd1dPlotWidget()
+        psd1dy = Psd1dPlotWidget()
+        qtbot.addWidget(psdwfx)
+        qtbot.addWidget(psdwfy)
+        qtbot.addWidget(psd1dx)
+        qtbot.addWidget(psd1dy)
+
+        pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
+        pfc.setup(self.arraySize, self.timeScale)
+
+        mockPsdXWaterfallClearPlot = mocker.patch.object(pfc.psdWaterfallXPlot, 'clearPlot')
+        mockPsdYWaterfallClearPlot = mocker.patch.object(pfc.psdWaterfallYPlot, 'clearPlot')
+        mockPsdX1dClearPlot = mocker.patch.object(pfc.psd1dXPlot, 'clearPlot')
+        mockPsdY1dClearPlot = mocker.patch.object(pfc.psd1dYPlot, 'clearPlot')
+
+        pfc.handleAcquireRoiStateChange(Qt.Unchecked)
+
+        assert mockPsdXWaterfallClearPlot.call_count == 1
+        assert mockPsdYWaterfallClearPlot.call_count == 1
+        assert mockPsdX1dClearPlot.call_count == 1
+        assert mockPsdY1dClearPlot.call_count == 1

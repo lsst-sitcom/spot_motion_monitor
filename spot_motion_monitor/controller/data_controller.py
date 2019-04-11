@@ -184,6 +184,7 @@ class DataController():
         """
         if not checked:
             self.cleanTelemetry()
+            self.bufferModel.reset()
 
     def handleSaveData(self, checked):
         """Deal with changes in the Save Buffer Data checkbox.

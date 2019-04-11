@@ -52,6 +52,13 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
         self.colorMap = 'viridis'
         self.image.setLookupTable(getLutFromColorMap(self.colorMap))
 
+    def clearPlot(self):
+        """Reset all data and clear the plot.
+        """
+        self.data = None
+        self.boundingRect = None
+        self.image.clear()
+
     def getConfiguration(self):
         """Get the current plot configuration.
 
