@@ -181,19 +181,14 @@ class TestPlotPsdController:
         pfc = PlotPsdController(psdwfx, psdwfy, psd1dx, psd1dy)
         pfc.setup(self.arraySize, self.timeScale)
 
-        # np.random.seed(3000)
-        # psdDataX = np.random.random(7)
-        # psdDataY = np.random.random(7)
-        # freqs = np.random.random(7)
-
-        # mockPsdXWaterfallClearPlot = mocker.patch.object(pfc.psdWaterfallXPlot, 'clearPlot')
-        # mockPsdYWaterfallClearPlot = mocker.patch.object(pfc.psdWaterfallYPlot, 'clearPlot')
+        mockPsdXWaterfallClearPlot = mocker.patch.object(pfc.psdWaterfallXPlot, 'clearPlot')
+        mockPsdYWaterfallClearPlot = mocker.patch.object(pfc.psdWaterfallYPlot, 'clearPlot')
         mockPsdX1dClearPlot = mocker.patch.object(pfc.psd1dXPlot, 'clearPlot')
         mockPsdY1dClearPlot = mocker.patch.object(pfc.psd1dYPlot, 'clearPlot')
 
         pfc.handleAcquireRoiStateChange(Qt.Unchecked)
 
-        # assert mockPsdXWaterfallClearPlot.call_count == 1
-        # assert mockPsdYWaterfallClearPlot.call_count == 1
+        assert mockPsdXWaterfallClearPlot.call_count == 1
+        assert mockPsdYWaterfallClearPlot.call_count == 1
         assert mockPsdX1dClearPlot.call_count == 1
         assert mockPsdY1dClearPlot.call_count == 1

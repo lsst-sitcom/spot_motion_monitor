@@ -65,6 +65,8 @@ class PlotPsdController:
         if not checked:
             self.psd1dXPlot.clearPlot()
             self.psd1dYPlot.clearPlot()
+            self.psdWaterfallXPlot.clearPlot()
+            self.psdWaterfallYPlot.clearPlot()
 
     def setPlotConfiguration(self, config):
         """Set a new configuration on the PSD plots.

@@ -102,3 +102,14 @@ class TestPsdWaterfallPlotWidget:
         assert pwpw2.data is None
         assert pwpw2.boundingRect is None
         assert pwpw2.colorMap == truthConfig['colorMap']
+
+    def test_clearPlot(self, qtbot, mocker):
+        pwpw2 = PsdWaterfallPlotWidget()
+        qtbot.addWidget(pwpw2)
+        arraySize = 5
+        mockImageClear = mocker.patch.object(pwpw2.image, 'clear')
+        pwpw2.setup(arraySize, self.timeScale, 'X')
+        pwpw2.clearPlot()
+        assert pwpw2.data is None
+        assert pwpw2.boundingRect is None
+        assert mockImageClear.call_count == 1
