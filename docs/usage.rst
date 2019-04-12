@@ -9,11 +9,19 @@ To run the user interface, do::
 
     smm_ui
 
+Command-line help can be acquired by doing::
+
+    smm_ui -h
+
+or::
+
+    smm_ui --help
+
 Telemetry
 ~~~~~~~~~
 
 When the UI is in the acquiring ROI mode and the first buffer is filled, the system
-writes out a file containing information that may be of wide interest. LSST will
+writes out a file containing information that may be of wider interest. LSST will
 leverage this information and place it into their Engineering Facilities Database
 when the Dome Seeing Monitor is running. By default, the telemetry files show up in
 the current running directory under one called ``dsm_telemetry``. A configuration file
@@ -32,7 +40,7 @@ code
   The current version of the user interface.
 
 config
-  The version of a specified configuration file. This is ``null`` is no file is used.
+  The version of a specified configuration file. This is ``null`` if no file is used.
 
 camera
 ------
