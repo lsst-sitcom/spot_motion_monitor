@@ -46,6 +46,10 @@ docs:
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html
 
+docs-pdf:
+	$(MAKE) -C docs clean
+	$(MAKE) -C docs latexpdf
+
 release: clean
 	python setup.py sdist upload
 	python setup.py bdist_wheel upload
