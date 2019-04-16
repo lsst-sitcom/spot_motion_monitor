@@ -1,6 +1,6 @@
 .. spot_motion_monitor documentation master file, created by Michael Reuter
 
-.. include:: ../README.rst
+.. include:: main.rst
 
 Table of Contents
 =================

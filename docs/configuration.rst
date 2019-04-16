@@ -5,7 +5,7 @@ Configuration
 =============
 
 In addition to using the configuration menu from within the user interface, the
-program provides a mechanism to insert configuration informaiton into the program
+program provides a mechanism to insert configuration information into the program
 on startup. The ``-c`` or ``--config_file`` flag may be passed to the ``smm_ui`` call.
 The flag takes a filename corresponding to a YAML configuration file. The following sections
 will describe the currently configurable parameters. Each section corresponds to a section
