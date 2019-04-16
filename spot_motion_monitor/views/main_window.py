@@ -190,6 +190,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             The options from command-line arguments.
         """
         config = readYamlFile(options.config_file)
+        if config is not None:
+            config['file'] = options.config_file
         del options.config_file
         options.config = config
         self.dataController.setCommandLineConfig(options)

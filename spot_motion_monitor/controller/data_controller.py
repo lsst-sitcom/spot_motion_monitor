@@ -31,6 +31,8 @@ class DataController():
         An instance of the camera data widget.
     centroidFilename : str
         The current name for the centroid output file.
+    configFile : str
+        The current name of a configuration file. None if not used.
     configVersion : str
         The current version of a configration file. None if not used.
     filesCreated : bool
@@ -85,6 +87,7 @@ class DataController():
         self.telemetrySetup = False
         self.fullTelemetrySavePath = None
         self.configVersion = None
+        self.configFile = None
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -263,6 +266,12 @@ class DataController():
                 self.configVersion = cv
             except KeyError:
                 pass
+
+            try:
+                f = options.config['file']
+                self.configFile = f
+            except KeyError:
+                pass
         except TypeError:
             # No configuration passed
             pass
@@ -382,7 +391,8 @@ class DataController():
             if not os.path.exists(self.fullTelemetrySavePath):
                 os.makedirs(self.fullTelemetrySavePath)
 
-            content = {'ui_versions': {'code': version, 'config': self.configVersion},
+            content = {'ui_versions': {'code': version, 'config': self.configVersion,
+                                       'config_file': self.configFile},
                        'camera': {'name': currentStatus.name,
                                   'fps': currentStatus.currentFps},
                        'data': {'buffer_size': roiInfo.validFrames[0],
