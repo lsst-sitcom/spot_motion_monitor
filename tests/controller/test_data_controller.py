@@ -43,6 +43,7 @@ class TestDataController():
         assert dc.telemetrySetup is False
         assert dc.fullTelemetrySavePath is None
         assert dc.configVersion is None
+        assert dc.configFile is None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -314,7 +315,8 @@ class TestDataController():
 
         args = collections.namedtuple('args', ['telemetry_dir', 'config'])
         args.telemetry_dir = '/new/path/for/telemetry'
-        content = {'general': {'version': '1.2', 'pixel_scale': 0.1,
+        content = {'file': 'default.yaml',
+                   'general': {'version': '1.2', 'pixel_scale': 0.1,
                                'telemetry_dir': '/other/path/for/telemetry'}}
         args.config = content
 
@@ -322,9 +324,11 @@ class TestDataController():
         assert dc.fullTelemetrySavePath == args.telemetry_dir
         assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
         assert dc.configVersion == content['general']['version']
+        assert dc.configFile == content['file']
 
         args.telemetry_dir = None
         dc.setCommandLineConfig(args)
         assert dc.fullTelemetrySavePath == content['general']['telemetry_dir']
         assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
         assert dc.configVersion == content['general']['version']
+        assert dc.configFile == content['file']

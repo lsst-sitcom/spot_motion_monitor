@@ -147,6 +147,9 @@ code
 config
   The version of a specified configuration file. This is ``null`` if no file is used.
 
+config_file
+  The filename of a specified configuration file. This is ``null`` if no file is used.
+
 camera
 ------
 
