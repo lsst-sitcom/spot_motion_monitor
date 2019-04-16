@@ -32,6 +32,8 @@ along with the program menu.
 .. image:: _static/ui_annotated.png
   :alt: Annotated User Interface
 
+The plots are made using the `pyqtgraph <http://pyqtgraph.org/>`_ library and have many adjustments available by right-clicking on the particular plot. The user interface also provides some plot configuration as well. More information on that configuration can be found here: PlotConfig_.
+
 The camera is interacted with via the *Camera Control* section. It contains spinners to set
 the camera frame rate (FPS or frames per second)and the number of frames kept in the internal program buffer. The *Start/Stop Camera* button controls the startup or shutdown of the currently chosen camera. The *Start/Stop Acquire Frames* button controls frame acquisition from the CCD. The *Acquire ROI* checkbox restricts the camera readout to a 50x50 (default) ROI section around the spot centroid. Once the camera is started and acquiring frames, the current images from the CCD is displayed in the *CCD* plot. The *Show Frames* checkbox turns the *CCD* plot display on and off.
 
@@ -59,14 +61,14 @@ where :math:`C` is the x or y centroid component buffer, :math:`L` is the buffer
   \nu = \frac{FPS}{L} \times [1, 2, ... L/2]
 
 The waterfall plot shows the current 1D spectrum as a strip at the top of the plot. As more buffers are filled and calculated, the most recent 1D spectrum is placed at the top of the plot and all other rows are moved one level down. Once the allotted number of rows is filled, when a new row is placed at the top of the plot, the row at the bottom will be discarded. The time show on the y axis of the waterfall plot is derived from the acquisition time (:math:`T_{Acq}`) times the total number of rows in the plot. 
-ß
+
 The figure below shows a user interface that has been operating long enough to fill the waterfall plot.
 
 .. image:: _static/ui_operating.png
   :alt: Operating User Interface
 
 The program menu offers four entries for further control: *File*, *Camera*, *Config* and *Help*.
-The *File* menu only offers one entry: *Exit* which is self explanatory. The *Camera* menu is dynamically created and will be filled based on the camera APIs available to the program. The default camera, *Gaussian* will always have an entry. The currently supported cameras besides that are *Vimba*. This menu allows one to switch back and forth between camera types. The checked entry will be the interface used when the *Start Camera* button is clicked. The *Help* menu provides one entry: *About*. This brings up a dialog with a brief program description and version information.
+The *File* menu only offers one entry: *Exit* which is self explanatory. The *Camera* menu is dynamically created and will be filled based on the camera APIs available to the program. The default camera, *Gaussian* will always have an entry. The currently supported cameras besides that are *Vimba*. This menu allows one to switch back and forth between camera types. The checked entry will be the interface used when the *Start Camera* button is clicked. Also, when the *Start Camera* button is clicked, the *Camera* menu is disabled. It will return to enabled when the *Stop Camera* button is clicked. The *Help* menu provides one entry: *About*. This brings up a dialog with a brief program description and version information.
 
 User Interface Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,7 +84,7 @@ up a configuration dialog containing different widgets depending on the chosen e
 
 The *General* configuration dialog has only one widget: *Pixel Scale*. This is the factor that multiplies the standard deviation of the centroid component array to get the value posted in the *RMS* widget in the *Data Information* section. 
 
-The *Camera* configuration entry will bring up a dialog that is dependent on the checked *Camera* entry in the main menu. Each of the currently supported cameras will be shown in turn.
+The *Camera* configuration entry will bring up a dialog that is dependent on the checked *Camera* entry in the main menu. Each of the currently supported cameras will be shown in turn. When the *Start Camera* button is clicked, the *Camera* configuration entry is disabled. It will return to enabled when the *Stop Camera* button is clicked.
 
 .. image:: _static/gaussian_camera_config.png
   :width: 243
@@ -99,6 +101,8 @@ This dialog is used for configuring the default Gaussian camera. The *ROI Size* 
   :alt: Vimba Camera Configuration Dialog
 
 This dialog is used for configuring the Vimba class of cameras. The *ROI Size* sets the size in pixels of the region around the centroid when in ROI mode. The *ROI Flux Minimum* sets the lowest acceptable flux for an ROI frame when the flux is summed over the ROI region. The *ROI Exposure Time* widget sets the length of exposure before capturing a CCD frame.
+
+.. _PlotConfig:
 
 The *Plots* sub-menu brings up a tabbed dialog containing configuration of both the centroid and PSD plots. The centroid plot configuration will be covered first followed by the PSD plot configuration.
 

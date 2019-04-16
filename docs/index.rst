@@ -2,9 +2,6 @@
 
 .. include:: main.rst
 
-Table of Contents
-=================
-
 .. toctree::
    :maxdepth: 2
 
