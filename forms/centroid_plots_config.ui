@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>287</width>
-    <height>398</height>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,6 +26,9 @@
          <widget class="QLabel" name="autoscaleXLabel">
           <property name="text">
            <string>Autoscale:</string>
+          </property>
+          <property name="buddy">
+           <cstring>autoscaleXComboBox</cstring>
           </property>
          </widget>
         </item>
@@ -63,6 +66,9 @@
           <property name="text">
            <string>Pixel Addition:</string>
           </property>
+          <property name="buddy">
+           <cstring>pixelAdditionXLineEdit</cstring>
+          </property>
          </widget>
         </item>
         <item>
@@ -84,6 +90,9 @@
           <property name="text">
            <string>Minimum:</string>
           </property>
+          <property name="buddy">
+           <cstring>minXLimitLineEdit</cstring>
+          </property>
          </widget>
         </item>
         <item>
@@ -104,6 +113,9 @@
           </property>
           <property name="text">
            <string>Maximum:</string>
+          </property>
+          <property name="buddy">
+           <cstring>maxXLimitLineEdit</cstring>
           </property>
          </widget>
         </item>
@@ -131,6 +143,9 @@
          <widget class="QLabel" name="autoscaleYLabel">
           <property name="text">
            <string>Autoscale:</string>
+          </property>
+          <property name="buddy">
+           <cstring>autoscaleYComboBox</cstring>
           </property>
          </widget>
         </item>
@@ -168,6 +183,9 @@
           <property name="text">
            <string>Pixel Addition:</string>
           </property>
+          <property name="buddy">
+           <cstring>pixelAdditionYLineEdit</cstring>
+          </property>
          </widget>
         </item>
         <item>
@@ -188,6 +206,9 @@
           </property>
           <property name="text">
            <string>Minimum:</string>
+          </property>
+          <property name="buddy">
+           <cstring>minYLimitLineEdit</cstring>
           </property>
          </widget>
         </item>
@@ -210,6 +231,9 @@
           <property name="text">
            <string>Maximum:</string>
           </property>
+          <property name="buddy">
+           <cstring>maxYLimitLineEdit</cstring>
+          </property>
          </widget>
         </item>
         <item>
@@ -231,6 +255,9 @@
        <property name="text">
         <string>Num Histogram Bins:</string>
        </property>
+       <property name="buddy">
+        <cstring>numHistoBinsLineEdit</cstring>
+       </property>
       </widget>
      </item>
      <item>
@@ -238,9 +265,23 @@
      </item>
     </layout>
    </item>
+   <item row="3" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
   <zorder>yCentroidGroupBox</zorder>
   <zorder>xCentroidGroupBox</zorder>
+  <zorder>verticalSpacer</zorder>
  </widget>
  <resources/>
  <connections/>
