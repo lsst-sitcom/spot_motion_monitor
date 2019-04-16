@@ -3,6 +3,16 @@
 History
 -------
 
+1.1.0 (2019-04-16)
+~~~~~~~~~~~~~~~~~~
+
+* Fixed program to handle new `pymba` API changes
+* Added methodology to configure program via a file
+* Added lots of documentation
+* Updates to telemetry information
+* Minor fixes to configuration dialog UIs
+* Minor fixes to docstrings
+
 1.0.2 (2018-11-20)
 ~~~~~~~~~~~~~~~~~~
 
