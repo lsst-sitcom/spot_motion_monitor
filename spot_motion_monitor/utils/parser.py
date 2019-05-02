@@ -25,5 +25,7 @@ def create_parser():
                         help='Provide an alternater full path for telemetry saving.')
     parser.add_argument('-c', '--config', dest='config_file',
                         help='Supply a YAML configuration file.')
+    parser.add_argument('-a', '--auto_run', dest='auto_run', action='store_true',
+                        help='Startup and run the UI in ROI mode.')
 
     return parser

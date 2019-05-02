@@ -122,15 +122,34 @@ class TestMainWindow():
         # Force camera setup
         mw.cameraController.setupCamera('GaussianCamera')
         mockDataContollerSetCliConf = mocker.patch.object(mw.dataController, 'setCommandLineConfig')
+        mockCameraControllerSetCliConf = mocker.patch.object(mw.cameraController, 'setCommandLineConfig')
 
-        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file'])
+        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run'])
         args.telemetry_dir = None
+        args.auto_run = False
 
         mw.handleConfig(args)
         assert mockDataContollerSetCliConf.call_count == 1
+        assert mockCameraControllerSetCliConf.call_count == 1
         assert args.config is None
         with pytest.raises(AttributeError):
             args.config_file
+
+    def test_autoRun(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+        mockCameraControllerAutoRun = mocker.patch.object(mw.cameraController, 'autoRun')
+
+        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run'])
+        args.telemetry_dir = None
+        args.auto_run = True
+
+        mw.handleConfig(args)
+        mw.autoRunIfNecessary()
+        assert mockCameraControllerAutoRun.call_count == 1
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()
