@@ -25,5 +25,13 @@ def create_parser():
                         help='Provide an alternater full path for telemetry saving.')
     parser.add_argument('-c', '--config', dest='config_file',
                         help='Supply a YAML configuration file.')
+    parser.add_argument('-a', '--auto_run', dest='auto_run', action='store_true',
+                        help='Startup and run the UI in ROI mode.')
+
+    vimba_camera_group_descr = ['This group controls features of Vimba class cameras.']
+    vimba_camera_group = parser.add_argument_group('vimba', ' '.join(vimba_camera_group_descr))
+    vimba_camera_group.add_argument('-i', '--camera-index', dest='vimba_camera_index', type=int,
+                                    help='Supply a different index for the Vimba camera if more '
+                                         'than one is present.')
 
     return parser

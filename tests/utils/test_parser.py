@@ -19,6 +19,7 @@ class TestArgumentParser():
         args = self.parser.parse_args([])
         assert args.profile is False
         assert args.config_file is None
+        assert args.auto_run is False
 
     def test_profileFlag(self):
         args = self.parser.parse_args(['--profile'])
@@ -39,3 +40,17 @@ class TestArgumentParser():
         assert args.config_file == conf_file1
         args = self.parser.parse_args(['--config', conf_file2])
         assert args.config_file == conf_file2
+
+    def test_autoRunFlag(self):
+        args = self.parser.parse_args(['-a'])
+        assert args.auto_run is True
+        args = self.parser.parse_args(['--auto_run'])
+        assert args.auto_run is True
+
+    def test_vimbaCameraIndex(self):
+        args = self.parser.parse_args([])
+        assert args.vimba_camera_index is None
+        args = self.parser.parse_args(['-i', '1'])
+        assert args.vimba_camera_index == 1
+        args = self.parser.parse_args(['--camera-index', '2'])
+        assert args.vimba_camera_index == 2

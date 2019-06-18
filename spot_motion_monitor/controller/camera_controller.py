@@ -43,6 +43,7 @@ class CameraController():
         self.updater = smmUtils.InformationUpdater()
         self.frameTimer = QTimer()
         self.offsetTimer = QTimer()
+        self.doAutoRun = False
 
         self.cameraControlWidget.cameraState.connect(self.startStopCamera)
         self.cameraControlWidget.acquireFramesState.connect(self.acquireFrame)
@@ -100,6 +101,14 @@ class CameraController():
             if self.cameraControlWidget.acquireFramesButton.isChecked():
                 self.acquireFrame(True)
         self.updater.acquireRoiState.emit(state)
+
+    def autoRun(self):
+        """Start the program in ROI mode if requested.
+        """
+        if self.doAutoRun:
+            self.cameraControlWidget.startStopButton.click()
+            self.cameraControlWidget.acquireFramesButton.click()
+            self.cameraControlWidget.acquireRoiCheckBox.click()
 
     def bufferSize(self, value):
         """Rebroadcast a buffer size change request.
@@ -253,6 +262,18 @@ class CameraController():
             The current configuration parameters.
         """
         self.camera.setConfiguration(config)
+
+    def setCommandLineConfig(self, options):
+        """Set new configurations based on command-line options.
+
+        Parameters
+        ----------
+        options : Namespace
+            The options from command-line arguments.
+        """
+        self.doAutoRun = options.auto_run
+        config = {'cameraIndex': options.vimba_camera_index}
+        self.setCameraConfiguration(config)
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.

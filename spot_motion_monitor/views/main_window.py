@@ -126,6 +126,11 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotPsdController.update(psdData[0], psdData[1], psdData[2])
         self.dataController.writeDataToFile(psdData, cameraStatus.currentFps)
 
+    def autoRunIfNecessary(self):
+        """Start the program in ROI mode if requested.
+        """
+        self.cameraController.autoRun()
+
     def closeEvent(self, event):
         """Handle saving settings on shutdown.
 
@@ -195,6 +200,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         del options.config_file
         options.config = config
         self.dataController.setCommandLineConfig(options)
+        self.cameraController.setCommandLineConfig(options)
 
     def handleRoiFpsChanged(self, newRoiFps):
         """Update the necessary controllers when the ROI FPS changes.
@@ -346,6 +352,7 @@ def launch(opts):
     form = SpotMotionMonitor()
     form.handleConfig(opts)
     form.show()
+    form.autoRunIfNecessary()
     app.exec_()
 
 

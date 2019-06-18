@@ -22,6 +22,8 @@ class VimbaCamera(BaseCamera):
     ----------
     badFrames : int
         Counter for the number of failed frame captures.
+    cameraIndex : int
+        Requested index in list of camera.
     cameraPtr : pymba.VimbaCamera
         Instance of the actual camera object.
     fluxMinRoi : int
@@ -40,6 +42,8 @@ class VimbaCamera(BaseCamera):
         The current offset in X for the camera.
     offsetY : int
         The current offset in Y for the camera.
+    roiExposureTime : int
+        Description
     roiSize : int
         The size of a (square) ROI region in pixels.
     totalFrames : int
@@ -55,6 +59,7 @@ class VimbaCamera(BaseCamera):
         """
         super().__init__()
         self.vimba = None
+        self.cameraIndex = 0
         self.cameraPtr = None
         self.frame = None
         self.fpsFullFrame = 24
@@ -199,11 +204,17 @@ class VimbaCamera(BaseCamera):
         config : dict
             The current configuration.
         """
-        self.roiSize = config['roiSize']
-        self.fluxMinRoi = config['roiFluxMinimum']
-        self.roiExposureTime = config['roiExposureTime']
-        if self.cameraPtr is not None:
-            self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
+        if 'cameraIndex' in config:
+            if config['cameraIndex'] is not None:
+                self.cameraIndex = config['cameraIndex']
+        if 'roiSize' in config:
+            self.roiSize = config['roiSize']
+        if 'roiFluxMinimum' in config:
+            self.fluxMinRoi = config['roiFluxMinimum']
+        if 'roiExposureTime' in config:
+            self.roiExposureTime = config['roiExposureTime']
+            if self.cameraPtr is not None:
+                self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
 
     def showFrameStatus(self):
         """Show frame status from the camera.
@@ -232,7 +243,7 @@ class VimbaCamera(BaseCamera):
         time.sleep(0.2)
         cameraIds = self.vimba.camera_ids()
         try:
-            self.cameraPtr = self.vimba.camera(cameraIds[0])
+            self.cameraPtr = self.vimba.camera(cameraIds[self.cameraIndex])
         except IndexError:
             raise CameraNotFound('Camera not found ... check power or connection!')
 
