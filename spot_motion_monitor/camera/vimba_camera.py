@@ -9,7 +9,7 @@ import numpy as np
 import pymba as pv
 
 from spot_motion_monitor.camera import BaseCamera
-from spot_motion_monitor.utils import CameraNotFound, FrameCaptureFailed
+from spot_motion_monitor.utils import CameraNotFound, FrameCaptureFailed, getTimestamp
 
 __all__ = ['VimbaCamera']
 
@@ -173,14 +173,19 @@ class VimbaCamera(BaseCamera):
         """
         self.totalFrames += 1
         try:
-            self.frame.queue_frame_capture()
+            self.frame.queue_for_capture()
         except pv.VimbaException as err:
             self.badFrames += 1
-            raise FrameCaptureFailed("{} ROI frame capture failed: {}".format(datetime.now(), str(err)))
+            raise FrameCaptureFailed("{} ROI frame capture failed: {}".format(getTimestamp(), str(err)))
         self.goodFrames += 1
         self.cameraPtr.run_feature_command('AcquisitionStart')
         self.cameraPtr.run_feature_command('AcquisitionStop')
-        self.frame.wait_for_capture(1)
+        try:
+            self.frame.wait_for_capture(1)
+        except pv.VimbaException as err:
+            self.goodFrames -= 1
+            self.badFrames += 1
+            raise FrameCaptureFailed("{} ROI frame capture wait failed: {}".format(getTimestamp(), str(err)))
         frameData = self.frame.buffer_data()
 
         img = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.roiSize, self.roiSize))

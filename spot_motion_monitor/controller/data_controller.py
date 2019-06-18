@@ -11,7 +11,7 @@ import pandas as pd
 import tables
 
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
-from spot_motion_monitor.utils import FrameRejected, FullFrameInformation
+from spot_motion_monitor.utils import FrameRejected, FullFrameInformation, GenericFrameInformation
 from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, getTimestamp
 from spot_motion_monitor.utils import writeYamlFile
 from spot_motion_monitor import __version__ as version
@@ -123,7 +123,10 @@ class DataController():
         GenericInformation
             The instance containing the results of the calculations.
         """
-        return self.fullFrameModel.calculateCentroid(frame)
+        try:
+            return self.fullFrameModel.calculateCentroid(frame)
+        except FrameRejected:
+            return GenericFrameInformation(getTimestamp(), 300, 200, -1, -1, -1, None)
 
     def getCentroids(self, isRoiMode):
         """Return the current x, y coordinate of the centroid.
