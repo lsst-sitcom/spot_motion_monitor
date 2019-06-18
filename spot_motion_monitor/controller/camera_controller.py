@@ -272,6 +272,8 @@ class CameraController():
             The options from command-line arguments.
         """
         self.doAutoRun = options.auto_run
+        config = {'cameraIndex': options.vimba_camera_index}
+        self.setCameraConfiguration(config)
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.

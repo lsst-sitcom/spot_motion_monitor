@@ -143,7 +143,8 @@ class TestMainWindow():
         mw.cameraController.setupCamera('GaussianCamera')
         mockCameraControllerAutoRun = mocker.patch.object(mw.cameraController, 'autoRun')
 
-        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run'])
+        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run',
+                                               'vimba_camera_index'])
         args.telemetry_dir = None
         args.auto_run = True
 

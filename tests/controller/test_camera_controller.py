@@ -283,7 +283,7 @@ class TestCameraController():
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
 
-        args = collections.namedtuple('args', ['auto_run'])
+        args = collections.namedtuple('args', ['auto_run', 'vimba_camera_index'])
         args.auto_run = True
 
         cc.setCommandLineConfig(args)

@@ -190,13 +190,20 @@ class GaussianCamera(BaseCamera):
         config : dict
             The current configuration.
         """
-        self.roiSize = config['roiSize']
-        self.doSpotOscillation = config['doSpotOscillation']
-        if self.doSpotOscillation:
-            self.xFreq = config['xFrequency']
-            self.xAmp = config['xAmplitude']
-            self.yFreq = config['yFrequency']
-            self.yAmp = config['yAmplitude']
+
+        if 'roiSize' in config:
+            self.roiSize = config['roiSize']
+        if 'doSpotOscillation' in config:
+            self.doSpotOscillation = config['doSpotOscillation']
+            if self.doSpotOscillation:
+                if 'xFrequency' in config:
+                    self.xFreq = config['xFrequency']
+                if 'xAmplitude' in config:
+                    self.xAmp = config['xAmplitude']
+                if 'yFrequency' in config:
+                    self.yFreq = config['yFrequency']
+                if 'yAmplitude' in config:
+                    self.yAmp = config['yAmplitude']
 
     def showFrameStatus(self):
         """Show frame status from the camera.
