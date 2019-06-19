@@ -201,6 +201,12 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.Height = self.height
         self.cameraPtr.Width = self.width
 
+    def safeShutdown(self):
+        """Check camera status before shutting down.
+        """
+        if self.cameraPtr is not None:
+            self.shutdown()
+
     def setConfiguration(self, config):
         """Set the comfiguration on the camera.
 

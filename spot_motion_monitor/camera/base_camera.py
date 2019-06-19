@@ -125,6 +125,15 @@ class BaseCamera():
         """
         raise NotImplementedError
 
+    def safeShutdown(self):
+        """Check camera status before shutting down.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
+
     def setConfiguration(self, config):
         """Set the comfiguration on the camera.
 

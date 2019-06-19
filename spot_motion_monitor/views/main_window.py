@@ -148,6 +148,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             cameraValue = QtCore.QVariant()
         settings.setValue('LastCamera', cameraValue)
 
+        self.cameraController.shutdownCamera()
+
     def getProgramSettings(self):
         """Retrieve program settings.
         """

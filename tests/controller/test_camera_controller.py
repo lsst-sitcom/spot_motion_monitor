@@ -300,3 +300,13 @@ class TestCameraController():
 
         fps = cc.currentCameraFps()
         assert fps == 40
+
+    def test_safeShutdown(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.safeShutdown')
+        cc.shutdownCamera()
+        assert cc.camera.safeShutdown.call_count == 1

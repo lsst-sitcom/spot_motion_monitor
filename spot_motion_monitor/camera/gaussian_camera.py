@@ -182,6 +182,13 @@ class GaussianCamera(BaseCamera):
         """
         pass
 
+    def safeShutdown(self):
+        """Check camera status before shutting down.
+
+        For the Gaussian camera, this is a no-op.
+        """
+        pass
+
     def setConfiguration(self, config):
         """Set the comfiguration on the camera.
 

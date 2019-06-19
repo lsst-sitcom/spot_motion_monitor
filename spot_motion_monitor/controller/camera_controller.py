@@ -296,6 +296,11 @@ class CameraController():
         if check:
             self.camera.showFrameStatus()
 
+    def shutdownCamera(self):
+        """Shutdown the camera safely.
+        """
+        self.camera.safeShutdown()
+
     def startStopCamera(self, state):
         """Start or stop the camera.
 
