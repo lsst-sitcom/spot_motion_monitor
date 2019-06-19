@@ -242,9 +242,6 @@
    <property name="toolTip">
     <string>Exit the Program</string>
    </property>
-   <property name="shortcut">
-    <string>Meta+Q</string>
-   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
