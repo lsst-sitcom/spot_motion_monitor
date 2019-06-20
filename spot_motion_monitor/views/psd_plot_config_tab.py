@@ -4,14 +4,14 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
-from PyQt5.QtWidgets import QTabWidget
 
 import spot_motion_monitor.utils as utils
+from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_psd_plots_config import Ui_PsdPlotConfigForm
 
 __all__ = ['PsdPlotConfigTab']
 
-class PsdPlotConfigTab(QTabWidget, Ui_PsdPlotConfigForm):
+class PsdPlotConfigTab(BaseConfigTab, Ui_PsdPlotConfigForm):
     """Class that handles the Power Spectrum Distribution plot configuration
        tab.
 
@@ -31,8 +31,9 @@ class PsdPlotConfigTab(QTabWidget, Ui_PsdPlotConfigForm):
         """
         super().__init__(parent)
         self.setupUi(self)
-        self.waterfallNumBinsLineEdit.setValidator(QIntValidator(1, 1000))
         self.name = 'PSD'
+        self.waterfallNumBinsLineEdit.setValidator(QIntValidator(1, 1000))
+        self.waterfallNumBinsLineEdit.textChanged.connect(self.validateInput)
 
         self.waterfallColorMapComboBox.addItems(utils.COLORMAPS)
 
