@@ -3,13 +3,13 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtGui import QDoubleValidator
-from PyQt5.QtWidgets import QTabWidget
 
+from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_data_config import Ui_DataConfigForm
 
 __all__ = ['DataConfigTab']
 
-class DataConfigTab(QTabWidget, Ui_DataConfigForm):
+class DataConfigTab(BaseConfigTab, Ui_DataConfigForm):
     """Class that handles the data configuration tab.
 
     Attributes
@@ -30,6 +30,7 @@ class DataConfigTab(QTabWidget, Ui_DataConfigForm):
         self.setupUi(self)
         self.name = 'Data'
         self.pixelScaleLineEdit.setValidator(QDoubleValidator(0.0, 1.0e200, 5))
+        self.pixelScaleLineEdit.textChanged.connect(self.validateInput)
 
     def getConfiguration(self):
         """Get the configuration parameter's from the tab's widgets.
