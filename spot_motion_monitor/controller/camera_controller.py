@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 import time
 
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import Qt, QTimer
 
 import spot_motion_monitor.camera
 import spot_motion_monitor.utils as smmUtils
@@ -68,6 +68,9 @@ class CameraController():
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
             self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
         else:
+            if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
+                self.cameraControlWidget.acquireRoiCheckBox.setChecked(Qt.Unchecked)
+
             self.updater.displayStatus.emit('Stopping Frame Acquistion',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.frameTimer.stop()

@@ -132,7 +132,7 @@ when the Dome Seeing Monitor is running. By default, the telemetry files show up
 the current running directory under one called ``dsm_telemetry``. A configuration file
 or the command-line can be used to specify an alternate directory. See the :ref:`configuration` 
 section for more details. Once the UI is no longer in the acquiring ROI mode, all of the
-telemetry files are deleted and the telemetry directory removed.
+telemetry files are deleted and the telemetry directory removed. If ROI mode is still active and frame acquisition is stopped, the telemetry directory will still be removed as the ROI checkbox is forced to be unchecked.
 
 In the telemetry directory, two types of files will be present. One file called
 ``dsm_ui_config.yaml`` contains the current configuration of the user interface
