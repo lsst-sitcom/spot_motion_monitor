@@ -1,16 +1,16 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtGui import QDoubleValidator, QIntValidator
-from PyQt5.QtWidgets import QTabWidget
 
 import spot_motion_monitor.utils as utils
+from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_gaussian_camera_config import Ui_GaussianCameraConfigForm
 
 __all__ = ['GaussianCameraConfigTab']
 
-class GaussianCameraConfigTab(QTabWidget, Ui_GaussianCameraConfigForm):
+class GaussianCameraConfigTab(BaseConfigTab, Ui_GaussianCameraConfigForm):
     """Class that handles the Gaussian camera configuration tab.
 
     Attributes
@@ -30,12 +30,17 @@ class GaussianCameraConfigTab(QTabWidget, Ui_GaussianCameraConfigForm):
         super().__init__(parent)
         self.setupUi(self)
         self.name = 'Gaussian'
-        self.roiSizeLineEdit.setValidator(QIntValidator(20, 1000))
+        self.roiSizeLineEdit.setValidator(QIntValidator(20, 200))
         self.xAmpLineEdit.setValidator(QIntValidator(1, 20))
-        self.xFreqLineEdit.setValidator(QDoubleValidator(0.1, 100.0, 1))
+        self.xFreqLineEdit.setValidator(QDoubleValidator(0.1, 100.0, 1, self))
         self.yAmpLineEdit.setValidator(QIntValidator(1, 20))
         self.yFreqLineEdit.setValidator(QDoubleValidator(0.1, 100.0, 1))
         self.spotOscillationCheckBox.toggled.connect(self.changeGroupBoxState)
+        self.roiSizeLineEdit.textChanged.connect(self.validateInput)
+        self.xAmpLineEdit.textChanged.connect(self.validateInput)
+        self.xFreqLineEdit.textChanged.connect(self.validateInput)
+        self.yAmpLineEdit.textChanged.connect(self.validateInput)
+        self.yFreqLineEdit.textChanged.connect(self.validateInput)
 
     def changeGroupBoxState(self, checked):
         """Adjust the oscillation parameters group box based on check box
@@ -68,6 +73,7 @@ class GaussianCameraConfigTab(QTabWidget, Ui_GaussianCameraConfigForm):
             config['yAmplitude'] = utils.convertValueOrNone(yAmp)
             yFreq = utils.defaultToNoneOrValue(self.yFreqLineEdit.text())
             config['yFrequency'] = utils.convertValueOrNone(yFreq, convert=float)
+        print(config)
         return config
 
     def setConfiguration(self, config):

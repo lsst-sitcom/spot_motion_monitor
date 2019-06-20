@@ -2,7 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QDialogButtonBox
 
 import spot_motion_monitor.views
 from spot_motion_monitor.views.forms.ui_configuration_dialog import Ui_ConfigurationDialog
@@ -33,6 +33,7 @@ class CameraConfigurationDialog(QDialog, Ui_ConfigurationDialog):
         self.cameraConfigTab = getattr(spot_motion_monitor.views, '{}ConfigTab'.format(camera))()
 
         self.tabWidget.addTab(self.cameraConfigTab, self.cameraConfigTab.name)
+        self.cameraConfigTab.hasValidInput.connect(self.inputFromTabsValid)
 
     def getCameraConfiguration(self):
         """Get the current camera configuration from the tab.
@@ -44,6 +45,9 @@ class CameraConfigurationDialog(QDialog, Ui_ConfigurationDialog):
         """
         config = self.cameraConfigTab.getConfiguration()
         return config
+
+    def inputFromTabsValid(self, hasValidInput):
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(hasValidInput)
 
     def setCameraConfiguration(self, config):
         """Set the current camera configuration in the tab.
