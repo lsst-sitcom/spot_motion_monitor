@@ -73,8 +73,7 @@ The *File* menu only offers one entry: *Exit* which is self explanatory. The *Ca
 User Interface Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The *Configure* menu contains the following entries: *Camera*, *Plots* and *General*. Each entry brings
-up a configuration dialog containing different widgets depending on the chosen entry. The following will detail each of the configuration dialogs.
+The *Configure* menu contains the following entries: *Camera*, *Plots* and *General*. Each entry brings up a configuration dialog containing different widgets depending on the chosen entry. The following will detail each of the configuration dialogs. A general note about the entry widgets. Many of them have input validators which will cause the entered value's text to turn blue, the dialog's *OK* button to be disabled or may not allow further typing of a value if that entered value violates the validator. To see the valid range, hover over the particular entry widget to get the details.
 
 .. image:: _static/data_config.png
   :width: 243
