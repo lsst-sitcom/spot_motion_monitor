@@ -76,6 +76,9 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="toolTip">
+           <string>Valid Range: 1 to 10000 as an integer</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -100,6 +103,9 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="toolTip">
+           <string>Valid Range: 0 to 1e9 as an integer</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -123,6 +129,9 @@
          <widget class="QLineEdit" name="maxXLimitLineEdit">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Valid Range: 0 to 1e9 as an integer</string>
           </property>
          </widget>
         </item>
@@ -193,6 +202,9 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="toolTip">
+           <string>Valid Range: 1 to 10000 as an integer</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -216,6 +228,9 @@
          <widget class="QLineEdit" name="minYLimitLineEdit">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Valid Range: 0 to 1e9 as an integer</string>
           </property>
          </widget>
         </item>
@@ -241,6 +256,9 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="toolTip">
+           <string>Valid Range: 0 to 1e9 as an integer</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -261,7 +279,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="numHistoBinsLineEdit"/>
+      <widget class="QLineEdit" name="numHistoBinsLineEdit">
+       <property name="toolTip">
+        <string>Valid Range: 1 to 1e9 as an integer</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
