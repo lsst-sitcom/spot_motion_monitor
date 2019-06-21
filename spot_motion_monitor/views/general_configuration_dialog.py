@@ -1,16 +1,13 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from PyQt5.QtWidgets import QDialog
-
-from spot_motion_monitor.views import DataConfigTab
-from spot_motion_monitor.views.forms.ui_configuration_dialog import Ui_ConfigurationDialog
+from spot_motion_monitor.views import BaseConfigurationDialog, DataConfigTab
 
 __all__ = ['GeneralConfigurationDialog']
 
-class GeneralConfigurationDialog(QDialog, Ui_ConfigurationDialog):
-    """Class that generates the dialog for handling camera configuration.
+class GeneralConfigurationDialog(BaseConfigurationDialog):
+    """Class that generates the dialog for handling general data configuration.
 
     Attributes
     ----------
@@ -19,7 +16,7 @@ class GeneralConfigurationDialog(QDialog, Ui_ConfigurationDialog):
     """
 
     def __init__(self, parent=None):
-        """Summary
+        """Initialize the class.
 
         Parameters
         ----------
@@ -27,13 +24,13 @@ class GeneralConfigurationDialog(QDialog, Ui_ConfigurationDialog):
             Top-level widget.
         """
         super().__init__(parent)
-        self.setupUi(self)
         self.dataConfigTab = DataConfigTab()
 
         self.tabWidget.addTab(self.dataConfigTab, self.dataConfigTab.name)
+        self.dataConfigTab.hasValidInput.connect(self.inputFromTabsValid)
 
     def getConfiguration(self):
-        """Get the current camera configuration from the tab.
+        """Get the current data configuration from the tab.
 
         Returns
         -------
@@ -44,7 +41,7 @@ class GeneralConfigurationDialog(QDialog, Ui_ConfigurationDialog):
         return config
 
     def setConfiguration(self, config):
-        """Set the current camera configuration in the tab.
+        """Set the current data configuration in the tab.
 
         Parameters
         ----------

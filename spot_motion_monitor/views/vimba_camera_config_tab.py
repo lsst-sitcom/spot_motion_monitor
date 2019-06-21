@@ -3,13 +3,13 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtGui import QIntValidator
-from PyQt5.QtWidgets import QTabWidget
 
+from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_vimba_camera_config import Ui_VimbaCameraConfigForm
 
 __all__ = ['VimbaCameraConfigTab']
 
-class VimbaCameraConfigTab(QTabWidget, Ui_VimbaCameraConfigForm):
+class VimbaCameraConfigTab(BaseConfigTab, Ui_VimbaCameraConfigForm):
     """Class that handles the Vimba camera configuration tab.
 
     Attributes
@@ -28,10 +28,13 @@ class VimbaCameraConfigTab(QTabWidget, Ui_VimbaCameraConfigForm):
         """
         super().__init__(parent)
         self.setupUi(self)
+        self.name = 'Vimba'
         self.roiSizeLineEdit.setValidator(QIntValidator(20, 1000))
         self.roiFluxMinLineEdit.setValidator(QIntValidator(100, 10000))
         self.roiExposureTimeLineEdit.setValidator(QIntValidator(500, 50000))
-        self.name = 'Vimba'
+        self.roiSizeLineEdit.textChanged.connect(self.validateInput)
+        self.roiFluxMinLineEdit.textChanged.connect(self.validateInput)
+        self.roiExposureTimeLineEdit.textChanged.connect(self.validateInput)
 
     def getConfiguration(self):
         """Get the configuration parameter's from the tab's widgets.

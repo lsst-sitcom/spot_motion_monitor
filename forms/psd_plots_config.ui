@@ -104,7 +104,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="waterfallNumBinsLineEdit"/>
+      <widget class="QLineEdit" name="waterfallNumBinsLineEdit">
+       <property name="toolTip">
+        <string>Valid Range: 1 to 1000 as an integer</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

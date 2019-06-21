@@ -1,8 +1,9 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialogButtonBox
 
 from spot_motion_monitor.views import CameraConfigurationDialog
 
@@ -40,3 +41,11 @@ class TestCameraConfigurationDialog:
 
         ccDialog.getCameraConfiguration()
         assert mockGetConfiguration.call_count == 1
+
+    def test_validInputFromTabs(self, qtbot):
+        ccDialog = CameraConfigurationDialog('GaussianCamera')
+        qtbot.addWidget(ccDialog)
+        ccDialog.show()
+
+        ccDialog.cameraConfigTab.roiSizeLineEdit.setText(str(1000))
+        assert ccDialog.buttonBox.button(QDialogButtonBox.Ok).isEnabled() is False

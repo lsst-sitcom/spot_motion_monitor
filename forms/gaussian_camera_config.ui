@@ -58,7 +58,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="xAmpLineEdit"/>
+       <widget class="QLineEdit" name="xAmpLineEdit">
+        <property name="toolTip">
+         <string>Valid Range: 1 to 20 pixels as an integer</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="xAmpUnits">
@@ -82,7 +86,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="xFreqLineEdit"/>
+       <widget class="QLineEdit" name="xFreqLineEdit">
+        <property name="toolTip">
+         <string>Valid Range: 0.1 to 100 with an allowed precision of 1</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="xFreqUnits">
@@ -106,7 +114,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="yAmpLineEdit"/>
+       <widget class="QLineEdit" name="yAmpLineEdit">
+        <property name="toolTip">
+         <string>Valid Range: 1 to 20 pixels as an integer</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="yAmpUnits">
@@ -130,7 +142,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="yFreqLineEdit"/>
+       <widget class="QLineEdit" name="yFreqLineEdit">
+        <property name="toolTip">
+         <string>Valid Range: 0.1 to 100 with an allowed precision of 1</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="yFreqUnits">
@@ -143,7 +159,15 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>238</width>
+     <height>23</height>
+    </rect>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout_6">
     <item>
      <widget class="QLabel" name="roiSizeLabel">
@@ -156,7 +180,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="roiSizeLineEdit"/>
+     <widget class="QLineEdit" name="roiSizeLineEdit">
+      <property name="toolTip">
+       <string>Valid Range: 20 to 200 as an integer</string>
+      </property>
+     </widget>
     </item>
     <item>
      <spacer name="horizontalSpacer">

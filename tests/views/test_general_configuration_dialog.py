@@ -1,7 +1,9 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from PyQt5.QtWidgets import QDialogButtonBox
+
 from spot_motion_monitor.views import GeneralConfigurationDialog
 
 class TestGeneralConfigurationDialog:
@@ -32,3 +34,11 @@ class TestGeneralConfigurationDialog:
 
         ccDialog.getConfiguration()
         assert mockGetConfiguration.call_count == 1
+
+    def test_validInputFromTabs(self, qtbot):
+        ccDialog = GeneralConfigurationDialog()
+        qtbot.addWidget(ccDialog)
+        ccDialog.show()
+
+        ccDialog.dataConfigTab.pixelScaleLineEdit.setText(str(-1))
+        assert ccDialog.buttonBox.button(QDialogButtonBox.Ok).isEnabled() is False

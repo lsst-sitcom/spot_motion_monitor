@@ -27,7 +27,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="pixelScaleLineEdit"/>
+      <widget class="QLineEdit" name="pixelScaleLineEdit">
+       <property name="toolTip">
+        <string>Valid Range: 0 to 1e200 with a precision of 5</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="pixelScaleUnitsLabel">

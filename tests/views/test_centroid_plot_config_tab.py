@@ -7,6 +7,25 @@ from spot_motion_monitor.utils import AutoscaleState
 
 class TestCentroidPlotConfigTab:
 
+    def setup_class(self):
+        self.fast_timeout = 250  # ms
+
+    def stateIsFalse(self, state):
+        return not state
+
+    def stateIsTrue(self, state):
+        return state
+
+    def checkValidations(self, qtbot, checkSignal, checkState, checkFunc, valuesToCheck):
+        if checkState:
+            statusCheck = self.stateIsTrue
+        else:
+            statusCheck = self.stateIsFalse
+
+        for valueToCheck in valuesToCheck:
+            with qtbot.waitSignal(checkSignal, timeout=self.fast_timeout, check_params_cb=statusCheck):
+                checkFunc(str(valueToCheck))
+
     def test_parametersAfterConstruction(self, qtbot):
         configTab = CentroidPlotConfigTab()
         qtbot.addWidget(configTab)
@@ -80,3 +99,43 @@ class TestCentroidPlotConfigTab:
         configTab.pixelAdditionYLineEdit.setText(str(truthConfig['yCentroid']['pixelAddition']))
         config = configTab.getConfiguration()
         assert config == truthConfig
+
+    def test_validLineEditParameters(self, qtbot):
+        configTab = CentroidPlotConfigTab()
+        qtbot.addWidget(configTab)
+        configTab.show()
+
+        self.checkValidations(qtbot, configTab.hasValidInput, True, configTab.pixelAdditionXLineEdit.setText,
+                              [1, 10000, 150])
+        self.checkValidations(qtbot, configTab.hasValidInput, True, configTab.minXLimitLineEdit.setText,
+                              [0, int(1e9), int(1e4)])
+        self.checkValidations(qtbot, configTab.hasValidInput, True, configTab.maxXLimitLineEdit.setText,
+                              [0, int(1e9), int(1e4)])
+        self.checkValidations(qtbot, configTab.hasValidInput, True, configTab.pixelAdditionYLineEdit.setText,
+                              [1, 10000, 150])
+        self.checkValidations(qtbot, configTab.hasValidInput, True, configTab.minYLimitLineEdit.setText,
+                              [0, int(1e9), int(1e4)])
+        self.checkValidations(qtbot, configTab.hasValidInput, True, configTab.maxYLimitLineEdit.setText,
+                              [0, int(1e9), int(1e4)])
+        self.checkValidations(qtbot, configTab.hasValidInput, True, configTab.numHistoBinsLineEdit.setText,
+                              [1, int(1e9), int(1e4)])
+
+    def test_invalidLineEditParameters(self, qtbot):
+        configTab = CentroidPlotConfigTab()
+        qtbot.addWidget(configTab)
+        configTab.show()
+
+        self.checkValidations(qtbot, configTab.hasValidInput, False, configTab.pixelAdditionXLineEdit.setText,
+                              [0, 10001, 40.1])
+        self.checkValidations(qtbot, configTab.hasValidInput, False, configTab.minXLimitLineEdit.setText,
+                              [-1, int(1e10), 1.1e4])
+        self.checkValidations(qtbot, configTab.hasValidInput, False, configTab.maxXLimitLineEdit.setText,
+                              [-1, int(1e10), 1.1e4])
+        self.checkValidations(qtbot, configTab.hasValidInput, False, configTab.pixelAdditionYLineEdit.setText,
+                              [0, 10001, 40.1])
+        self.checkValidations(qtbot, configTab.hasValidInput, False, configTab.minYLimitLineEdit.setText,
+                              [-1, int(1e10), 1.1e4])
+        self.checkValidations(qtbot, configTab.hasValidInput, False, configTab.maxYLimitLineEdit.setText,
+                              [-1, int(1e10), 1.1e4])
+        self.checkValidations(qtbot, configTab.hasValidInput, False, configTab.numHistoBinsLineEdit.setText,
+                              [0, int(1e10), 1.1e4])

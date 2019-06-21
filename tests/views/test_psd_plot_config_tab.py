@@ -7,6 +7,25 @@ from spot_motion_monitor.views import PsdPlotConfigTab
 
 class TestPsdPlotConfigTab:
 
+    def setup_class(self):
+        self.fast_timeout = 250  # ms
+
+    def stateIsFalse(self, state):
+        return not state
+
+    def stateIsTrue(self, state):
+        return state
+
+    def checkValidations(self, qtbot, checkSignal, checkState, checkFunc, valuesToCheck):
+        if checkState:
+            statusCheck = self.stateIsTrue
+        else:
+            statusCheck = self.stateIsFalse
+
+        for valueToCheck in valuesToCheck:
+            with qtbot.waitSignal(checkSignal, timeout=self.fast_timeout, check_params_cb=statusCheck):
+                checkFunc(str(valueToCheck))
+
     def test_parametersAfterConstruction(self, qtbot):
         configTab = PsdPlotConfigTab()
         qtbot.addWidget(configTab)
@@ -42,3 +61,21 @@ class TestPsdPlotConfigTab:
         configTab.y1dMaximumLineEdit.setText(str(truthConfig['yPSD']['maximum']))
         config = configTab.getConfiguration()
         assert config == truthConfig
+
+    def test_validLineEditParameters(self, qtbot):
+        configTab = PsdPlotConfigTab()
+        qtbot.addWidget(configTab)
+        configTab.show()
+
+        self.checkValidations(qtbot, configTab.hasValidInput, True,
+                              configTab.waterfallNumBinsLineEdit.setText,
+                              [1, 1000, 150])
+
+    def test_invalidLineEditParameters(self, qtbot):
+        configTab = PsdPlotConfigTab()
+        qtbot.addWidget(configTab)
+        configTab.show()
+
+        self.checkValidations(qtbot, configTab.hasValidInput, False,
+                              configTab.waterfallNumBinsLineEdit.setText,
+                              [0, 1001, 40.1])

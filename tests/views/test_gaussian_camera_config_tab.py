@@ -9,6 +9,25 @@ from spot_motion_monitor.views import GaussianCameraConfigTab
 
 class TestGaussianCameraConfigTab:
 
+    def setup_class(self):
+        self.fast_timeout = 250  # ms
+
+    def stateIsFalse(self, state):
+        return not state
+
+    def stateIsTrue(self, state):
+        return state
+
+    def checkValidations(self, qtbot, checkSignal, checkState, checkFunc, valuesToCheck):
+        if checkState:
+            statusCheck = self.stateIsTrue
+        else:
+            statusCheck = self.stateIsFalse
+
+        for valueToCheck in valuesToCheck:
+            with qtbot.waitSignal(checkSignal, timeout=self.fast_timeout, check_params_cb=statusCheck):
+                checkFunc(str(valueToCheck))
+
     def test_parametersAfterConstruction(self, qtbot):
         gcConfigTab = GaussianCameraConfigTab()
         qtbot.addWidget(gcConfigTab)
@@ -61,3 +80,35 @@ class TestGaussianCameraConfigTab:
 
         config = gcConfigTab.getConfiguration()
         assert config == truthConfig
+
+    def test_validLineEditParameters(self, qtbot):
+        gcConfigTab = GaussianCameraConfigTab()
+        qtbot.addWidget(gcConfigTab)
+        gcConfigTab.show()
+
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True, gcConfigTab.roiSizeLineEdit.setText,
+                              [20, 200, 150])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True, gcConfigTab.xAmpLineEdit.setText,
+                              [1, 20, 10])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True, gcConfigTab.xFreqLineEdit.setText,
+                              [1.0, 100.0, 4e1])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True, gcConfigTab.yAmpLineEdit.setText,
+                              [1, 20, 10])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True, gcConfigTab.yFreqLineEdit.setText,
+                              [1.0, 100.0, 4e1])
+
+    def test_invalidLineEditParameters(self, qtbot):
+        gcConfigTab = GaussianCameraConfigTab()
+        qtbot.addWidget(gcConfigTab)
+        gcConfigTab.show()
+
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False, gcConfigTab.roiSizeLineEdit.setText,
+                              [10, 40.1, 201])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False, gcConfigTab.xAmpLineEdit.setText,
+                              [0, 30, 5.1])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False, gcConfigTab.xFreqLineEdit.setText,
+                              [0.05, 5.6352, 2e2])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False, gcConfigTab.yAmpLineEdit.setText,
+                              [0, 30, 5.1])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False, gcConfigTab.yFreqLineEdit.setText,
+                              [0.05, 5.6352, 2e2])

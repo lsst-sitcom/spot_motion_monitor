@@ -1,7 +1,9 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from PyQt5.QtWidgets import QDialogButtonBox
+
 from spot_motion_monitor.utils import AutoscaleState
 from spot_motion_monitor.views import PlotConfigurationDialog
 
@@ -46,3 +48,15 @@ class TestPlotConfigurationDialog:
         assert mockPsdTabGetConfig.call_count == 1
         assert centroidConfig is not None
         assert psdConfig is not None
+
+    def test_validInputFromTabs(self, qtbot):
+        pcDialog = PlotConfigurationDialog()
+        qtbot.addWidget(pcDialog)
+        pcDialog.show()
+
+        pcDialog.centroidPlotConfigTab.pixelAdditionXLineEdit.setText(str(-1))
+        assert pcDialog.buttonBox.button(QDialogButtonBox.Ok).isEnabled() is False
+        pcDialog.centroidPlotConfigTab.pixelAdditionXLineEdit.setText(str(10))
+        assert pcDialog.buttonBox.button(QDialogButtonBox.Ok).isEnabled()
+        pcDialog.psdPlotConfigTab.waterfallNumBinsLineEdit.setText(str(0))
+        assert pcDialog.buttonBox.button(QDialogButtonBox.Ok).isEnabled() is False

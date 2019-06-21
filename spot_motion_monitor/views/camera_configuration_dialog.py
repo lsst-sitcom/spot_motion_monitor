@@ -1,15 +1,13 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from PyQt5.QtWidgets import QDialog
-
 import spot_motion_monitor.views
-from spot_motion_monitor.views.forms.ui_configuration_dialog import Ui_ConfigurationDialog
+from spot_motion_monitor.views import BaseConfigurationDialog
 
 __all__ = ['CameraConfigurationDialog']
 
-class CameraConfigurationDialog(QDialog, Ui_ConfigurationDialog):
+class CameraConfigurationDialog(BaseConfigurationDialog):
     """Class that generates the dialog for handling camera configuration.
 
     Attributes
@@ -19,7 +17,7 @@ class CameraConfigurationDialog(QDialog, Ui_ConfigurationDialog):
     """
 
     def __init__(self, camera, parent=None):
-        """Summary
+        """Initialize the class.
 
         Parameters
         ----------
@@ -29,10 +27,10 @@ class CameraConfigurationDialog(QDialog, Ui_ConfigurationDialog):
             Top-level widget.
         """
         super().__init__(parent)
-        self.setupUi(self)
         self.cameraConfigTab = getattr(spot_motion_monitor.views, '{}ConfigTab'.format(camera))()
 
         self.tabWidget.addTab(self.cameraConfigTab, self.cameraConfigTab.name)
+        self.cameraConfigTab.hasValidInput.connect(self.inputFromTabsValid)
 
     def getCameraConfiguration(self):
         """Get the current camera configuration from the tab.

@@ -1,15 +1,12 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from PyQt5.QtWidgets import QDialog
-
-from spot_motion_monitor.views import CentroidPlotConfigTab, PsdPlotConfigTab
-from spot_motion_monitor.views.forms.ui_configuration_dialog import Ui_ConfigurationDialog
+from spot_motion_monitor.views import BaseConfigurationDialog, CentroidPlotConfigTab, PsdPlotConfigTab
 
 __all__ = ['PlotConfigurationDialog']
 
-class PlotConfigurationDialog(QDialog, Ui_ConfigurationDialog):
+class PlotConfigurationDialog(BaseConfigurationDialog):
     """Class that generates the dialog for handling plot configuration.
 
     Attributes
@@ -29,12 +26,13 @@ class PlotConfigurationDialog(QDialog, Ui_ConfigurationDialog):
             Top-level widget.
         """
         super().__init__(parent)
-        self.setupUi(self)
         self.centroidPlotConfigTab = CentroidPlotConfigTab(self)
         self.psdPlotConfigTab = PsdPlotConfigTab(self)
 
         self.tabWidget.addTab(self.centroidPlotConfigTab, self.centroidPlotConfigTab.name)
         self.tabWidget.addTab(self.psdPlotConfigTab, self.psdPlotConfigTab.name)
+        self.centroidPlotConfigTab.hasValidInput.connect(self.inputFromTabsValid)
+        self.psdPlotConfigTab.hasValidInput.connect(self.inputFromTabsValid)
 
     def getPlotConfiguration(self):
         """Get the current plotting configuration from all the tabs.

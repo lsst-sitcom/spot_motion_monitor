@@ -27,7 +27,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="roiSizeLineEdit"/>
+      <widget class="QLineEdit" name="roiSizeLineEdit">
+       <property name="toolTip">
+        <string>Valid Range: 20 to 1000 as an integer</string>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -57,7 +61,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="roiFluxMinLineEdit"/>
+      <widget class="QLineEdit" name="roiFluxMinLineEdit">
+       <property name="toolTip">
+        <string>Valid Range: 100 to 10000 as an integer</string>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="horizontalSpacer_2">
@@ -87,7 +95,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="roiExposureTimeLineEdit"/>
+      <widget class="QLineEdit" name="roiExposureTimeLineEdit">
+       <property name="toolTip">
+        <string>Valid Range: 500 to 50000 as an integer</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="roiExposureTimeUnits">

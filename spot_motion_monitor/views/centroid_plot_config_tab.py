@@ -3,14 +3,14 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtGui import QIntValidator
-from PyQt5.QtWidgets import QTabWidget
 
 import spot_motion_monitor.utils as utils
+from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_centroid_plots_config import Ui_CentroidPlotsConfigForm
 
 __all__ = ['CentroidPlotConfigTab']
 
-class CentroidPlotConfigTab(QTabWidget, Ui_CentroidPlotsConfigForm):
+class CentroidPlotConfigTab(BaseConfigTab, Ui_CentroidPlotsConfigForm):
     """Class that handles the centroid plot configuration tab.
 
     Attributes
@@ -29,13 +29,27 @@ class CentroidPlotConfigTab(QTabWidget, Ui_CentroidPlotsConfigForm):
         """
         super().__init__(parent)
         self.setupUi(self)
-        self.pixelAdditionXLineEdit.setValidator(QIntValidator(1, 10000))
-        self.minXLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
-        self.maxXLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
-        self.pixelAdditionYLineEdit.setValidator(QIntValidator(1, 10000))
-        self.minYLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
-        self.maxYLimitLineEdit.setValidator(QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR))
         self.name = 'Centroid'
+
+        intValidator0 = QIntValidator(1, 10000)
+        intValidator1 = QIntValidator(0, utils.LARGE_VALUE_FOR_VALIDATOR)
+        intValidator2 = QIntValidator(1, utils.LARGE_VALUE_FOR_VALIDATOR)
+
+        self.pixelAdditionXLineEdit.setValidator(intValidator0)
+        self.minXLimitLineEdit.setValidator(intValidator1)
+        self.maxXLimitLineEdit.setValidator(intValidator1)
+        self.pixelAdditionYLineEdit.setValidator(intValidator0)
+        self.minYLimitLineEdit.setValidator(intValidator1)
+        self.maxYLimitLineEdit.setValidator(intValidator1)
+        self.numHistoBinsLineEdit.setValidator(intValidator2)
+
+        self.pixelAdditionXLineEdit.textChanged.connect(self.validateInput)
+        self.minXLimitLineEdit.textChanged.connect(self.validateInput)
+        self.maxXLimitLineEdit.textChanged.connect(self.validateInput)
+        self.pixelAdditionYLineEdit.textChanged.connect(self.validateInput)
+        self.minYLimitLineEdit.textChanged.connect(self.validateInput)
+        self.maxYLimitLineEdit.textChanged.connect(self.validateInput)
+        self.numHistoBinsLineEdit.textChanged.connect(self.validateInput)
 
         self.autoscaleXComboBox.currentIndexChanged.connect(self.handleAutoscaleChange)
         self.autoscaleYComboBox.currentIndexChanged.connect(self.handleAutoscaleChange)
