@@ -53,5 +53,8 @@ class TestBaseCamera(object):
         with pytest.raises(NotImplementedError):
             self.baseCamera.setConfiguration({})
 
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.safeShutdown()
+
         assert self.baseCamera.checkFullFrame(1, 1, 1, 1) is True
         assert self.baseCamera.checkRoiFrame(1) is True

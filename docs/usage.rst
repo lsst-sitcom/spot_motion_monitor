@@ -35,7 +35,7 @@ along with the program menu.
 The plots are made using the `pyqtgraph <http://pyqtgraph.org/>`_ library and have many adjustments available by right-clicking on the particular plot. The user interface also provides some plot configuration as well. More information on that configuration can be found here: PlotConfig_.
 
 The camera is interacted with via the *Camera Control* section. It contains spinners to set
-the camera frame rate (FPS or frames per second)and the number of frames kept in the internal program buffer. The *Start/Stop Camera* button controls the startup or shutdown of the currently chosen camera. The *Start/Stop Acquire Frames* button controls frame acquisition from the CCD. The *Acquire ROI* checkbox restricts the camera readout to a 50x50 (default) ROI section around the spot centroid. Once the camera is started and acquiring frames, the current images from the CCD is displayed in the *CCD* plot. The *Show Frames* checkbox turns the *CCD* plot display on and off.
+the camera frame rate (FPS or frames per second)and the number of frames kept in the internal program buffer. The *Start/Stop Camera* button controls the startup or shutdown of the currently chosen camera. The *Start/Stop Acquire Frames* button controls frame acquisition from the CCD. The *Acquire ROI* checkbox restricts the camera readout to a 50x50 (default) ROI section around the spot centroid. Once the camera is started and acquiring frames, the current images from the CCD is displayed in the *CCD* plot. The *Show Frames* checkbox turns the *CCD* plot display on and off. With the camera acquiring in ROI mode (the *Acquire ROI* checkbox is checked), the *ROI FPS* and *Buffer Size* spinners are disabled to prevent modification of the buffer information during running. To enable the spinners again, uncheck the *Acquire ROI* checkbox.
 
 While the camera is running, information from the acquired frames is displayed in the *Data Information* section. Not all widgets display information while acquiring full CCD frames. In this mode, only the
 *Flux*, *Maximum* and *Centroid* widgets display information. When acquiring in ROI mode, all widgets
@@ -132,7 +132,7 @@ when the Dome Seeing Monitor is running. By default, the telemetry files show up
 the current running directory under one called ``dsm_telemetry``. A configuration file
 or the command-line can be used to specify an alternate directory. See the :ref:`configuration` 
 section for more details. Once the UI is no longer in the acquiring ROI mode, all of the
-telemetry files are deleted and the telemetry directory removed.
+telemetry files are deleted and the telemetry directory removed. If ROI mode is still active and frame acquisition is stopped, the telemetry directory will still be removed as the ROI checkbox is forced to be unchecked.
 
 In the telemetry directory, two types of files will be present. One file called
 ``dsm_ui_config.yaml`` contains the current configuration of the user interface

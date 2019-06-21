@@ -300,3 +300,29 @@ class TestCameraController():
 
         fps = cc.currentCameraFps()
         assert fps == 40
+
+    def test_safeShutdown(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.safeShutdown')
+        cc.shutdownCamera()
+        assert cc.camera.safeShutdown.call_count == 1
+
+    def test_stateAtAcquireFramesStop(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        #cc.startStopCamera(True)
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+        qtbot.mouseClick(ccWidget.acquireRoiCheckBox, Qt.LeftButton)
+        assert cc.isRoiMode() is True
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+        assert cc.isRoiMode() is False
+        assert cc.currentCameraFps() == 24
+        assert ccWidget.acquireFramesButton.isChecked() is False
