@@ -3,6 +3,21 @@
 History
 -------
 
+1.2.0 (2019-06-20)
+~~~~~~~~~~~~~~~~~~
+
+* Added input validation to configuration dialog system 
+* Added tooltips on Data Information section
+* Added units to Gaussian camera configuration tab
+* Added safe camera shutdown on program quit
+* Added updates to documentation
+* Keep program from crashing with no spot and ROI mode requested
+
+  * This also fixed a missed `pymba` API change
+
+* Fixed behavior with respect to ROI mode when stopping frame acquisition
+* Corrected OS value for program quit keyboard shortcut
+
 1.1.0 (2019-04-16)
 ~~~~~~~~~~~~~~~~~~
 
