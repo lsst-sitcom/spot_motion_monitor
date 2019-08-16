@@ -3,6 +3,11 @@
 History
 -------
 
+1.2.1 (2019-08-16)
+~~~~~~~~~~~~~~~~~~
+
+* Added timestamp to UI configuration telemetry file
+
 1.2.0 (2019-06-20)
 ~~~~~~~~~~~~~~~~~~
 
