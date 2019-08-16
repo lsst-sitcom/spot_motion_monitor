@@ -137,6 +137,10 @@ In the telemetry directory, two types of files will be present. One file called
 ``dsm_ui_config.yaml`` contains the current configuration of the user interface
 at the time the telemetry was started. It contains the following information.
 
+timestamp
+---------
+The time at which the configuration file was created.
+
 ui_versions
 -----------
 
