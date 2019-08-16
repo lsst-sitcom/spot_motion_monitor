@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import csv
@@ -394,7 +394,8 @@ class DataController():
             if not os.path.exists(self.fullTelemetrySavePath):
                 os.makedirs(self.fullTelemetrySavePath)
 
-            content = {'ui_versions': {'code': version, 'config': self.configVersion,
+            content = {'timestamp': getTimestamp().isoformat(),
+                       'ui_versions': {'code': version, 'config': self.configVersion,
                                        'config_file': self.configFile},
                        'camera': {'name': currentStatus.name,
                                   'fps': currentStatus.currentFps},
