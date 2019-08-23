@@ -43,6 +43,9 @@ class DataController():
         The full path for where to save the telemetry files.
     psdFilename : str
         The current name for the PSD output file.
+    removeTelemetryDir : bool
+        Whether or not to remove the telemetry directory when ROI acquisition
+        ends.
     roiFrameModel : .RoiFrameModel
         An instance of the ROI frame calculation model.
     roiResetDone : bool
@@ -86,6 +89,7 @@ class DataController():
         self.telemetrySavePath = None
         self.telemetrySetup = False
         self.fullTelemetrySavePath = None
+        self.removeTelemetryDir = True
         self.configVersion = None
         self.configFile = None
 
@@ -97,7 +101,8 @@ class DataController():
         if self.fullTelemetrySavePath is not None:
             for tfile in os.listdir(self.fullTelemetrySavePath):
                 os.remove(os.path.join(self.fullTelemetrySavePath, tfile))
-            os.removedirs(self.fullTelemetrySavePath)
+            if self.removeTelemetryDir:
+                os.removedirs(self.fullTelemetrySavePath)
             self.telemetrySetup = False
 
     def getBufferSize(self):
@@ -261,6 +266,12 @@ class DataController():
             try:
                 td = options.config['general']['telemetry_dir']
                 self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(td))
+            except KeyError:
+                pass
+
+            try:
+                rtd = options.config['general']['remove_telemetry_dir']
+                self.removeTelemetryDir = rtd
             except KeyError:
                 pass
 

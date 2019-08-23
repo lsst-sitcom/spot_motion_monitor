@@ -27,6 +27,9 @@ telemetry_dir
   This is a path where the resulting telemetry data is to be stored. This parameter can
   be overridden from the command line using the ``-t`` or ``--telemetry_dir`` flag.
 
+remove_telemetry_dir
+  By default, the telemetry directory is removed when ROI acquistion is stopped. This flag can be used to override that behavior by setting it to False.
+
 pixel_scale
   This is the sky scale on the camera CCD in units of arcseconds per pixel. This value will
   vary depending on the optical path in front of the CCD camera. 
@@ -44,4 +47,5 @@ here.
     general:
       version: '1.0'
       telemetry_dir: /path/to/output/directory
+      remove_telemetry_dir: False
       pixel_scale: 0.1

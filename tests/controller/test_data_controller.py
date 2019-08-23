@@ -298,6 +298,50 @@ class TestDataController():
         assert os.path.exists(fullSaveDir) is False
         assert dc.telemetrySetup is False
 
+    @freeze_time('2018-10-30 22:30:15')
+    def test_noTelemetryDirCleanup(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        saveTelemetryDir = os.path.join(os.path.abspath(os.path.curdir), 'temp2')
+        telemetryOutputDir = 'dsm_telemetry'
+        fullSaveDir = os.path.join(saveTelemetryDir, telemetryOutputDir)
+        dc = DataController(cdw)
+        dc.telemetrySavePath = saveTelemetryDir
+        dc.removeTelemetryDir = False
+
+        # Setup buffer model
+        dc.setBufferSize(4)
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp,
+                                                                 300.3, 400.2,
+                                                                 32042.42, 145.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime,
+                                                                 300.4, 400.4,
+                                                                 32045.42, 146.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 2,
+                                                                 300.2, 400.5,
+                                                                 32040.42, 142.422,
+                                                                 70, None), (0, 0))
+        dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 3,
+                                                                 300.1, 400.3,
+                                                                 32043.42, 143.422,
+                                                                 70, None), (0, 0))
+
+        telemetryFile = 'dsm_20181030_223015.dat'
+        configFile = 'dsm_ui_config.yaml'
+        roiInfo = dc.bufferModel.getInformation(self.roiFrameStatus.currentFps)
+        dc.writeTelemetryFile(roiInfo, self.roiFrameStatus)
+        assert os.path.exists(fullSaveDir) is True
+        assert os.path.exists(os.path.join(fullSaveDir, telemetryFile)) is True
+        assert os.path.exists(os.path.join(fullSaveDir, configFile)) is True
+        dc.cleanTelemetry()
+        assert os.path.exists(os.path.join(fullSaveDir, telemetryFile)) is False
+        assert os.path.exists(os.path.join(fullSaveDir, configFile)) is False
+        assert os.path.exists(fullSaveDir) is True
+        assert dc.telemetrySetup is False
+        os.removedirs(fullSaveDir)
+
     def test_handleAcquireRoiStateChange(self, qtbot, mocker):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
@@ -325,10 +369,13 @@ class TestDataController():
         assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
         assert dc.configVersion == content['general']['version']
         assert dc.configFile == content['file']
+        assert dc.removeTelemetryDir is True
 
         args.telemetry_dir = None
+        args.config['general']['remove_telemetry_dir'] = False
         dc.setCommandLineConfig(args)
         assert dc.fullTelemetrySavePath == content['general']['telemetry_dir']
         assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
         assert dc.configVersion == content['general']['version']
         assert dc.configFile == content['file']
+        assert dc.removeTelemetryDir is False
