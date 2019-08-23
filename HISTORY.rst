@@ -3,6 +3,13 @@
 History
 -------
 
+1.3.0 (2019-08-23)
+~~~~~~~~~~~~~~~~~~
+
+* Add configuration mechanism to stop telemetry directory from being removed
+* Add missing API descriptions
+* Make tag deploy on Python 3.7 build
+
 1.2.1 (2019-08-16)
 ~~~~~~~~~~~~~~~~~~
 
