@@ -20,7 +20,7 @@ deploy:
       a2IxWXZTUVdXbEU0MFhyZW5yTDk4cXg1d3I1aEFTdU9zYWJBTFErYVpiY1ppUTBaMTBBQW1uRGs9
   true:
     branch: master
-    python: '3.6'
+    python: '3.7'
     repo: lsst-com/spot_motion_monitor
     tags: true
 install:
