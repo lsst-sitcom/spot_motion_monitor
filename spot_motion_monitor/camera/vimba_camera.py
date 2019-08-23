@@ -43,7 +43,7 @@ class VimbaCamera(BaseCamera):
     offsetY : int
         The current offset in Y for the camera.
     roiExposureTime : int
-        Description
+        The camera exposure time (microseconds) in ROI mode.
     roiSize : int
         The size of a (square) ROI region in pixels.
     totalFrames : int

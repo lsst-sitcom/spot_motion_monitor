@@ -156,8 +156,8 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
 
         Parameters
         ----------
-        arraySize : The size for the plot data arrays.
-            Description
+        arraySize : int
+            The size for the plot data arrays.
         """
         self.dataSize = arraySize
         self.xData = np.array([])

@@ -56,9 +56,9 @@ class DataController():
         The location to add the TELEMETRY_SAVEDIR to. Default is the current
         running directory.
     telemetrySetup : bool
-        Description
+        Whether or not the telemetry UI configuration file has been written.
     UI_CONFIG_FILE : str
-        Description
+        The default name for the telemetry UI configuration file.
     updater : .InformationUpdater
         An instance of the information updater.
     writeData : bool

@@ -30,7 +30,7 @@ def psd_calculator(xVals, yVals, collectRate):
         Parameters
         ----------
         vals : numpy.array
-            Description
+            The array of ROI centroid values.
         dt : float
             The inverse of the sampling rate.
 

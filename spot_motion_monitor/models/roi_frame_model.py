@@ -18,8 +18,11 @@ class RoiFrameModel():
 
     Attributes
     ----------
+    frameCheck : function
+        A function that describes the criteria for passing a frame.
     thresholdFactor : float
-        Description
+        The scale factor multiplied by the frame max and then subtracted from
+        the frame.
     """
 
     def __init__(self):

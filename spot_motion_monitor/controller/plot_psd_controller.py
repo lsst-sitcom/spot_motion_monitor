@@ -109,11 +109,6 @@ class PlotPsdController:
             The array of the PSD y coordinate data.
         frequencies : numpy.array
             The frequency array associated with the PSD data.
-
-        Returns
-        -------
-        TYPE
-            Description
         """
         if psdDataX is None or psdDataY is None or frequencies is None:
             return
