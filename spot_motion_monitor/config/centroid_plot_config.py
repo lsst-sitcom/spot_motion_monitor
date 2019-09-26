@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from spot_motion_monitor.config import BaseConfig
@@ -43,3 +43,37 @@ class CentroidPlotConfig(BaseConfig):
         self.minimumY = 0
         self.maximumY = 100
         self.numHistogramBins = 40
+
+    def fromDict(self, config):
+        """Translate config to class attributes.
+
+        Parameters
+        ----------
+        config : dict
+            The configuration to translate.
+        """
+        self.autoscaleX = config["xCentroid"]["autoscaleY"]
+        self.minimumX = config["xCentroid"]["minimumY"]
+        self.maximumX = config["xCentroid"]["maximumY"]
+        self.autoscaleY = config["yCentroid"]["autoscaleY"]
+        self.minimumY = config["yCentroid"]["minimumY"]
+        self.maximumY = config["yCentroid"]["maximumY"]
+        self.numHistogramBins = config["scatterPlot"]["histograms"]["numBins"]
+
+    def toDict(self):
+        """Translate class attributes to configuration dict.
+
+        Returns
+        -------
+        dict
+            The currently stored configuration.
+        """
+        config = {"xCentroid": {}, "yCentroid": {}, "scatterPlot": {"histograms": {}}}
+        config["xCentroid"]["autoscaleY"] = self.autoscaleX
+        config["xCentroid"]["minimumY"] = self.minimumX
+        config["xCentroid"]["maximumY"] = self.maximumX
+        config["yCentroid"]["autoscaleY"] = self.autoscaleY
+        config["yCentroid"]["minimumY"] = self.minimumY
+        config["yCentroid"]["maximumY"] = self.maximumY
+        config["scatterPlot"]["histograms"]["numBins"] = self.numHistogramBins
+        return config

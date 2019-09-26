@@ -11,10 +11,14 @@ class VimbaCameraConfig(BaseConfig):
 
     Attributes
     ----------
+    fullExposureTime : int
+        The exposure time (microseconds) in full frame mode.
+    modelName : str
+        A description of the camera model.
     roiExposureTime : int
         The exposure time (microseconds) in ROI mode.
     roiFluxMinimum : int
-        The mimium flux allowed in an ROI.
+        The minimum flux allowed in an ROI.
     roiSize : int
         The size (pixels) of the ROI on the camera.
     """
@@ -23,6 +27,39 @@ class VimbaCameraConfig(BaseConfig):
         """Initialize the class.
         """
         super().__init__()
+        self.modelName = None
         self.roiSize = 50
         self.roiFluxMinimum = 2000
         self.roiExposureTime = 3000  # microseconds
+        self.fullExposureTime = 3000  # microseconds
+
+    def fromDict(self, config):
+        """Translate config to class attributes.
+
+        Parameters
+        ----------
+        config : dict
+            The configuration to translate.
+        """
+        self.modelName = config["modelName"]
+        self.roiSize = config["roi"]["size"]
+        self.roiFluxMinimum = config["roi"]["fluxMin"]
+        self.roiExposureTime = config["roi"]["exposureTime"]
+        self.fullExposureTime = config["full"]["exposureTime"]
+
+    def toDict(self):
+        """Translate class attributes to configuration dict.
+
+        Returns
+        -------
+        dict
+            The currently stored configuration.
+        """
+        config = {"roi": {}, "full": {}}
+        if self.modelName is not None:
+            config["modelName"] = self.modelName
+        config["roi"]["size"] = self.roiSize
+        config["roi"]["fluxMin"] = self.roiFluxMinimum
+        config["roi"]["exposureTime"] = self.roiExposureTime
+        config["full"]["exposureTime"] = self.fullExposureTime
+        return config

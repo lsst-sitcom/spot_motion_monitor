@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from spot_motion_monitor.config import BaseConfig
@@ -38,3 +38,37 @@ class GaussianCameraConfig(BaseConfig):
         self.yAmplitude = 5
         self.yFrequency = 10.0
         self.deltaTime = 200
+
+    def fromDict(self, config):
+        """Translate config to class attributes.
+
+        Parameters
+        ----------
+        config : dict
+            The configuration to translate.
+        """
+        self.roiSize = config["roi"]["size"]
+        self.doSpotOscillation = config["spotOscillation"]["do"]
+        self.xAmplitude = config["spotOscillation"]["x"]["amplitude"]
+        self.xFrequency = config["spotOscillation"]["x"]["frequency"]
+        self.yAmplitude = config["spotOscillation"]["y"]["amplitude"]
+        self.yFrequency = config["spotOscillation"]["y"]["frequency"]
+        self.deltaTime = config["spotOscillation"]["deltaTime"]
+
+    def toDict(self):
+        """Translate class attributes to configuration dict.
+
+        Returns
+        -------
+        dict
+            The currently stored configuration.
+        """
+        config = {"roi": {}, "spotOscillation": {"x": {}, "y": {}}}
+        config["roi"]["size"] = self.roiSize
+        config["spotOscillation"]["do"] = self.doSpotOscillation
+        config["spotOscillation"]["x"]["amplitude"] = self.xAmplitude
+        config["spotOscillation"]["x"]["frequency"] = self.xFrequency
+        config["spotOscillation"]["y"]["amplitude"] = self.yAmplitude
+        config["spotOscillation"]["y"]["frequency"] = self.yFrequency
+        config["spotOscillation"]["deltaTime"] = self.deltaTime
+        return config
