@@ -11,8 +11,10 @@ class TestPsdPlotConfig:
 
     def test_parametersAfterConstruction(self):
         assert self.config.autoscaleX1d is False
+        assert self.config.x1dMinimum == 0
         assert self.config.x1dMaximum == 1000
         assert self.config.autoscaleY1d is False
+        assert self.config.y1dMinimum == 0
         assert self.config.y1dMaximum == 1000
         assert self.config.numWaterfallBins == 25
         assert self.config.waterfallColorMap == "viridis"

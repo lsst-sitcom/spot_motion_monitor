@@ -22,8 +22,12 @@ class PsdPlotConfig(BaseConfig):
         Set the color map for the waterfall PSD plots.
     x1dMaximum : int
         Set the maximum y axis value for on the x component 1D PSD plot.
+    x1dMinimum : int
+        Set the minimum y axis value for on the x component 1D PSD plot.
     y1dMaximum : int
         Set the maximum y axis value for on the y component 1D PSD plot.
+    y1dMinimum : int
+        Set the minimum y axis value for on the y component 1D PSD plot.
     """
 
     def __init__(self):
@@ -31,8 +35,10 @@ class PsdPlotConfig(BaseConfig):
         """
         super().__init__()
         self.autoscaleX1d = False
+        self.x1dMinimum = 0
         self.x1dMaximum = 1000
         self.autoscaleY1d = False
+        self.y1dMinimum = 0
         self.y1dMaximum = 1000
         self.numWaterfallBins = 25
         self.waterfallColorMap = "viridis"

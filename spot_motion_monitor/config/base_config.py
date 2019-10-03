@@ -14,6 +14,25 @@ class BaseConfig:
         """
         pass
 
+    def __eq__(self, other):
+        """Check equality.
+
+        Parameters
+        ----------
+        other : Any derived `BaseConfig`
+            Other instance to check.
+
+        Returns
+        -------
+        bool
+            True is objects are equal, False if not
+        """
+        print("Other: ", other.__dict__)
+        print("Self : ", self.__dict__)
+        if type(other) is type(self):
+            return self.__dict__ == other.__dict__
+        return False
+
     def fromDict(self, config):
         """Convert the stored configuration to a dictionary.
 

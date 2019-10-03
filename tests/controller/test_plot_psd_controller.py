@@ -5,6 +5,7 @@
 import numpy as np
 from PyQt5.QtCore import Qt
 
+from spot_motion_monitor.config import PsdPlotConfig
 from spot_motion_monitor.controller import PlotPsdController
 from spot_motion_monitor.views import PsdWaterfallPlotWidget, Psd1dPlotWidget
 
@@ -13,6 +14,14 @@ class TestPlotPsdController:
     def setup_class(cls):
         cls.arraySize = 5
         cls.timeScale = 10
+        cls.truthConfig = PsdPlotConfig()
+        cls.truthConfig.numWaterfallBins = cls.arraySize
+        cls.truthConfig.autoscaleX1d = True
+        cls.truthConfig.x1dMinimum = None
+        cls.truthConfig.x1dMaximum = None
+        cls.truthConfig.autoscaleY1d = True
+        cls.truthConfig.y1dMinimum = None
+        cls.truthConfig.y1dMaximum = None
 
     def test_parametersAfterContruction(self, qtbot):
         psdwfx = PsdWaterfallPlotWidget()
@@ -137,8 +146,7 @@ class TestPlotPsdController:
         pfc.setup(self.arraySize, self.timeScale)
 
         currentConfig = pfc.getPlotConfiguration()
-        assert len(currentConfig) == 3
-        assert list(currentConfig.keys()) == ['waterfall', 'xPSD', 'yPSD']
+        assert currentConfig == self.truthConfig
 
     def test_setPlotConfiguration(self, qtbot, mocker):
         psdwfx = PsdWaterfallPlotWidget()
@@ -158,10 +166,7 @@ class TestPlotPsdController:
         mockPsdX1dSetConfig = mocker.patch.object(pfc.psd1dXPlot, 'setConfiguration')
         mockPsdY1dSetConfig = mocker.patch.object(pfc.psd1dYPlot, 'setConfiguration')
 
-        truthConfig = {'waterfall': {'numBins': 10, 'colorMap': None},
-                       'xPSD': {'autoscale': True},
-                       'yPSD': {'autoscale': True}}
-        pfc.setPlotConfiguration(truthConfig)
+        pfc.setPlotConfiguration(self.truthConfig)
 
         assert mockPsdXWaterfallSetConfig.call_count == 1
         assert mockPsdYWaterfallSetConfig.call_count == 1

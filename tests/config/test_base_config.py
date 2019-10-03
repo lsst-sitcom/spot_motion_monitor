@@ -18,3 +18,20 @@ class TestBaseConfig:
 
         with pytest.raises(NotImplementedError):
             self.baseConfig.fromDict({})
+
+    def test_equality(self):
+        config1 = BaseConfig()
+        config1.x = 10
+        config2 = BaseConfig()
+        config2.x = 4
+        config3 = BaseConfig()
+        config3.x = 10
+        config4 = BaseConfig()
+        config4.x = None
+        config5 = BaseConfig()
+        config5.x = None
+
+        assert config1 != config2
+        assert config1 == config3
+        assert config1 != config4
+        assert config4 == config5
