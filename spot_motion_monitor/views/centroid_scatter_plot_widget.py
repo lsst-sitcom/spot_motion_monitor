@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import numpy as np
@@ -108,12 +108,10 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
 
         Returns
         -------
-        dict
+        int
             The set of current configuration parameters.
         """
-        config = {}
-        config['numHistogramBins'] = self.numBins
-        return config
+        return self.numBins
 
     def makeBrushes(self):
         """Make brushes for spots with differnet alpha factors.
@@ -146,10 +144,10 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
 
         Parameters
         ----------
-        config : dict
+        config : `config.CentroidPlotConfig`
             The new parameters to apply.
         """
-        self.numBins = config['numHistogramBins']
+        self.numBins = config.numHistogramBins
 
     def setup(self, arraySize):
         """Provide information for setting up the plot.

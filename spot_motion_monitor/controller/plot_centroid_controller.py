@@ -1,7 +1,9 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from .. import config
+
 __all__ = ['PlotCentroidController']
 
 class PlotCentroidController():
@@ -11,6 +13,8 @@ class PlotCentroidController():
 
     Attributes
     ----------
+    config : `config.CentroidPlotConfig`
+        The instance that holds the current configuration.
     scatterPlot : .GraphicsLayoutWidget
         The scatter plot of the x,y pixel coordinate of the centroid.
     x1dPlot : .GraphicsLayoutWidget
@@ -34,32 +38,36 @@ class PlotCentroidController():
         self.x1dPlot = cxp
         self.y1dPlot = cyp
         self.scatterPlot = csp
+        self.config = config.CentroidPlotConfig()
 
     def getPlotConfiguration(self):
         """Get the current camera configuration.
 
         Returns
         -------
-        dict
+        `config.CentroidPlotConfig`
             The set of current camera configuration parameters.
         """
-        config = {}
-        config['scatterPlot'] = self.scatterPlot.getConfiguration()
-        config['xCentroid'] = self.x1dPlot.getConfiguration()
-        config['yCentroid'] = self.y1dPlot.getConfiguration()
-        return config
+        self.config.numHistogramBins = self.scatterPlot.getConfiguration()
+        self.config.autoscaleX, ixrange, self.config.pixelRangeAdditionX = self.x1dPlot.getConfiguration()
+        self.config.minimumX = ixrange[0]
+        self.config.maximumX = ixrange[1]
+        self.config.autoscaleY, iyrange, self.config.pixelRangeAdditionY = self.y1dPlot.getConfiguration()
+        self.config.minimumY = iyrange[0]
+        self.config.maximumY = iyrange[1]
+        return self.config
 
     def setPlotConfiguration(self, config):
-        """Set a new configuration on the PSD plots.
+        """Set a new configuration on the Centroid plots.
 
         Parameters
         ----------
-        config : dict
+        config : `config.CentroidPlotConfig`
             The new configuration parameters.
         """
-        self.x1dPlot.setConfiguration(config['xCentroid'])
-        self.y1dPlot.setConfiguration(config['yCentroid'])
-        self.scatterPlot.setConfiguration(config['scatterPlot'])
+        self.x1dPlot.setConfiguration(config)
+        self.y1dPlot.setConfiguration(config)
+        self.scatterPlot.setConfiguration(config)
 
     def handleAcquireRoiStateChange(self, checked):
         """Deal with changes in the Acquire ROI checkbox.

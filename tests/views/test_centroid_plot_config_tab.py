@@ -1,9 +1,10 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.views import CentroidPlotConfigTab
+from spot_motion_monitor.config import CentroidPlotConfig
 from spot_motion_monitor.utils import AutoscaleState
+from spot_motion_monitor.views import CentroidPlotConfigTab
 
 class TestCentroidPlotConfigTab:
 
@@ -35,15 +36,20 @@ class TestCentroidPlotConfigTab:
         configTab = CentroidPlotConfigTab()
         qtbot.addWidget(configTab)
 
-        config = {'xCentroid': {'autoscale': AutoscaleState.OFF.name, 'pixelAddition': None,
-                                'minimum': 10, 'maximum': 1000},
-                  'yCentroid': {'autoscale': AutoscaleState.ON.name, 'pixelAddition': None,
-                                'minimum': None, 'maximum': None},
-                  'scatterPlot': {'numHistogramBins': 50}}
+        truthConfig = CentroidPlotConfig()
+        truthConfig.autoscaleX = AutoscaleState.OFF
+        truthConfig.minimumX = 10
+        truthConfig.maximumX = 1000
+        truthConfig.pixelRangeAdditionX = None
+        truthConfig.autoscaleY = AutoscaleState.ON
+        truthConfig.minimumY = None
+        truthConfig.maximumY = None
+        truthConfig.pixelRangeAdditionY = None
+        truthConfig.numHistogramBins = 50
 
-        configTab.setConfiguration(config)
+        configTab.setConfiguration(truthConfig)
         xState = configTab.autoscaleXComboBox.currentText()
-        assert xState == config['xCentroid']['autoscale']
+        assert xState == truthConfig.autoscaleX.name
         assert configTab.pixelAdditionXLineEdit.text() == ''
         assert configTab.pixelAdditionXLabel.isEnabled() is False
         assert configTab.pixelAdditionXLineEdit.isEnabled() is False
@@ -51,10 +57,10 @@ class TestCentroidPlotConfigTab:
         assert configTab.minXLimitLineEdit.isEnabled() is True
         assert configTab.maxXLimitLabel.isEnabled() is True
         assert configTab.maxXLimitLineEdit.isEnabled() is True
-        assert int(configTab.minXLimitLineEdit.text()) == config['xCentroid']['minimum']
-        assert int(configTab.maxXLimitLineEdit.text()) == config['xCentroid']['maximum']
+        assert int(configTab.minXLimitLineEdit.text()) == truthConfig.minimumX
+        assert int(configTab.maxXLimitLineEdit.text()) == truthConfig.maximumX
         yState = configTab.autoscaleYComboBox.currentText()
-        assert yState == config['yCentroid']['autoscale']
+        assert yState == truthConfig.autoscaleY.name
         assert configTab.pixelAdditionYLabel.isEnabled() is False
         assert configTab.pixelAdditionYLineEdit.isEnabled() is False
         assert configTab.minYLimitLabel.isEnabled() is False
@@ -64,39 +70,42 @@ class TestCentroidPlotConfigTab:
         assert configTab.pixelAdditionXLineEdit.text() == ''
         assert configTab.minYLimitLineEdit.text() == ''
         assert configTab.maxYLimitLineEdit.text() == ''
-        assert int(configTab.numHistoBinsLineEdit.text()) == config['scatterPlot']['numHistogramBins']
+        assert int(configTab.numHistoBinsLineEdit.text()) == truthConfig.numHistogramBins
 
-        config['yCentroid']['autoscale'] = AutoscaleState.PARTIAL.name
-        config['yCentroid']['pixelAddition'] = 10
-        configTab.setConfiguration(config)
+        truthConfig.autoscaleY = AutoscaleState.PARTIAL
+        truthConfig.pixelRangeAdditionY = 10
+        configTab.setConfiguration(truthConfig)
         yState = configTab.autoscaleYComboBox.currentText()
-        assert yState == config['yCentroid']['autoscale']
+        assert yState == truthConfig.autoscaleY.name
         assert configTab.pixelAdditionYLineEdit.isEnabled() is True
         assert configTab.minYLimitLineEdit.isEnabled() is False
         assert configTab.maxYLimitLineEdit.isEnabled() is False
-        assert int(configTab.pixelAdditionYLineEdit.text()) == config['yCentroid']['pixelAddition']
+        assert int(configTab.pixelAdditionYLineEdit.text()) == truthConfig.pixelRangeAdditionY
 
     def test_getParametersFromConfiguration(self, qtbot):
         configTab = CentroidPlotConfigTab()
         qtbot.addWidget(configTab)
         configTab.show()
 
-        truthConfig = {'xCentroid': {'autoscale': AutoscaleState.OFF.name, 'minimum': 10, 'maximum': 1000},
-                       'yCentroid': {'autoscale': AutoscaleState.ON.name},
-                       'scatterPlot': {'numHistogramBins': 30}}
+        truthConfig = CentroidPlotConfig()
+        truthConfig.autoscaleX = AutoscaleState.OFF
+        truthConfig.minimumX = 10
+        truthConfig.maximumX = 1000
+        truthConfig.autoscaleY = AutoscaleState.ON
+        truthConfig.numHistogramBins = 30
 
-        configTab.autoscaleXComboBox.setCurrentText(truthConfig['xCentroid']['autoscale'])
-        configTab.minXLimitLineEdit.setText(str(truthConfig['xCentroid']['minimum']))
-        configTab.maxXLimitLineEdit.setText(str(truthConfig['xCentroid']['maximum']))
-        configTab.autoscaleYComboBox.setCurrentText(truthConfig['yCentroid']['autoscale'])
-        configTab.numHistoBinsLineEdit.setText(str(truthConfig['scatterPlot']['numHistogramBins']))
+        configTab.autoscaleXComboBox.setCurrentText(truthConfig.autoscaleX.name)
+        configTab.minXLimitLineEdit.setText(str(truthConfig.minimumX))
+        configTab.maxXLimitLineEdit.setText(str(truthConfig.maximumX))
+        configTab.autoscaleYComboBox.setCurrentText(truthConfig.autoscaleY.name)
+        configTab.numHistoBinsLineEdit.setText(str(truthConfig.numHistogramBins))
         config = configTab.getConfiguration()
         assert config == truthConfig
 
-        truthConfig['yCentroid']['autoscale'] = AutoscaleState.PARTIAL.name
-        truthConfig['yCentroid']['pixelAddition'] = 10
-        configTab.autoscaleYComboBox.setCurrentText(truthConfig['yCentroid']['autoscale'])
-        configTab.pixelAdditionYLineEdit.setText(str(truthConfig['yCentroid']['pixelAddition']))
+        truthConfig.autoscaleY = AutoscaleState.PARTIAL
+        truthConfig.pixelRangeAdditionY = 10
+        configTab.autoscaleYComboBox.setCurrentText(truthConfig.autoscaleY.name)
+        configTab.pixelAdditionYLineEdit.setText(str(truthConfig.pixelRangeAdditionY))
         config = configTab.getConfiguration()
         assert config == truthConfig
 

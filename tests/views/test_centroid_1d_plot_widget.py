@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
+from spot_motion_monitor.config import CentroidPlotConfig
 from spot_motion_monitor.utils import AutoscaleState
 from spot_motion_monitor.views import Centroid1dPlotWidget
 
@@ -24,6 +25,7 @@ class TestCentroid1dPlotWidget():
         assert c1dpw.yRange is None
         assert c1dpw.pixelRangeAddition == 10
         assert c1dpw.numAccumFrames == 15
+        assert c1dpw.axis is None
 
     def test_parametersAfterSetup(self, qtbot):
         c1dpw = Centroid1dPlotWidget()
@@ -38,6 +40,7 @@ class TestCentroid1dPlotWidget():
         assert c1dpw.timeRange.size == arraySize
         assert c1dpw.rollArray is False
         assert c1dpw.roiFps == roiFps
+        assert c1dpw.axis == 'X'
 
     def test_updatePlot(self, qtbot, mocker):
         c1dpw = Centroid1dPlotWidget()
@@ -99,10 +102,15 @@ class TestCentroid1dPlotWidget():
         c1dpw = Centroid1dPlotWidget()
         c1dpw.show()
         qtbot.addWidget(c1dpw)
-        config = {'autoscale': AutoscaleState.PARTIAL.name, 'pixelAddition': 10,
-                  'minimum': None, 'maximum': None}
-        currentConfig = c1dpw.getConfiguration()
-        assert currentConfig == config
+        truthAutoscale = AutoscaleState.PARTIAL
+        truthPixelAddition = 10
+        truthMinimum = None
+        truthMaximum = None
+        autoscale, irange, pixelAddition = c1dpw.getConfiguration()
+        assert autoscale == truthAutoscale
+        assert irange[0] == truthMinimum
+        assert irange[1] == truthMaximum
+        assert pixelAddition == truthPixelAddition
 
     def test_setConfiguration(self, qtbot):
         c1dpw = Centroid1dPlotWidget()
@@ -111,18 +119,22 @@ class TestCentroid1dPlotWidget():
         arraySize = 1024
         roiFps = 40
         c1dpw.setup(arraySize, 'X', roiFps)
-        truthConfig = {'autoscale': AutoscaleState.OFF.name, 'minimum': 10, 'maximum': 100}
+        truthConfig = CentroidPlotConfig()
+        truthConfig.autoscaleX = AutoscaleState.OFF
+        truthConfig.minimumX = 10
+        truthConfig.maximumX = 100
         c1dpw.setConfiguration(truthConfig)
         c1dpw.autoscale == AutoscaleState.OFF
-        c1dpw.yRange = [truthConfig['minimum'], truthConfig['maximum']]
-        truthConfig = {'autoscale': AutoscaleState.ON.name}
+        c1dpw.yRange = [truthConfig.minimumX, truthConfig.maximumX]
+        truthConfig.autoscaleX = AutoscaleState.ON
         c1dpw.setConfiguration(truthConfig)
         c1dpw.autoscale == AutoscaleState.ON
         c1dpw.yRange is None
-        truthConfig = {'autoscale': AutoscaleState.PARTIAL.name, 'pixelAddition': 25}
+        truthConfig.autoscaleX = AutoscaleState.PARTIAL
+        truthConfig.pixelRangeAdditionX = 25
         c1dpw.setConfiguration(truthConfig)
         c1dpw.autoscale == AutoscaleState.PARTIAL
-        c1dpw.pixelRangeAddition == truthConfig['pixelAddition']
+        c1dpw.pixelRangeAddition == truthConfig.pixelRangeAdditionX
         c1dpw.yRange is None
 
     def test_clearPlot(self, qtbot, mocker):
