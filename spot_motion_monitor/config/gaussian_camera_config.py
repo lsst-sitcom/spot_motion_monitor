@@ -11,8 +11,6 @@ class GaussianCameraConfig(BaseConfig):
 
     Attributes
     ----------
-    deltaTime : int
-        The time segmentation over on oscillation period.
     doSpotOscillation : bool
         Flag tp make the generated spot oscillate.
     roiSize : int
@@ -37,7 +35,6 @@ class GaussianCameraConfig(BaseConfig):
         self.xFrequency = 5.0
         self.yAmplitude = 5
         self.yFrequency = 10.0
-        self.deltaTime = 200
 
     def fromDict(self, config):
         """Translate config to class attributes.
@@ -53,7 +50,6 @@ class GaussianCameraConfig(BaseConfig):
         self.xFrequency = config["spotOscillation"]["x"]["frequency"]
         self.yAmplitude = config["spotOscillation"]["y"]["amplitude"]
         self.yFrequency = config["spotOscillation"]["y"]["frequency"]
-        self.deltaTime = config["spotOscillation"]["deltaTime"]
 
     def toDict(self):
         """Translate class attributes to configuration dict.
@@ -70,5 +66,4 @@ class GaussianCameraConfig(BaseConfig):
         config["spotOscillation"]["x"]["frequency"] = self.xFrequency
         config["spotOscillation"]["y"]["amplitude"] = self.yAmplitude
         config["spotOscillation"]["y"]["frequency"] = self.yFrequency
-        config["spotOscillation"]["deltaTime"] = self.deltaTime
         return config

@@ -5,6 +5,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialogButtonBox
 
+from spot_motion_monitor.config import GaussianCameraConfig
 from spot_motion_monitor.views import CameraConfigurationDialog
 
 class TestCameraConfigurationDialog:
@@ -22,16 +23,19 @@ class TestCameraConfigurationDialog:
         qtbot.addWidget(ccDialog)
         ccDialog.show()
 
-        config = {'roiSize': 30, 'doSpotOscillation': True,
-                  'xAmplitude': 2, 'xFrequency': 50.0,
-                  'yAmplitude': 7, 'yFrequency': 25.0,
-                  'deltaTime': 300}
+        truthConfig = GaussianCameraConfig()
+        truthConfig.roiSize = 30
+        truthConfig.doSpotOscillation = False
+        truthConfig.xAmplitude = 2
+        truthConfig.xFrequency = 50.0
+        truthConfig.yAmplitude = 7
+        truthConfig.yFrequency = 25.0
 
-        ccDialog.setCameraConfiguration(config)
-        assert int(ccDialog.cameraConfigTab.roiSizeLineEdit.text()) == config['roiSize']
+        ccDialog.setCameraConfiguration(truthConfig)
+        assert int(ccDialog.cameraConfigTab.roiSizeLineEdit.text()) == truthConfig.roiSize
         state = ccDialog.cameraConfigTab.spotOscillationCheckBox.checkState()
         boolState = True if state == Qt.Checked else False
-        assert boolState == config['doSpotOscillation']
+        assert boolState == truthConfig.doSpotOscillation
 
     def test_getCameraConfiguration(self, qtbot, mocker):
         ccDialog = CameraConfigurationDialog('GaussianCamera')

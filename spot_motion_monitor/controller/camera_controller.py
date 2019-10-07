@@ -193,7 +193,7 @@ class CameraController():
 
         Returns
         -------
-        dict
+        Derived camera type of `config.BaseConfig`
             The set of current camera configuration parameters.
         """
         return self.camera.getConfiguration()
@@ -261,7 +261,7 @@ class CameraController():
 
         Parameters
         ----------
-        config : dict
+        config : Derived camera type of `config.BaseConfig`
             The current configuration parameters.
         """
         self.camera.setConfiguration(config)
@@ -275,7 +275,8 @@ class CameraController():
             The options from command-line arguments.
         """
         self.doAutoRun = options.auto_run
-        config = {'cameraIndex': options.vimba_camera_index}
+        config = self.camera.getConfiguration()
+        config.cameraIndex = options.vimba_camera_index
         self.setCameraConfiguration(config)
 
     def setupCamera(self, cameraStr):

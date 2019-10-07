@@ -1,9 +1,10 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import numpy as np
 
+from spot_motion_monitor.config import GaussianCameraConfig
 from spot_motion_monitor.camera.gaussian_camera import GaussianCamera
 
 class TestGaussianCamera():
@@ -28,6 +29,7 @@ class TestGaussianCamera():
         assert self.camera.xFreq == 1.0
         assert self.camera.yAmp == 5
         assert self.camera.yFreq == 2.0
+        assert self.camera.config is not None
 
     def test_parametersAfterStartup(self):
         self.camera.startup()
@@ -60,21 +62,31 @@ class TestGaussianCamera():
         assert offset == (264, 200)
 
     def test_getConfiguration(self):
-        config = {'roiSize': 50, 'doSpotOscillation': True,
-                  'xAmplitude': 10, 'xFrequency': 1.0,
-                  'yAmplitude': 5, 'yFrequency': 2.0}
+        truthConfig = GaussianCameraConfig()
+        truthConfig.roiSize = 50
+        truthConfig.doSpotOscillation = True
+        truthConfig.xAmplitude = 10
+        truthConfig.xFrequency = 1.0
+        truthConfig.yAmplitude = 5
+        truthConfig.yFrequency = 2.0
         currentConfig = self.camera.getConfiguration()
-        assert currentConfig == config
+        assert currentConfig == truthConfig
 
     def test_setConfiguration(self):
         camera = GaussianCamera()
-        truthConfig = {'roiSize': 75, 'doSpotOscillation': True,
-                       'xAmplitude': 1, 'xFrequency': 40.0,
-                       'yAmplitude': 8, 'yFrequency': 75.0}
+
+        truthConfig = GaussianCameraConfig()
+        truthConfig.roiSize = 75
+        truthConfig.doSpotOscillation = True
+        truthConfig.xAmplitude = 1
+        truthConfig.xFrequency = 40.0
+        truthConfig.yAmplitude = 8
+        truthConfig.yFrequency = 75.0
+
         camera.setConfiguration(truthConfig)
-        assert camera.roiSize == truthConfig['roiSize']
-        assert camera.doSpotOscillation == truthConfig['doSpotOscillation']
-        assert camera.xAmp == truthConfig['xAmplitude']
-        assert camera.xFreq == truthConfig['xFrequency']
-        assert camera.yAmp == truthConfig['yAmplitude']
-        assert camera.yFreq == truthConfig['yFrequency']
+        assert camera.roiSize == truthConfig.roiSize
+        assert camera.doSpotOscillation == truthConfig.doSpotOscillation
+        assert camera.xAmp == truthConfig.xAmplitude
+        assert camera.xFreq == truthConfig.xFrequency
+        assert camera.yAmp == truthConfig.yAmplitude
+        assert camera.yFreq == truthConfig.yFrequency

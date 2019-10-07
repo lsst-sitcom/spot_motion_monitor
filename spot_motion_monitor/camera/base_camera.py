@@ -9,6 +9,8 @@ class BaseCamera():
 
     Attributes
     ----------
+    config : Camera derived type of `config.BaseConfig`
+        The instance containing the camera configuration.
     fpsFullFrame : int
         The Frames per Second rate in full frame mode.
     fpsRoiFrame : int
@@ -26,6 +28,7 @@ class BaseCamera():
     fpsFullFrame = None
     fpsRoiFrame = None
     roiSize = None
+    config = None
 
     def __init__(self):
         """Initialize the class.
