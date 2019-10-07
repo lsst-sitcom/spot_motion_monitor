@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import cProfile
@@ -15,9 +15,9 @@ from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
-from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE, readYamlFile
+from spot_motion_monitor.utils import create_parser, CSS, DEFAULT_PSD_ARRAY_SIZE, readYamlFile
 from spot_motion_monitor.views import CameraConfigurationDialog
-from spot_motion_monitor.views import GeneralConfigurationDialog
+from spot_motion_monitor.views import DataConfigurationDialog
 from spot_motion_monitor.views import PlotConfigurationDialog
 from spot_motion_monitor.views.forms import Ui_MainWindow
 from spot_motion_monitor import __version__
@@ -90,7 +90,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionAbout.triggered.connect(self.about)
         self.actionPlotsConfig.triggered.connect(self.updatePlotConfiguration)
         self.actionCameraConfig.triggered.connect(self.updateCameraConfiguration)
-        self.actionGeneralConfig.triggered.connect(self.updateGeneralConfiguration)
+        self.actionDataConfig.triggered.connect(self.updateDataConfiguration)
 
     def about(self):
         """This function presents the about dialog box.
@@ -289,17 +289,17 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             config = cameraConfigDialog.getCameraConfiguration()
             self.cameraController.setCameraConfiguration(config)
 
-    def updateGeneralConfiguration(self):
-        """This function handles general configuration.
+    def updateDataConfiguration(self):
+        """This function handles data configuration.
 
         The configuration is centered on the data structures used for the
         calculations.
         """
-        generalConfigDialog = GeneralConfigurationDialog()
+        dataConfigDialog = DataConfigurationDialog()
         currentDataConfig = self.dataController.getDataConfiguration()
-        generalConfigDialog.setConfiguration(currentDataConfig)
-        if generalConfigDialog.exec_():
-            newDataConfig = generalConfigDialog.getConfiguration()
+        dataConfigDialog.setConfiguration(currentDataConfig)
+        if dataConfigDialog.exec_():
+            newDataConfig = dataConfigDialog.getConfiguration()
             self.dataController.setDataConfiguration(newDataConfig)
 
     def updateOffset(self):
@@ -352,6 +352,7 @@ def launch(opts):
     app.setOrganizationName("LSST-Systems-Engineering")
     app.setOrganizationDomain("lsst.org")
     app.setApplicationName("Spot Motion Monitor")
+    app.setStyleSheet(CSS)
     form = SpotMotionMonitor()
     form.handleConfig(opts)
     form.show()

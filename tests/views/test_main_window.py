@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import collections
@@ -109,11 +109,11 @@ class TestMainWindow():
         mw.cameraController.setupCamera('GaussianCamera')
         assert mw.actionCameraConfig.isEnabled() is True
         assert mw.actionPlotsConfig.isEnabled() is True
-        assert mw.actionGeneralConfig.isEnabled() is True
+        assert mw.actionDataConfig.isEnabled() is True
         qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
         assert mw.actionCameraConfig.isEnabled() is False
         assert mw.actionPlotsConfig.isEnabled() is True
-        assert mw.actionGeneralConfig.isEnabled() is True
+        assert mw.actionDataConfig.isEnabled() is True
 
     def test_commandLineConfiguration(self, qtbot, mocker):
         mw = SpotMotionMonitor()

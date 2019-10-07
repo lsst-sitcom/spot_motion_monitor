@@ -30,7 +30,7 @@ class RoiFrameModelConfig(BaseConfig):
         config : dict
             The configuration to translate.
         """
-        self.thresholdFactor = config["roiFrame"]["thresholdFactor"]
+        self.check("thresholdFactor", config["roiFrame"], "thresholdFactor")
 
     def toDict(self):
         """Translate class attributes to configuration dict.

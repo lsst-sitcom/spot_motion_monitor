@@ -227,7 +227,7 @@
     </property>
     <addaction name="actionCameraConfig"/>
     <addaction name="actionPlotsConfig"/>
-    <addaction name="actionGeneralConfig"/>
+    <addaction name="actionDataConfig"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuCamera"/>
@@ -263,9 +263,9 @@
     <string>Plots</string>
    </property>
   </action>
-  <action name="actionGeneralConfig">
+  <action name="actionDataConfig">
    <property name="text">
-    <string>General</string>
+    <string>Data</string>
    </property>
   </action>
  </widget>

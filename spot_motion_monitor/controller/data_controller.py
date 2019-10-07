@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import tables
 
+from ..config import DataConfig
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation, GenericFrameInformation
 from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, getTimestamp
@@ -92,6 +93,7 @@ class DataController():
         self.removeTelemetryDir = True
         self.configVersion = None
         self.configFile = None
+        self.dataConfig = DataConfig()
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -157,12 +159,14 @@ class DataController():
 
         Returns
         -------
-        dict
+        `config.DataConfig`
             The set of current data configuration parameters.
         """
-        config = {}
-        config['pixelScale'] = self.bufferModel.pixelScale
-        return config
+        self.dataConfig.buffer.pixelScale = self.bufferModel.pixelScale
+        self.dataConfig.fullFrame.sigmaScale = self.fullFrameModel.sigmaScale
+        self.dataConfig.fullFrame.minimumNumPixels = self.fullFrameModel.minimumNumPixels
+        self.dataConfig.roiFrame.thresholdFactor = self.roiFrameModel.thresholdFactor
+        return self.dataConfig
 
     def getPsd(self, isRoiMode, currentFps):
         """Return the power spectrum distribution (PSD).
@@ -299,10 +303,13 @@ class DataController():
 
         Parameters
         ----------
-        config : dict
+        config : `config.DataConfig`
             The new configuration parameters.
         """
-        self.bufferModel.pixelScale = config['pixelScale']
+        self.bufferModel.pixelScale = config.buffer.pixelScale
+        self.fullFrameModel.sigmaScale = config.fullFrame.sigmaScale
+        self.fullFrameModel.minimumNumPixels = config.fullFrame.minimumNumPixels
+        self.roiFrameModel.thresholdFactor = config.roiFrame.thresholdFactor
 
     def setFrameChecks(self, fullFrameCheck, roiFrameCheck):
         """Set the frame checks to the corresponding models.

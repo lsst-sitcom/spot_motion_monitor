@@ -33,8 +33,8 @@ class BufferModelConfig(BaseConfig):
         config : dict
             The configuration to translate.
         """
-        self.bufferSize = config["buffer"]["size"]
-        self.pixelScale = config["buffer"]["pixelScale"]
+        self.check("bufferSize", config["buffer"], "size")
+        self.check("pixelScale", config["buffer"], "pixelScale")
 
     def toDict(self):
         """Translate class attributes to configuration dict.

@@ -35,3 +35,13 @@ class TestBaseConfig:
         assert config1 == config3
         assert config1 != config4
         assert config4 == config5
+
+    def test_check(self):
+        config1 = BaseConfig()
+        config1.x = 10
+        config1.y = 2.5
+        idict = {"x": 14}
+        config1.check("x", idict, "x")
+        assert config1.x == idict["x"]
+        config1.check("y", idict, "y")
+        assert config1.y == 2.5

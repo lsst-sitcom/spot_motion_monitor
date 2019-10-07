@@ -32,8 +32,8 @@ class FullFrameModelConfig(BaseConfig):
         config : dict
             The configuration to translate.
         """
-        self.sigmaScale = config["fullFrame"]["sigmaScale"]
-        self.minimumNumPixels = config["fullFrame"]["minNumPixels"]
+        self.check("sigmaScale", config["fullFrame"], "sigmaScale")
+        self.check("minimumNumPixels", config["fullFrame"], "minimumNumPixels")
 
     def toDict(self):
         """Translate class attributes to configuration dict.
@@ -45,5 +45,5 @@ class FullFrameModelConfig(BaseConfig):
         """
         config = {"fullFrame": {}}
         config["fullFrame"]["sigmaScale"] = self.sigmaScale
-        config["fullFrame"]["minNumPixels"] = self.minimumNumPixels
+        config["fullFrame"]["minimumNumPixels"] = self.minimumNumPixels
         return config

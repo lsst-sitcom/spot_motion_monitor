@@ -4,10 +4,10 @@
 #------------------------------------------------------------------------------
 from spot_motion_monitor.views import BaseConfigurationDialog, DataConfigTab
 
-__all__ = ['GeneralConfigurationDialog']
+__all__ = ['DataConfigurationDialog']
 
-class GeneralConfigurationDialog(BaseConfigurationDialog):
-    """Class that generates the dialog for handling general data configuration.
+class DataConfigurationDialog(BaseConfigurationDialog):
+    """Class that generates the dialog for handling data configuration.
 
     Attributes
     ----------

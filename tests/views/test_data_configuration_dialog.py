@@ -4,12 +4,13 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtWidgets import QDialogButtonBox
 
-from spot_motion_monitor.views import GeneralConfigurationDialog
+from spot_motion_monitor.config import DataConfig
+from spot_motion_monitor.views import DataConfigurationDialog
 
-class TestGeneralConfigurationDialog:
+class TestDataConfigurationDialog:
 
     def test_parametersAfterConstruction(self, qtbot):
-        ccDialog = GeneralConfigurationDialog()
+        ccDialog = DataConfigurationDialog()
         qtbot.addWidget(ccDialog)
         ccDialog.show()
 
@@ -17,17 +18,18 @@ class TestGeneralConfigurationDialog:
         assert ccDialog.tabWidget.currentWidget().name == 'Data'
 
     def test_setConfiguration(self, qtbot):
-        ccDialog = GeneralConfigurationDialog()
+        ccDialog = DataConfigurationDialog()
         qtbot.addWidget(ccDialog)
         ccDialog.show()
 
-        config = {'pixelScale': 0.54}
+        truthConfig = DataConfig()
+        truthConfig.buffer.pixelScale = 0.54
 
-        ccDialog.setConfiguration(config)
-        assert float(ccDialog.dataConfigTab.pixelScaleLineEdit.text()) == config['pixelScale']
+        ccDialog.setConfiguration(truthConfig)
+        assert float(ccDialog.dataConfigTab.pixelScaleLineEdit.text()) == truthConfig.buffer.pixelScale
 
     def test_getConfiguration(self, qtbot, mocker):
-        ccDialog = GeneralConfigurationDialog()
+        ccDialog = DataConfigurationDialog()
         qtbot.addWidget(ccDialog)
         ccDialog.show()
         mockGetConfiguration = mocker.patch.object(ccDialog.dataConfigTab, 'getConfiguration')
@@ -36,7 +38,7 @@ class TestGeneralConfigurationDialog:
         assert mockGetConfiguration.call_count == 1
 
     def test_validInputFromTabs(self, qtbot):
-        ccDialog = GeneralConfigurationDialog()
+        ccDialog = DataConfigurationDialog()
         qtbot.addWidget(ccDialog)
         ccDialog.show()
 

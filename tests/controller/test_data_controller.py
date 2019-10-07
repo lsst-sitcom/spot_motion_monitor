@@ -11,6 +11,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.camera import CameraStatus
+from spot_motion_monitor.config import DataConfig
 from spot_motion_monitor.controller import DataController
 from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, RoiFrameInformation
 from spot_motion_monitor.utils import getTimestamp, passFrame
@@ -44,6 +45,7 @@ class TestDataController():
         assert dc.fullTelemetrySavePath is None
         assert dc.configVersion is None
         assert dc.configFile is None
+        assert dc.dataConfig is not None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -191,22 +193,29 @@ class TestDataController():
         assert mockWriteTelemetryFile.call_count == 1
         mockWriteTelemetryFile.assert_called_once_with(roiInfo, self.roiFrameStatus)
 
-    def test_setDataConfiguration(self, qtbot):
-        cdw = CameraDataWidget()
-        qtbot.addWidget(cdw)
-        dc = DataController(cdw)
-        currentConfig = dc.getDataConfiguration()
-        assert len(currentConfig) == 1
-        assert currentConfig == {'pixelScale': 1.0}
-
     def test_getDataConfiguration(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
+        currentConfig = dc.getDataConfiguration()
+        truthConfig = DataConfig()
+        assert currentConfig == truthConfig
 
-        truthConfig = {'pixelScale': 0.5}
+    def test_setDataConfiguration(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+
+        truthConfig = DataConfig()
+        truthConfig.buffer.pixelScale = 0.5
+        truthConfig.fullFrame.sigmaScale = 1.753
+        truthConfig.fullFrame.minimumNumPixels = 15
+        truthConfig.roiFrame.thresholdFactor = 0.99
         dc.setDataConfiguration(truthConfig)
-        assert dc.bufferModel.pixelScale == truthConfig['pixelScale']
+        assert dc.bufferModel.pixelScale == truthConfig.buffer.pixelScale
+        assert dc.fullFrameModel.sigmaScale == truthConfig.fullFrame.sigmaScale
+        assert dc.fullFrameModel.minimumNumPixels == truthConfig.fullFrame.minimumNumPixels
+        assert dc.roiFrameModel.thresholdFactor == truthConfig.roiFrame.thresholdFactor
 
     @freeze_time('2018-10-30 22:30:15')
     def test_writingData(self, qtbot):
