@@ -4,6 +4,8 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtGui import QIntValidator
 
+from ..config import VimbaCameraConfig
+from ..utils import defaultToNoneOrValue, noneToDefaultOrValue
 from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_vimba_camera_config import Ui_VimbaCameraConfigForm
 
@@ -16,6 +18,8 @@ class VimbaCameraConfigTab(BaseConfigTab, Ui_VimbaCameraConfigForm):
     ----------
     name : str
         The name for the tab widget.
+    config : `config.VimbaCameraConfig`
+        The instance that contains the Vimba camera configuration.
     """
 
     def __init__(self, parent=None):
@@ -29,35 +33,41 @@ class VimbaCameraConfigTab(BaseConfigTab, Ui_VimbaCameraConfigForm):
         super().__init__(parent)
         self.setupUi(self)
         self.name = 'Vimba'
+        self.config = VimbaCameraConfig()
         self.roiSizeLineEdit.setValidator(QIntValidator(20, 1000))
         self.roiFluxMinLineEdit.setValidator(QIntValidator(100, 10000))
         self.roiExposureTimeLineEdit.setValidator(QIntValidator(500, 50000))
+        self.fullFrameExposureTimeLineEdit.setValidator(QIntValidator(500, 50000))
         self.roiSizeLineEdit.textChanged.connect(self.validateInput)
         self.roiFluxMinLineEdit.textChanged.connect(self.validateInput)
         self.roiExposureTimeLineEdit.textChanged.connect(self.validateInput)
+        self.fullFrameExposureTimeLineEdit.textChanged.connect(self.validateInput)
 
     def getConfiguration(self):
         """Get the configuration parameter's from the tab's widgets.
 
         Returns
         -------
-        dict
+        `config.VimbaCameraConfig`
             The current set of configuration parameters.
         """
-        config = {}
-        config['roiSize'] = int(self.roiSizeLineEdit.text())
-        config['roiFluxMinimum'] = int(self.roiFluxMinLineEdit.text())
-        config['roiExposureTime'] = int(self.roiExposureTimeLineEdit.text())
-        return config
+        self.config.modelName = defaultToNoneOrValue(self.modelNameLineEdit.text())
+        self.config.roiSize = int(self.roiSizeLineEdit.text())
+        self.config.roiFluxMinimum = int(self.roiFluxMinLineEdit.text())
+        self.config.roiExposureTime = int(self.roiExposureTimeLineEdit.text())
+        self.config.fullExposureTime = int(self.fullFrameExposureTimeLineEdit.text())
+        return self.config
 
     def setConfiguration(self, config):
         """Set the configuration parameters into the tab's widgets.
 
         Parameters
         ----------
-        config : dict
+        config : `config.VimbaCameraConfig`
             The current set of configuration parameters.
         """
-        self.roiSizeLineEdit.setText(str(config['roiSize']))
-        self.roiFluxMinLineEdit.setText(str(config['roiFluxMinimum']))
-        self.roiExposureTimeLineEdit.setText(str(config['roiExposureTime']))
+        self.modelNameLineEdit.setText(noneToDefaultOrValue(config.modelName))
+        self.roiSizeLineEdit.setText(str(config.roiSize))
+        self.roiFluxMinLineEdit.setText(str(config.roiFluxMinimum))
+        self.roiExposureTimeLineEdit.setText(str(config.roiExposureTime))
+        self.fullFrameExposureTimeLineEdit.setText(str(config.fullExposureTime))

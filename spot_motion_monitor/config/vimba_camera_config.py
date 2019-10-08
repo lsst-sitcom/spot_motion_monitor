@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from spot_motion_monitor.config import BaseConfig
@@ -11,6 +11,8 @@ class VimbaCameraConfig(BaseConfig):
 
     Attributes
     ----------
+    cameraIndex : int
+        The current index of the camera if multiple present.
     fullExposureTime : int
         The exposure time (microseconds) in full frame mode.
     modelName : str
@@ -30,8 +32,9 @@ class VimbaCameraConfig(BaseConfig):
         self.modelName = None
         self.roiSize = 50
         self.roiFluxMinimum = 2000
-        self.roiExposureTime = 3000  # microseconds
-        self.fullExposureTime = 3000  # microseconds
+        self.roiExposureTime = 8000  # microseconds
+        self.fullExposureTime = 8000  # microseconds
+        self.cameraIndex = 0
 
     def fromDict(self, config):
         """Translate config to class attributes.
@@ -46,6 +49,7 @@ class VimbaCameraConfig(BaseConfig):
         self.roiFluxMinimum = config["roi"]["fluxMin"]
         self.roiExposureTime = config["roi"]["exposureTime"]
         self.fullExposureTime = config["full"]["exposureTime"]
+        self.cameraIndex = config["cameraIndex"]
 
     def toDict(self):
         """Translate class attributes to configuration dict.

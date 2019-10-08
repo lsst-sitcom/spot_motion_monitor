@@ -1,7 +1,8 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from spot_motion_monitor.config import VimbaCameraConfig
 from spot_motion_monitor.views import VimbaCameraConfigTab
 
 class TestVimbaCameraConfigTab:
@@ -30,28 +31,41 @@ class TestVimbaCameraConfigTab:
         qtbot.addWidget(vcConfigTab)
 
         assert vcConfigTab.name == 'Vimba'
+        assert vcConfigTab.config is not None
 
     def test_setParametersFromConfiguration(self, qtbot):
         vcConfigTab = VimbaCameraConfigTab()
         qtbot.addWidget(vcConfigTab)
 
-        config = {'roiSize': 20, 'roiFluxMinimum': 1000, 'roiExposureTime': 5000}
-        vcConfigTab.setConfiguration(config)
+        truthConfig = VimbaCameraConfig()
+        truthConfig.modelName = "Prosilica GC-650"
+        truthConfig.roiSize = 20
+        truthConfig.roiFluxMinimum = 1000
+        truthConfig.roiExposureTime = 5000
+        truthConfig.fullExposureTime = 8000
+        vcConfigTab.setConfiguration(truthConfig)
 
-        assert int(vcConfigTab.roiSizeLineEdit.text()) == config['roiSize']
-        assert int(vcConfigTab.roiFluxMinLineEdit.text()) == config['roiFluxMinimum']
-        assert int(vcConfigTab.roiExposureTimeLineEdit.text()) == config['roiExposureTime']
+        assert vcConfigTab.modelNameLineEdit.text() == truthConfig.modelName
+        assert int(vcConfigTab.roiSizeLineEdit.text()) == truthConfig.roiSize
+        assert int(vcConfigTab.roiFluxMinLineEdit.text()) == truthConfig.roiFluxMinimum
+        assert int(vcConfigTab.roiExposureTimeLineEdit.text()) == truthConfig.roiExposureTime
+        assert int(vcConfigTab.fullFrameExposureTimeLineEdit.text()) == truthConfig.fullExposureTime
 
     def test_getParametersFromConfiguration(self, qtbot):
         vcConfigTab = VimbaCameraConfigTab()
         qtbot.addWidget(vcConfigTab)
         vcConfigTab.show()
 
-        truthConfig = {'roiSize': 75, 'roiFluxMinimum': 1000, 'roiExposureTime': 3000}
+        truthConfig = VimbaCameraConfig()
+        truthConfig.roiSize = 75
+        truthConfig.roiFluxMinimum = 1000
+        truthConfig.roiExposureTime = 3000
+        truthConfig.fullExposureTime = 5000
 
-        vcConfigTab.roiSizeLineEdit.setText(str(truthConfig['roiSize']))
-        vcConfigTab.roiFluxMinLineEdit.setText(str(truthConfig['roiFluxMinimum']))
-        vcConfigTab.roiExposureTimeLineEdit.setText(str(truthConfig['roiExposureTime']))
+        vcConfigTab.roiSizeLineEdit.setText(str(truthConfig.roiSize))
+        vcConfigTab.roiFluxMinLineEdit.setText(str(truthConfig.roiFluxMinimum))
+        vcConfigTab.roiExposureTimeLineEdit.setText(str(truthConfig.roiExposureTime))
+        vcConfigTab.fullFrameExposureTimeLineEdit.setText(str(truthConfig.fullExposureTime))
         config = vcConfigTab.getConfiguration()
         assert config == truthConfig
 
@@ -67,6 +81,9 @@ class TestVimbaCameraConfigTab:
         self.checkValidations(qtbot, vcConfigTab.hasValidInput, True,
                               vcConfigTab.roiExposureTimeLineEdit.setText,
                               [500, 50000, 25000])
+        self.checkValidations(qtbot, vcConfigTab.hasValidInput, True,
+                              vcConfigTab.fullFrameExposureTimeLineEdit.setText,
+                              [500, 50000, 25000])
 
     def test_invalidLineEditParameters(self, qtbot):
         vcConfigTab = VimbaCameraConfigTab()
@@ -79,4 +96,7 @@ class TestVimbaCameraConfigTab:
                               [50, 15000, 200.2])
         self.checkValidations(qtbot, vcConfigTab.hasValidInput, False,
                               vcConfigTab.roiExposureTimeLineEdit.setText,
+                              [25, 60000, 2300.5])
+        self.checkValidations(qtbot, vcConfigTab.hasValidInput, False,
+                              vcConfigTab.fullFrameExposureTimeLineEdit.setText,
                               [25, 60000, 2300.5])
