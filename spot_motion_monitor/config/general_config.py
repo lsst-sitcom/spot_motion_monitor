@@ -2,7 +2,9 @@
 # Copyright (c) 2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.config import BaseConfig
+import os
+
+from . import BaseConfig
 
 __all__ = ['GeneralConfig']
 
@@ -15,6 +17,13 @@ class GeneralConfig(BaseConfig):
         Run application in ROI mode at launch.
     configVersion : str
         The current version of the configuration, if applicable.
+    fullTelemetrySavePath : str
+        The full path for where to save the telemetry files.
+    removeTelemetryDir : bool
+        Whether or not to remove the telemetry directory when ROI acquisition
+        ends.
+    removeTelemetryFiles : bool
+        Whether or not to remove the telemetry files when ROI acquisition ends.
     site : str
         The location the program is used.
     timezone : str
@@ -29,6 +38,9 @@ class GeneralConfig(BaseConfig):
         self.site = None
         self.autorun = False
         self.timezone = "UTC"
+        self.fullTelemetrySavePath = None
+        self.removeTelemetryDir = True
+        self.removeTelemetryFiles = True
 
     def fromDict(self, config):
         """Translate config to class attributes.
@@ -42,6 +54,13 @@ class GeneralConfig(BaseConfig):
         self.site = config["general"]["site"]
         self.autorun = config["general"]["autorun"]
         self.timezone = config["general"]["timezone"]
+        try:
+            td = config["general"]["telemetry"]["directory"]
+            self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(td))
+        except KeyError:
+            pass
+        self.removeTelemetryDir = config["general"]["telemetry"]["cleanup"]["directory"]
+        self.removeTelemetryFiles = config["general"]["telemetry"]["cleanup"]["files"]
 
     def toDict(self):
         """Translate class attributes to configuration dict.
@@ -58,4 +77,10 @@ class GeneralConfig(BaseConfig):
             config["general"]["site"] = self.site
         config["general"]["autorun"] = self.autorun
         config["general"]["timezone"] = self.timezone
+        config["general"]["telemetry"] = {}
+        if self.fullTelemetrySavePath is not None:
+            config["general"]["telemetry"]["directory"] = self.fullTelemetrySavePath
+        config["general"]["telemetry"]["cleanup"] = {}
+        config["general"]["telemetry"]["cleanup"]["directory"] = self.removeTelemetryDir
+        config["general"]["telemetry"]["cleanup"]["files"] = self.removeTelemetryFiles
         return config
