@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import tables
 
-from ..config import DataConfig
+from ..config import DataConfig, GeneralConfig
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation, GenericFrameInformation
 from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, getTimestamp
@@ -94,6 +94,7 @@ class DataController():
         self.configVersion = None
         self.configFile = None
         self.dataConfig = DataConfig()
+        self.generalConfig = GeneralConfig()
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -167,6 +168,16 @@ class DataController():
         self.dataConfig.fullFrame.minimumNumPixels = self.fullFrameModel.minimumNumPixels
         self.dataConfig.roiFrame.thresholdFactor = self.roiFrameModel.thresholdFactor
         return self.dataConfig
+
+    def getGeneralConfiguration(self):
+        """Get the current general configuration.
+
+        Returns
+        -------
+        `config.GeneralConfig`
+            The set of current general configuration parameters.
+        """
+        return self.generalConfig
 
     def getPsd(self, isRoiMode, currentFps):
         """Return the power spectrum distribution (PSD).
@@ -323,6 +334,19 @@ class DataController():
         """
         self.fullFrameModel.frameCheck = fullFrameCheck
         self.roiFrameModel.frameCheck = roiFrameCheck
+
+    def setGeneralConfiguration(self, config):
+        """Set a new configuration for the general information.
+
+        Parameters
+        ----------
+        config : `config.GeneralConfig`
+            The new configuration parameters.
+        """
+        self.generalConfig = config
+        self.fullTelemetrySavePath = config.fullTelemetrySavePath
+        self.removeTelemetryDir = config.removeTelemetryDir
+        self.configVersion = config.configVersion
 
     def showRoiInformation(self, show, currentStatus):
         """Display the current ROI information on camera data widget.

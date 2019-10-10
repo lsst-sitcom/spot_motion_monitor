@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import collections
@@ -11,7 +11,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.camera import CameraStatus
-from spot_motion_monitor.config import DataConfig
+from spot_motion_monitor.config import DataConfig, GeneralConfig
 from spot_motion_monitor.controller import DataController
 from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, RoiFrameInformation
 from spot_motion_monitor.utils import getTimestamp, passFrame
@@ -391,3 +391,25 @@ class TestDataController():
         assert dc.configVersion == content['general']['version']
         assert dc.configFile == content['file']
         assert dc.removeTelemetryDir is False
+
+    def test_getGeneralConfiguration(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        currentConfig = dc.getGeneralConfiguration()
+        truthConfig = GeneralConfig()
+        assert currentConfig == truthConfig
+
+    def test_setGeneralConfiguration(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+
+        truthConfig = GeneralConfig()
+        truthConfig.site = "Cerro Pachon"
+        truthConfig.configVersion = "0.1.10"
+        dc.setGeneralConfiguration(truthConfig)
+        assert dc.generalConfig == truthConfig
+        assert dc.fullTelemetrySavePath == truthConfig.fullTelemetrySavePath
+        assert dc.removeTelemetryDir == truthConfig.removeTelemetryDir
+        assert dc.configVersion == truthConfig.configVersion

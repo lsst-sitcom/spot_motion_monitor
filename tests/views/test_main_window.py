@@ -110,10 +110,12 @@ class TestMainWindow():
         assert mw.actionCameraConfig.isEnabled() is True
         assert mw.actionPlotsConfig.isEnabled() is True
         assert mw.actionDataConfig.isEnabled() is True
+        assert mw.actionGeneralConfig.isEnabled() is True
         qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
         assert mw.actionCameraConfig.isEnabled() is False
         assert mw.actionPlotsConfig.isEnabled() is True
         assert mw.actionDataConfig.isEnabled() is True
+        assert mw.actionGeneralConfig.isEnabled() is True
 
     def test_commandLineConfiguration(self, qtbot, mocker):
         mw = SpotMotionMonitor()
