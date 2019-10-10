@@ -248,6 +248,9 @@
    <property name="text">
     <string>About</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+Shift+A</string>
+   </property>
   </action>
   <action name="actionDummy">
    <property name="text">
@@ -258,20 +261,32 @@
    <property name="text">
     <string>Camera</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+Shift+C</string>
+   </property>
   </action>
   <action name="actionPlotsConfig">
    <property name="text">
     <string>Plots</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Shift+P</string>
    </property>
   </action>
   <action name="actionDataConfig">
    <property name="text">
     <string>Data</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+Shift+D</string>
+   </property>
   </action>
   <action name="actionGeneralConfig">
    <property name="text">
     <string>General</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Shift+G</string>
    </property>
   </action>
  </widget>
