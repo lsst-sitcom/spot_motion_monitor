@@ -73,6 +73,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupCameraMenu()
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
+        self.setActionIcon(self.actionSaveConfiguration, "filesave.svg", True)
         self.actionSaveConfiguration.setShortcut(QtGui.QKeySequence.Save)
         self.actionExit.setShortcut(QtGui.QKeySequence.Quit)
 
