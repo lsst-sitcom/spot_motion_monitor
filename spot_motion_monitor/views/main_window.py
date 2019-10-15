@@ -15,7 +15,7 @@ from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
-from spot_motion_monitor.utils import create_parser, CSS, DEFAULT_PSD_ARRAY_SIZE, readYamlFile
+from spot_motion_monitor.utils import create_parser, CSS, DEFAULT_PSD_ARRAY_SIZE, readYamlFile, writeYamlFile
 from spot_motion_monitor.views import CameraConfigurationDialog
 from spot_motion_monitor.views import DataConfigurationDialog
 from . import GeneralConfigurationDialog
@@ -73,6 +73,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupCameraMenu()
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
+        self.actionSaveConfiguration.setShortcut(QtGui.QKeySequence.Save)
         self.actionExit.setShortcut(QtGui.QKeySequence.Quit)
 
         self.cameraController.frameTimer.timeout.connect(self.acquireFrame)
@@ -93,6 +94,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionCameraConfig.triggered.connect(self.updateCameraConfiguration)
         self.actionDataConfig.triggered.connect(self.updateDataConfiguration)
         self.actionGeneralConfig.triggered.connect(self.updateGeneralConfiguration)
+        self.actionSaveConfiguration.triggered.connect(self.saveConfiguration)
+
+    def _openFileDialog(self):
+        return "configuration.yaml"
 
     def about(self):
         """This function presents the about dialog box.
@@ -218,6 +223,19 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotCentroidController.updateRoiFps(newRoiFps)
         bufferSize = self.dataController.getBufferSize()
         self.plotPsdController.updateTimeScale(bufferSize / newRoiFps)
+
+    def saveConfiguration(self):
+        """Save the configuration from the program.
+        """
+        saveFile = self._openFileDialog()
+        generalConf = self.dataController.getGeneralConfiguration().toDict()
+        cameraConf = {"camera": self.cameraController.getCameraConfiguration().toDict()}
+        dataConf = {"data": self.dataController.getDataConfiguration().toDict()}
+        plotConfig = {"plot":
+                      {"centroid": self.plotCentroidController.getPlotConfiguration().toDict(),
+                       "psd": self.plotPsdController.getPlotConfiguration().toDict()}}
+        config = {**generalConf, **cameraConf, **dataConf, **plotConfig}
+        writeYamlFile(saveFile, config)
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.

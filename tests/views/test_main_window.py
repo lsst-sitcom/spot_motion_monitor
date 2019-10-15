@@ -3,6 +3,7 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import collections
+import os
 
 import numpy as np
 from PyQt5.QtCore import Qt
@@ -153,6 +154,20 @@ class TestMainWindow():
         mw.handleConfig(args)
         mw.autoRunIfNecessary()
         assert mockCameraControllerAutoRun.call_count == 1
+
+    def test_saveConfiguration(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+
+        truthFile = "./configuration.yaml"
+
+        mw._openFileDialog = mocker.Mock(return_value=truthFile)
+        mw.saveConfiguration()
+        assert os.path.exists(truthFile)
+        os.remove(truthFile)
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()
