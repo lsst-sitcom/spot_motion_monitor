@@ -55,3 +55,16 @@ class AutoscaleState(enum.Enum):
     OFF = 0
     PARTIAL = 1
     ON = 2
+
+class SaveConfigMask(enum.IntFlag):
+    """Enumeration for saving configuration information.
+
+    Attributes
+    ----------
+    EMPTY : int
+        Write out attributes that contain None types.
+    PLOT : int
+        Write out plot configuration.
+    """
+    PLOT = 1
+    EMPTY = 2

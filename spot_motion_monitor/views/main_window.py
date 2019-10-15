@@ -16,6 +16,7 @@ from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
 from spot_motion_monitor.utils import create_parser, CSS, DEFAULT_PSD_ARRAY_SIZE, readYamlFile, writeYamlFile
+import spot_motion_monitor.utils.constants as consts
 from spot_motion_monitor.views import CameraConfigurationDialog
 from spot_motion_monitor.views import DataConfigurationDialog
 from . import GeneralConfigurationDialog
@@ -165,6 +166,18 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         settings = QtCore.QSettings()
         self.lastCamera = str(settings.value('LastCamera'))
 
+    def getSaveConfigurationMask(self):
+        """Create mask for saving configuration information.
+
+        Returns
+        -------
+        int
+            The mask for saving configuration.
+        """
+        write_plot = int(self.actionWritePlotConfig.isChecked()) * consts.SaveConfigMask.PLOT
+        write_empty = int(self.actionWriteEmptyConfig.isChecked()) * consts.SaveConfigMask.EMPTY
+        return write_plot | write_empty
+
     def handleBufferSizeChanged(self, newBufferSize):
         """Update the necessary controllers when the buffer size changes.
 
@@ -232,9 +245,13 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         generalConf = self.dataController.getGeneralConfiguration().toDict()
         cameraConf = {"camera": self.cameraController.getCameraConfiguration().toDict()}
         dataConf = {"data": self.dataController.getDataConfiguration().toDict()}
-        plotConfig = {"plot":
-                      {"centroid": self.plotCentroidController.getPlotConfiguration().toDict(),
-                       "psd": self.plotPsdController.getPlotConfiguration().toDict()}}
+        saveMask = self.getSaveConfigurationMask()
+        if (saveMask & consts.SaveConfigMask.PLOT):
+            plotConfig = {"plot":
+                          {"centroid": self.plotCentroidController.getPlotConfiguration().toDict(),
+                           "psd": self.plotPsdController.getPlotConfiguration().toDict()}}
+        else:
+            plotConfig = {}
         config = {**generalConf, **cameraConf, **dataConf, **plotConfig}
         writeYamlFile(saveFile, config)
 

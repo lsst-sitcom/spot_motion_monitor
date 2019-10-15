@@ -164,10 +164,32 @@ class TestMainWindow():
 
         truthFile = "./configuration.yaml"
 
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 0
+
         mw._openFileDialog = mocker.Mock(return_value=truthFile)
         mw.saveConfiguration()
         assert os.path.exists(truthFile)
         os.remove(truthFile)
+
+    def test_saveConfigurationMask(self, qtbot):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 0
+        mw.actionWritePlotConfig.setChecked(True)
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 1
+        mw.actionWriteEmptyConfig.setChecked(True)
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 3
+        mw.actionWritePlotConfig.setChecked(False)
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 2
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()
