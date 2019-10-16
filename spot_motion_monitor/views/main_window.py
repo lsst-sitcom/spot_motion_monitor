@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import cProfile
 from datetime import datetime
+import os
 import sys
 
 from PyQt5 import QtCore
@@ -99,7 +100,19 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionSaveConfiguration.triggered.connect(self.saveConfiguration)
 
     def _openFileDialog(self):
-        return "configuration.yaml"
+        """Open the directory file dialog
+
+        Returns
+        -------
+        str
+            The selected directory path, empty string if nothing selected.
+        """
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save Configuration File",
+                                                            directory=os.path.join(os.path.expanduser("~/"),
+                                                                                   "configuration.yaml"),
+                                                            filter="Config Files (*.yaml *.yml)",
+                                                            options=QtWidgets.QFileDialog.DontUseNativeDialog)
+        return fileName
 
     def about(self):
         """This function presents the about dialog box.
@@ -242,6 +255,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """Save the configuration from the program.
         """
         saveFile = self._openFileDialog()
+        if saveFile == '':
+            return
         saveMask = self.getSaveConfigurationMask()
         writeEmpty = saveMask & consts.SaveConfigMask.EMPTY
         generalConf = self.dataController.getGeneralConfiguration().toDict(writeEmpty)
