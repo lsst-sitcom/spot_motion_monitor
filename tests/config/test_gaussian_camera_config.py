@@ -26,6 +26,10 @@ class TestGaussianCameraConfig:
         assert config_dict["spotOscillation"]["y"]["amplitude"] == 5
         assert config_dict["spotOscillation"]["y"]["frequency"] == 10.0
 
+        # Check to make sure function accepts argument.
+        config_dict = self.config.toDict(True)
+        assert config_dict["roi"]["size"] == 50
+
     def test_fromDict(self):
         config_dict = {"roi": {}, "spotOscillation": {"x": {}, "y": {}}}
         config_dict["roi"]["size"] = 75

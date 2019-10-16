@@ -69,8 +69,13 @@ class CentroidPlotConfig(BaseConfig):
         self.maximumY = config["yCentroid"]["maximumY"]
         self.numHistogramBins = config["scatterPlot"]["histograms"]["numBins"]
 
-    def toDict(self):
+    def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
+
+        Parameters
+        ----------
+        writeEmpty : bool
+            Flag to write parameters with None as values.
 
         Returns
         -------
@@ -79,10 +84,14 @@ class CentroidPlotConfig(BaseConfig):
         """
         config = {"xCentroid": {}, "yCentroid": {}, "scatterPlot": {"histograms": {}}}
         config["xCentroid"]["autoscaleY"] = self.autoscaleX.name
-        config["xCentroid"]["minimumY"] = self.minimumX
-        config["xCentroid"]["maximumY"] = self.maximumX
+        if writeEmpty or self.minimumX is not None:
+            config["xCentroid"]["minimumY"] = self.minimumX
+        if writeEmpty or self.maximumX is not None:
+            config["xCentroid"]["maximumY"] = self.maximumX
         config["yCentroid"]["autoscaleY"] = self.autoscaleY.name
-        config["yCentroid"]["minimumY"] = self.minimumY
-        config["yCentroid"]["maximumY"] = self.maximumY
+        if writeEmpty or self.minimumY is not None:
+            config["yCentroid"]["minimumY"] = self.minimumY
+        if writeEmpty or self.maximumY is not None:
+            config["yCentroid"]["maximumY"] = self.maximumY
         config["scatterPlot"]["histograms"]["numBins"] = self.numHistogramBins
         return config

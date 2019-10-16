@@ -25,6 +25,9 @@ class TestVimbaCameraConfig:
         assert config_dict["roi"]["exposureTime"] == 8000
         assert config_dict["full"]["exposureTime"] == 8000
 
+        config_dict = self.config.toDict(True)
+        assert config_dict["modelName"] is None
+
     def test_fromDict(self):
         config_dict = {"roi": {}, "full": {}}
         config_dict["modelName"] = "GT-3300"

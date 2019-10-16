@@ -28,6 +28,12 @@ class TestGeneralConfig:
         assert config_dict["general"]["telemetry"]["cleanup"]["directory"] is True
         assert config_dict["general"]["telemetry"]["cleanup"]["files"] is True
 
+        writeEmpty = True
+        config_dict = self.config.toDict(writeEmpty)
+        assert config_dict["general"]["configVersion"] is None
+        assert config_dict["general"]["site"] is None
+        assert config_dict["general"]["telemetry"]["directory"] is None
+
     def test_fromDict(self):
         config_dict = {"general": {}}
         config_dict["general"]["configVersion"] = "1.3.3"

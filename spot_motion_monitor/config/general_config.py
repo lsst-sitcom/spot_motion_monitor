@@ -62,8 +62,13 @@ class GeneralConfig(BaseConfig):
         self.removeTelemetryDir = config["general"]["telemetry"]["cleanup"]["directory"]
         self.removeTelemetryFiles = config["general"]["telemetry"]["cleanup"]["files"]
 
-    def toDict(self):
+    def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
+
+        Parameters
+        ----------
+        writeEmpty : bool
+            Flag to write parameters with None as values.
 
         Returns
         -------
@@ -71,14 +76,14 @@ class GeneralConfig(BaseConfig):
             The currently stored configuration.
         """
         config = {"general": {}}
-        if self.configVersion is not None:
+        if writeEmpty or self.configVersion is not None:
             config["general"]["configVersion"] = self.configVersion
-        if self.site is not None:
+        if writeEmpty or self.site is not None:
             config["general"]["site"] = self.site
         config["general"]["autorun"] = self.autorun
         config["general"]["timezone"] = self.timezone
         config["general"]["telemetry"] = {}
-        if self.fullTelemetrySavePath is not None:
+        if writeEmpty or self.fullTelemetrySavePath is not None:
             config["general"]["telemetry"]["directory"] = self.fullTelemetrySavePath
         config["general"]["telemetry"]["cleanup"] = {}
         config["general"]["telemetry"]["cleanup"]["directory"] = self.removeTelemetryDir

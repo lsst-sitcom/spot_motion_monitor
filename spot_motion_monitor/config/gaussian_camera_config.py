@@ -51,8 +51,13 @@ class GaussianCameraConfig(BaseConfig):
         self.yAmplitude = config["spotOscillation"]["y"]["amplitude"]
         self.yFrequency = config["spotOscillation"]["y"]["frequency"]
 
-    def toDict(self):
+    def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
+
+        Parameters
+        ----------
+        writeEmpty : bool
+            Flag to write parameters with None as values.
 
         Returns
         -------

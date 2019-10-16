@@ -30,6 +30,23 @@ class TestCentroidPlotConfig:
         assert config_dict["yCentroid"]["minimumY"] == 0
         assert config_dict["yCentroid"]["maximumY"] == 100
 
+        self.config.minimumX = None
+        self.config.maximumX = None
+        self.config.minimumY = None
+        self.config.maximumY = None
+
+        config_dict = self.config.toDict()
+        assert "minimumY" not in config_dict["xCentroid"]
+        assert "maximumY" not in config_dict["xCentroid"]
+        assert "minimumY" not in config_dict["yCentroid"]
+        assert "maximumY" not in config_dict["yCentroid"]
+
+        config_dict = self.config.toDict(True)
+        assert config_dict["xCentroid"]["minimumY"] is None
+        assert config_dict["xCentroid"]["maximumY"] is None
+        assert config_dict["yCentroid"]["minimumY"] is None
+        assert config_dict["yCentroid"]["maximumY"] is None
+
     def test_fromDict(self):
         config_dict = {"xCentroid": {}, "yCentroid": {}, "scatterPlot": {}}
         config_dict["xCentroid"]["autoscaleY"] = AutoscaleState.ON.name

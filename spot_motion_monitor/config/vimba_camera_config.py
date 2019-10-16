@@ -51,8 +51,13 @@ class VimbaCameraConfig(BaseConfig):
         self.fullExposureTime = config["full"]["exposureTime"]
         self.cameraIndex = config["cameraIndex"]
 
-    def toDict(self):
+    def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
+
+        Parameters
+        ----------
+        writeEmpty : bool
+            Flag to write parameters with None as values.
 
         Returns
         -------
@@ -60,7 +65,7 @@ class VimbaCameraConfig(BaseConfig):
             The currently stored configuration.
         """
         config = {"roi": {}, "full": {}}
-        if self.modelName is not None:
+        if writeEmpty or self.modelName is not None:
             config["modelName"] = self.modelName
         config["roi"]["size"] = self.roiSize
         config["roi"]["fluxMin"] = self.roiFluxMinimum

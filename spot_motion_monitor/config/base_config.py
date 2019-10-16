@@ -72,8 +72,13 @@ class BaseConfig:
         """
         raise NotImplementedError
 
-    def toDict(self):
+    def toDict(self, writeEmpty=False):
         """Convert the stored configuration to a dictionary.
+
+        Parameters
+        ----------
+        writeEmpty : bool
+            Flag to write parameters with None as values.
 
         Raises
         ------

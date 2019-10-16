@@ -242,14 +242,15 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """Save the configuration from the program.
         """
         saveFile = self._openFileDialog()
-        generalConf = self.dataController.getGeneralConfiguration().toDict()
-        cameraConf = {"camera": self.cameraController.getCameraConfiguration().toDict()}
-        dataConf = {"data": self.dataController.getDataConfiguration().toDict()}
         saveMask = self.getSaveConfigurationMask()
+        writeEmpty = saveMask & consts.SaveConfigMask.EMPTY
+        generalConf = self.dataController.getGeneralConfiguration().toDict(writeEmpty)
+        cameraConf = {"camera": self.cameraController.getCameraConfiguration().toDict(writeEmpty)}
+        dataConf = {"data": self.dataController.getDataConfiguration().toDict()}
         if (saveMask & consts.SaveConfigMask.PLOT):
             plotConfig = {"plot":
-                          {"centroid": self.plotCentroidController.getPlotConfiguration().toDict(),
-                           "psd": self.plotPsdController.getPlotConfiguration().toDict()}}
+                          {"centroid": self.plotCentroidController.getPlotConfiguration().toDict(writeEmpty),
+                           "psd": self.plotPsdController.getPlotConfiguration().toDict(writeEmpty)}}
         else:
             plotConfig = {}
         config = {**generalConf, **cameraConf, **dataConf, **plotConfig}

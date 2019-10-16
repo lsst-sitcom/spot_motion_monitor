@@ -58,8 +58,13 @@ class PsdPlotConfig(BaseConfig):
         self.numWaterfallBins = config["waterfall"]["numBins"]
         self.waterfallColorMap = config["waterfall"]["colorMap"]
 
-    def toDict(self):
+    def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
+
+        Parameters
+        ----------
+        writeEmpty : bool
+            Flag to write parameters with None as values.
 
         Returns
         -------
@@ -68,9 +73,11 @@ class PsdPlotConfig(BaseConfig):
         """
         config = {"xPSD": {}, "yPSD": {}, "waterfall": {}}
         config["xPSD"]["autoscaleY"] = self.autoscaleX1d
-        config["xPSD"]["maximumY"] = self.x1dMaximum
+        if writeEmpty or self.x1dMaximum is not None:
+            config["xPSD"]["maximumY"] = self.x1dMaximum
         config["yPSD"]["autoscaleY"] = self.autoscaleY1d
-        config["yPSD"]["maximumY"] = self.y1dMaximum
+        if writeEmpty or self.y1dMaximum is not None:
+            config["yPSD"]["maximumY"] = self.y1dMaximum
         config["waterfall"]["numBins"] = self.numWaterfallBins
         config["waterfall"]["colorMap"] = self.waterfallColorMap
         return config

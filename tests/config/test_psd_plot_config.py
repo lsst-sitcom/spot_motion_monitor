@@ -28,6 +28,16 @@ class TestPsdPlotConfig:
         assert config_dict["waterfall"]["numBins"] == 25
         assert config_dict["waterfall"]["colorMap"] == "viridis"
 
+        self.config.x1dMaximum = None
+        self.config.y1dMaximum = None
+        config_dict = self.config.toDict()
+        assert "maximumY" not in config_dict["xPSD"]
+        assert "maximumY" not in config_dict["yPSD"]
+
+        config_dict = self.config.toDict(True)
+        assert config_dict["xPSD"]["maximumY"] is None
+        assert config_dict["yPSD"]["maximumY"] is None
+
     def test_fromDict(self):
         config_dict = {"xPSD": {}, "yPSD": {}, "waterfall": {}}
         config_dict["xPSD"]["autoscaleY"] = True
