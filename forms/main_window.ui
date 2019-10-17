@@ -208,6 +208,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpenConfiguration"/>
     <addaction name="actionSaveConfiguration"/>
     <addaction name="separator"/>
     <addaction name="actionWritePlotConfig"/>
@@ -324,6 +325,11 @@
    </property>
    <property name="text">
     <string>Write Empty Config</string>
+   </property>
+  </action>
+  <action name="actionOpenConfiguration">
+   <property name="text">
+    <string>Open Configuration</string>
    </property>
   </action>
  </widget>

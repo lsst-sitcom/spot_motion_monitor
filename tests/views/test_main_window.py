@@ -167,7 +167,7 @@ class TestMainWindow():
         mask = mw.getSaveConfigurationMask()
         assert mask == 0
 
-        mw._openFileDialog = mocker.Mock(return_value=truthFile)
+        mw._saveFileDialog = mocker.Mock(return_value=truthFile)
         mw.saveConfiguration()
         assert os.path.exists(truthFile)
         os.remove(truthFile)

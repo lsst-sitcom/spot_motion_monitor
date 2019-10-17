@@ -76,6 +76,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
         self.setActionIcon(self.actionSaveConfiguration, "filesave.svg", True)
+        self.setActionIcon(self.actionOpenConfiguration, "folder_open.svg", True)
+        self.actionOpenConfiguration.setShortcut(QtGui.QKeySequence.Open)
         self.actionSaveConfiguration.setShortcut(QtGui.QKeySequence.Save)
         self.actionExit.setShortcut(QtGui.QKeySequence.Quit)
 
@@ -98,14 +100,60 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionDataConfig.triggered.connect(self.updateDataConfiguration)
         self.actionGeneralConfig.triggered.connect(self.updateGeneralConfiguration)
         self.actionSaveConfiguration.triggered.connect(self.saveConfiguration)
+        self.actionOpenConfiguration.triggered.connect(self.openConfiguration)
+
+    def _configOverrideWarning(self):
+        """Show a configuration override warning message.
+        """
+        settings = QtCore.QSettings()
+        value = settings.value("suppressOverrideWarning")
+        if value is None:
+            suppressOverrideWarning = False
+        else:
+            suppressOverrideWarning = value
+        if not suppressOverrideWarning:
+            buttons = QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+            message = ["Opening a configuration file will override any "
+                       "parameters brought in from the command line ",
+                       "at program launch if those parameters are ",
+                       "in the configuration file.",
+                       "",
+                       "To suppress this warning for future openings, "
+                       "click \"Yes\". Clicking \"No\" will mean this ",
+                       "message will be shown again when opening a ",
+                       "configuration file."]
+
+            answer = QtWidgets.QMessageBox.warning(self,
+                                                   "Configuration Parameter Override Warning",
+                                                   os.linesep.join(message),
+                                                   buttons)
+            if answer == QtWidgets.QMessageBox.Yes:
+                saveSuppressWarning = True
+            else:
+                saveSuppressWarning = False
+            settings.setValue("suppressOverrideWarning", saveSuppressWarning)
 
     def _openFileDialog(self):
-        """Open the directory file dialog
+        """Open the file opening dialog.
 
         Returns
         -------
         str
-            The selected directory path, empty string if nothing selected.
+            The selected file, empty string if nothing selected.
+        """
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open Configuration File",
+                                                            directory=os.path.expanduser("~/"),
+                                                            filter="Config Files (*.yaml *.yml)",
+                                                            options=QtWidgets.QFileDialog.DontUseNativeDialog)
+        return fileName
+
+    def _saveFileDialog(self):
+        """Open the save file dialog.
+
+        Returns
+        -------
+        str
+            The selected file, empty string if nothing selected.
         """
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save Configuration File",
                                                             directory=os.path.join(os.path.expanduser("~/"),
@@ -251,10 +299,18 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         bufferSize = self.dataController.getBufferSize()
         self.plotPsdController.updateTimeScale(bufferSize / newRoiFps)
 
+    def openConfiguration(self):
+        """Open a configuration file and apply it.
+        """
+        self._configOverrideWarning()
+        openFile = self._openFileDialog()
+        if openFile == '':
+            return
+
     def saveConfiguration(self):
         """Save the configuration from the program.
         """
-        saveFile = self._openFileDialog()
+        saveFile = self._saveFileDialog()
         if saveFile == '':
             return
         saveMask = self.getSaveConfigurationMask()
