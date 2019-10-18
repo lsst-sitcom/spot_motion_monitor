@@ -56,7 +56,10 @@ class GeneralConfig(BaseConfig):
         self.timezone = config["general"]["timezone"]
         try:
             td = config["general"]["telemetry"]["directory"]
-            self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(td))
+            if td is not None:
+                self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(td))
+            else:
+                self.fullTelemetrySavePath = td
         except KeyError:
             pass
         self.removeTelemetryDir = config["general"]["telemetry"]["cleanup"]["directory"]

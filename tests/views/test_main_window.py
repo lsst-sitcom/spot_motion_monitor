@@ -9,9 +9,10 @@ import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMainWindow
 import pytest
+import yaml
 
 from spot_motion_monitor.camera import CameraStatus
-from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
+from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS, YAML_INPUT
 from spot_motion_monitor.views.main_window import SpotMotionMonitor
 
 class TestMainWindow():
@@ -190,6 +191,40 @@ class TestMainWindow():
         mw.actionWritePlotConfig.setChecked(False)
         mask = mw.getSaveConfigurationMask()
         assert mask == 2
+
+    def test_setConfiguration(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+
+        filename = "test_config.yaml"
+        with open(filename, 'w') as ofile:
+            yaml.dump(yaml.load(YAML_INPUT, yaml.Loader), ofile)
+        #mocker.patch('spot_motion_monitor.utils.readYamlFile', return_value=yaml.safe_load(YAML_INPUT))
+        mw.setConfiguration(filename)
+
+        assert mw.cameraController.doAutoRun is True
+        assert mw.dataController.getGeneralConfiguration().configVersion == "1.5.2"
+        assert mw.dataController.getDataConfiguration().buffer.bufferSize == 512
+
+        os.remove(filename)
+
+    # def test_openConfiguration(self, qtbot, mocker):
+    #     mw = SpotMotionMonitor()
+    #     mw.show()
+    #     qtbot.addWidget(mw)
+    #     # Force camera setup
+    #     mw.cameraController.setupCamera('GaussianCamera')
+
+    #     truthFile = "./configuration.yaml"
+    #     mw._configOverrideWarning = mocker.Mock()
+    #     mw._openFileDialog = mocker.Mock(return_value=truthFile)
+    #     mwSetConfigurationMock = mocker.patch.object(mw, 'setConfiguration')
+
+    #     mw.openConfiguration()
+    #     assert mwSetConfigurationMock.call_count == 1
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()

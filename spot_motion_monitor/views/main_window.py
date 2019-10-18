@@ -306,6 +306,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         openFile = self._openFileDialog()
         if openFile == '':
             return
+        self.setConfiguration(openFile)
 
     def saveConfiguration(self):
         """Save the configuration from the program.
@@ -342,6 +343,44 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         action.setIcon(QtGui.QIcon(QtGui.QPixmap(':{}'.format(iconName))))
         action.setIconVisibleInMenu(iconInMenu)
+
+    def setConfiguration(self, inputFile, options=None):
+        """Get the configuration from file and optionally CLI.
+
+        Parameters
+        ----------
+        inputFile : str
+            Configuration YAML file.
+        options : Namespace, optional
+            Command line options.
+        """
+        config = readYamlFile(inputFile)
+        print(type(config))
+
+        generalConf = self.dataController.getGeneralConfiguration()
+        dataConf = self.dataController.getDataConfiguration()
+        cameraConf = self.cameraController.getCameraConfiguration()
+        centroidPlotConf = self.plotCentroidController.getPlotConfiguration()
+        psdPlotConf = self.plotPsdController.getPlotConfiguration()
+
+        generalConf.fromDict(config)
+        dataConf.fromDict(config["data"])
+        cameraConf.fromDict(config["camera"])
+        try:
+            centroidPlotConf.fromDict(config["plot"]["centroid"])
+            psdPlotConf.fromDict(config["plot"]["psd"])
+            plotConfPresent = True
+        except KeyError:
+            plotConfPresent = False
+
+        self.cameraController.doAutoRun = generalConf.autorun
+
+        self.dataController.setGeneralConfiguration(generalConf)
+        self.dataController.setDataConfiguration(dataConf)
+        self.cameraController.setCameraConfiguration(cameraConf)
+        if plotConfPresent:
+            self.plotCentroidController.setPlotConfiguration(centroidPlotConf)
+            self.plotPsdController.setPlotConfiguration(psdPlotConf)
 
     def setupCameraMenu(self):
         """Add the available cameras to the menu.
