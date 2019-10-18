@@ -315,7 +315,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             return
         saveMask = self.getSaveConfigurationMask()
         writeEmpty = saveMask & consts.SaveConfigMask.EMPTY
-        generalConf = self.dataController.getGeneralConfiguration().toDict(writeEmpty)
+        generalConf = self.dataController.getGeneralConfiguration()
+        generalConf.autorun = self.cameraController.doAutoRun
         cameraConf = {"camera": self.cameraController.getCameraConfiguration().toDict(writeEmpty)}
         dataConf = {"data": self.dataController.getDataConfiguration().toDict()}
         if (saveMask & consts.SaveConfigMask.PLOT):
@@ -324,7 +325,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
                            "psd": self.plotPsdController.getPlotConfiguration().toDict(writeEmpty)}}
         else:
             plotConfig = {}
-        config = {**generalConf, **cameraConf, **dataConf, **plotConfig}
+        config = {**generalConf.toDict(writeEmpty), **cameraConf, **dataConf, **plotConfig}
         writeYamlFile(saveFile, config)
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
@@ -417,10 +418,12 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         generalConfigDialog = GeneralConfigurationDialog(self)
         currentGeneralConfig = self.dataController.getGeneralConfiguration()
+        currentGeneralConfig.autorun = self.cameraController.doAutoRun
         generalConfigDialog.setConfiguration(currentGeneralConfig)
         if generalConfigDialog.exec_():
             newGeneralConfig = generalConfigDialog.getConfiguration()
             self.dataController.setGeneralConfiguration(newGeneralConfig)
+            self.cameraController.doAutoRun = newGeneralConfig.autorun
 
     def updateOffset(self):
         """This function updates the camera offsets.
