@@ -19,6 +19,10 @@ class TestMainWindow():
     # def setup_class(cls):
     #     cls.fastTimeout = 1250  # ms
 
+    def write_config(self, filename):
+        with open(filename, 'w') as ofile:
+            yaml.dump(yaml.load(YAML_INPUT, yaml.Loader), ofile)
+
     def test_mainWindowExit(self, qtbot, mocker):
         mocker.patch('PyQt5.QtWidgets.QMainWindow.close')
         mw = SpotMotionMonitor()
@@ -129,9 +133,15 @@ class TestMainWindow():
                                                'vimba_camera_index'])
         args.telemetry_dir = "/new/path/for/telemetry"
         args.auto_run = False
+        filename = "test_new_config.yaml"
+        args.config_file = filename
+        self.write_config(filename)
 
         mw.handleConfig(args)
         assert mw.dataController.getDataConfiguration().fullTelemetrySavePath == args.telemetry_dir
+        assert mw.dataController.bufferModel.bufferSize == 512
+
+        os.remove(filename)
 
     def test_autoRun(self, qtbot, mocker):
         mw = SpotMotionMonitor()
@@ -194,9 +204,7 @@ class TestMainWindow():
         mw.cameraController.setupCamera('GaussianCamera')
 
         filename = "test_config.yaml"
-        with open(filename, 'w') as ofile:
-            yaml.dump(yaml.load(YAML_INPUT, yaml.Loader), ofile)
-        #mocker.patch('spot_motion_monitor.utils.readYamlFile', return_value=yaml.safe_load(YAML_INPUT))
+        self.write_config(filename)
         mw.setConfiguration(filename)
 
         assert mw.cameraController.doAutoRun is True

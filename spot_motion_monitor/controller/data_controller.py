@@ -164,6 +164,7 @@ class DataController():
             The set of current data configuration parameters.
         """
         self.dataConfig.buffer.pixelScale = self.bufferModel.pixelScale
+        self.dataConfig.buffer.bufferSize = self.bufferModel.bufferSize
         self.dataConfig.fullFrame.sigmaScale = self.fullFrameModel.sigmaScale
         self.dataConfig.fullFrame.minimumNumPixels = self.fullFrameModel.minimumNumPixels
         self.dataConfig.roiFrame.thresholdFactor = self.roiFrameModel.thresholdFactor

@@ -53,10 +53,10 @@ class GeneralConfig(BaseConfig):
         config : dict
             The configuration to translate.
         """
-        self.configVersion = config["general"]["configVersion"]
-        self.site = config["general"]["site"]
-        self.autorun = config["general"]["autorun"]
-        self.timezone = config["general"]["timezone"]
+        self.check("configVersion", config["general"], "configVersion")
+        self.check("site", config["general"], "site")
+        self.check("autorun", config["general"], "autorun")
+        self.check("timezone", config["general"], "timezone")
         try:
             td = config["general"]["telemetry"]["directory"]
             if td is not None:
@@ -65,8 +65,8 @@ class GeneralConfig(BaseConfig):
                 self.fullTelemetrySavePath = td
         except KeyError:
             pass
-        self.removeTelemetryDir = config["general"]["telemetry"]["cleanup"]["directory"]
-        self.removeTelemetryFiles = config["general"]["telemetry"]["cleanup"]["files"]
+        self.check("removeTelemetryDir", config["general"]["telemetry"]["cleanup"], "directory")
+        self.check("removeTelemetryFiles", config["general"]["telemetry"]["cleanup"], "files")
 
     def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.

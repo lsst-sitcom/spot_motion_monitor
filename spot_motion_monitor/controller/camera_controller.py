@@ -113,7 +113,7 @@ class CameraController():
             self.cameraControlWidget.acquireFramesButton.click()
             self.cameraControlWidget.acquireRoiCheckBox.click()
 
-    def bufferSize(self, value):
+    def bufferSize(self, value, updateWidget=False):
         """Rebroadcast a buffer size change request.
 
         Parameters
@@ -122,6 +122,9 @@ class CameraController():
             The requested buffer size.
         """
         self.updater.bufferSizeChanged.emit(value)
+        if updateWidget:
+            self.cameraControlWidget.currentBufferSize = value
+            self.cameraControlWidget.bufferSizeSpinBox.setValue(value)
 
     def currentCameraFps(self):
         """Get the current camera FPS.
