@@ -279,13 +279,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         options : Namespace
             The options from command-line arguments.
         """
-        config = readYamlFile(options.config_file)
-        if config is not None:
-            config['file'] = options.config_file
-        del options.config_file
-        options.config = config
-        self.dataController.setCommandLineConfig(options)
-        self.cameraController.setCommandLineConfig(options)
+        self.setConfiguration(options.config_file, options)
 
     def handleRoiFpsChanged(self, newRoiFps):
         """Update the necessary controllers when the ROI FPS changes.
@@ -355,7 +349,6 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             Command line options.
         """
         config = readYamlFile(inputFile)
-        print(type(config))
 
         generalConf = self.dataController.getGeneralConfiguration()
         dataConf = self.dataController.getDataConfiguration()
@@ -363,17 +356,30 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         centroidPlotConf = self.plotCentroidController.getPlotConfiguration()
         psdPlotConf = self.plotPsdController.getPlotConfiguration()
 
-        generalConf.fromDict(config)
-        dataConf.fromDict(config["data"])
-        cameraConf.fromDict(config["camera"])
-        try:
-            centroidPlotConf.fromDict(config["plot"]["centroid"])
-            psdPlotConf.fromDict(config["plot"]["psd"])
-            plotConfPresent = True
-        except KeyError:
+        if config is not None:
+            generalConf.fromDict(config)
+            dataConf.fromDict(config["data"])
+            cameraConf.fromDict(config["camera"])
+            try:
+                centroidPlotConf.fromDict(config["plot"]["centroid"])
+                psdPlotConf.fromDict(config["plot"]["psd"])
+                plotConfPresent = True
+            except KeyError:
+                plotConfPresent = False
+        else:
             plotConfPresent = False
 
         self.cameraController.doAutoRun = generalConf.autorun
+        if inputFile is not None:
+            generalConf.configFile = inputFile
+
+        if options is not None:
+            generalConf.autorun = generalConf.autorun | options.auto_run
+            self.cameraController.doAutoRun = generalConf.autorun
+            if options.telemetry_dir is not None:
+                dataConf.fullTelemetrySavePath = os.path.expanduser(options.telemetry_dir)
+            if options.vimba_camera_index is not None:
+                cameraConf.cameraIndex = options.vimba_camera_index
 
         self.dataController.setGeneralConfiguration(generalConf)
         self.dataController.setDataConfiguration(dataConf)

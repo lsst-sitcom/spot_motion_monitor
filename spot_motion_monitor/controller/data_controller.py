@@ -264,51 +264,6 @@ class DataController():
         """
         self.bufferModel.bufferSize = value
 
-    def setCommandLineConfig(self, options):
-        """Set new configurations based on command-line options.
-
-        Parameters
-        ----------
-        options : Namespace
-            The options from command-line arguments.
-        """
-        try:
-            try:
-                ps = options.config['general']['pixel_scale']
-                self.bufferModel.pixelScale = ps
-            except KeyError:
-                pass
-
-            try:
-                td = options.config['general']['telemetry_dir']
-                self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(td))
-            except KeyError:
-                pass
-
-            try:
-                rtd = options.config['general']['remove_telemetry_dir']
-                self.removeTelemetryDir = rtd
-            except KeyError:
-                pass
-
-            try:
-                cv = options.config['general']['version']
-                self.configVersion = cv
-            except KeyError:
-                pass
-
-            try:
-                f = options.config['file']
-                self.configFile = f
-            except KeyError:
-                pass
-        except TypeError:
-            # No configuration passed
-            pass
-
-        if options.telemetry_dir is not None:
-            self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(options.telemetry_dir))
-
     def setDataConfiguration(self, config):
         """Set a new configuration for the data controller.
 
@@ -347,6 +302,7 @@ class DataController():
         self.fullTelemetrySavePath = config.fullTelemetrySavePath
         self.removeTelemetryDir = config.removeTelemetryDir
         self.configVersion = config.configVersion
+        self.configFile = config.configFile
 
     def showRoiInformation(self, show, currentStatus):
         """Display the current ROI information on camera data widget.

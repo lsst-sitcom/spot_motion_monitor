@@ -15,6 +15,8 @@ class GeneralConfig(BaseConfig):
     ----------
     autorun : bool
         Run application in ROI mode at launch.
+    configFile : str
+        The configuration file used, if applicable.
     configVersion : str
         The current version of the configuration, if applicable.
     fullTelemetrySavePath : str
@@ -35,6 +37,7 @@ class GeneralConfig(BaseConfig):
         """
         super().__init__()
         self.configVersion = None
+        self.configFile = None
         self.site = None
         self.autorun = False
         self.timezone = "UTC"

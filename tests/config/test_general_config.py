@@ -11,6 +11,7 @@ class TestGeneralConfig:
 
     def test_parametersAfterConstruction(self):
         assert self.config.configVersion is None
+        assert self.config.configFile is None
         assert self.config.site is None
         assert self.config.autorun is False
         assert self.config.timezone == "UTC"

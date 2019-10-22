@@ -2,8 +2,6 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-import collections
-
 from PyQt5.QtCore import Qt
 
 try:
@@ -279,19 +277,6 @@ class TestCameraController():
 
         cc.setCameraConfiguration(GaussianCameraConfig())
         assert mockSetCameraConfiguration.call_count == 1
-
-    def test_setCommandLineConfig(self, qtbot):
-        ccWidget = CameraControlWidget()
-        ccWidget.show()
-        qtbot.addWidget(ccWidget)
-        cc = CameraController(ccWidget)
-        cc.setupCamera("GaussianCamera")
-
-        args = collections.namedtuple('args', ['auto_run', 'vimba_camera_index'])
-        args.auto_run = True
-
-        cc.setCommandLineConfig(args)
-        assert cc.doAutoRun is True
 
     def test_autoRun(self, qtbot):
         ccWidget = CameraControlWidget()

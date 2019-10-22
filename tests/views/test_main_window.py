@@ -8,7 +8,6 @@ import os
 import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMainWindow
-import pytest
 import yaml
 
 from spot_motion_monitor.camera import CameraStatus
@@ -125,19 +124,14 @@ class TestMainWindow():
         qtbot.addWidget(mw)
         # Force camera setup
         mw.cameraController.setupCamera('GaussianCamera')
-        mockDataContollerSetCliConf = mocker.patch.object(mw.dataController, 'setCommandLineConfig')
-        mockCameraControllerSetCliConf = mocker.patch.object(mw.cameraController, 'setCommandLineConfig')
 
-        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run'])
-        args.telemetry_dir = None
+        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run',
+                                               'vimba_camera_index'])
+        args.telemetry_dir = "/new/path/for/telemetry"
         args.auto_run = False
 
         mw.handleConfig(args)
-        assert mockDataContollerSetCliConf.call_count == 1
-        assert mockCameraControllerSetCliConf.call_count == 1
-        assert args.config is None
-        with pytest.raises(AttributeError):
-            args.config_file
+        assert mw.dataController.getDataConfiguration().fullTelemetrySavePath == args.telemetry_dir
 
     def test_autoRun(self, qtbot, mocker):
         mw = SpotMotionMonitor()

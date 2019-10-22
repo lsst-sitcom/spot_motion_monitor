@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import argparse
@@ -22,7 +22,7 @@ def create_parser():
     parser.add_argument('--profile', dest='profile', action='store_true',
                         help='Supply a filename to trigger profiling the code.')
     parser.add_argument('-t', '--telemetry_dir', dest='telemetry_dir',
-                        help='Provide an alternater full path for telemetry saving.')
+                        help='Provide an alternate full path for telemetry saving.')
     parser.add_argument('-c', '--config', dest='config_file',
                         help='Supply a YAML configuration file.')
     parser.add_argument('-a', '--auto_run', dest='auto_run', action='store_true',

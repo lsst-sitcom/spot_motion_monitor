@@ -2,7 +2,6 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-import collections
 from datetime import timedelta
 import os
 
@@ -363,34 +362,6 @@ class TestDataController():
         dc.handleAcquireRoiStateChange(Qt.Unchecked)
         assert mockCleanTelemetry.call_count == 1
         assert mockBufferModelReset.call_count == 1
-
-    def test_setCommandLineConfig(self, qtbot):
-        cdw = CameraDataWidget()
-        qtbot.addWidget(cdw)
-        dc = DataController(cdw)
-
-        args = collections.namedtuple('args', ['telemetry_dir', 'config'])
-        args.telemetry_dir = '/new/path/for/telemetry'
-        content = {'file': 'default.yaml',
-                   'general': {'version': '1.2', 'pixel_scale': 0.1,
-                               'telemetry_dir': '/other/path/for/telemetry'}}
-        args.config = content
-
-        dc.setCommandLineConfig(args)
-        assert dc.fullTelemetrySavePath == args.telemetry_dir
-        assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
-        assert dc.configVersion == content['general']['version']
-        assert dc.configFile == content['file']
-        assert dc.removeTelemetryDir is True
-
-        args.telemetry_dir = None
-        args.config['general']['remove_telemetry_dir'] = False
-        dc.setCommandLineConfig(args)
-        assert dc.fullTelemetrySavePath == content['general']['telemetry_dir']
-        assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
-        assert dc.configVersion == content['general']['version']
-        assert dc.configFile == content['file']
-        assert dc.removeTelemetryDir is False
 
     def test_getGeneralConfiguration(self, qtbot):
         cdw = CameraDataWidget()
