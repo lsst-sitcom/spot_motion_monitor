@@ -3,6 +3,12 @@
 History
 -------
 
+1.4.0 (2019-10-24)
+~~~~~~~~~~~~~~~~~~
+
+* Use newer version of `pymba` (0.3.5)
+* Update Vimba camera internals to use new API
+
 1.3.0 (2019-08-23)
 ~~~~~~~~~~~~~~~~~~
 
