@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from datetime import datetime
@@ -34,10 +34,16 @@ class VimbaCamera(BaseCamera):
         The Frames per Second rate in ROI frame mode.
     frame : pymba.VimbaFrame
         Instance of the frame object for the camera.
+    frameShape : tuple(int, int)
+        Describe the shape of the frame being converted.
     goodFrames : int
         Counter for the number of capture frames.
     height : int
         The pixel height of the CCD.
+    image : numpy.array
+        The current converted CCD frame.
+    isRoiMode : bool
+        Whether or not the camera is in ROI mode.
     offsetX : int
         The current offset in X for the camera.
     offsetY : int
@@ -69,6 +75,9 @@ class VimbaCamera(BaseCamera):
         self.fluxMinRoi = 2000
         self.offsetX = 0
         self.offsetY = 0
+        self.image = None
+        self.frameShape = None
+        self.isRoiMode = False
 
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
@@ -106,6 +115,25 @@ class VimbaCamera(BaseCamera):
         """
         return flux > self.fluxMinRoi
 
+    def convertFrame(self, frame):
+        """Convert frame into numpy array.
+
+        Parameters
+        ----------
+        frame: `pymba.Frame`
+            The current frame from the camera to convert.
+
+        Raises
+        ------
+        FrameCaptureFailed
+            Raises this if conversion of frame fails.
+        """
+        try:
+            frameData = frame.buffer_data()
+            self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=self.frameShape)
+        except pv.VimbaException:
+            raise FrameCaptureFailed(f"{datetime.now()} Frame conversion failed.")
+
     def getConfiguration(self):
         """Get the current camera configuration.
 
@@ -134,18 +162,16 @@ class VimbaCamera(BaseCamera):
             Raises this if the camera fails to capture the frame when
             requested.
         """
+        if self.isRoiMode:
+            self.isRoiMode = False
+            self.frameShape = (self.height, self.width)
+
         try:
-            self.frame.queue_for_capture()
+            self.cameraPtr.start_frame_acquisition()
         except pv.VimbaException as err:
             raise FrameCaptureFailed("{} Full frame capture failed: {}".format(datetime.now(), str(err)))
 
-        self.cameraPtr.run_feature_command('AcquisitionStart')
-        #self.cameraPtr.run_feature_command('AcquisitionStop')
-        self.frame.wait_for_capture(1000)
-        frameData = self.frame.buffer_data()
-
-        img = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.height, self.width))
-        return img
+        return self.image
 
     def getOffset(self):
         """Get the offset for the CCD frame.
@@ -171,25 +197,21 @@ class VimbaCamera(BaseCamera):
             Raises this if the camera fails to capture the frame when
             requested.
         """
+        if not self.isRoiMode:
+            self.isRoiMode = True
+            self.frameShape = (self.roiSize, self.roiSize)
+
         self.totalFrames += 1
         try:
-            self.frame.queue_for_capture()
+            self.cameraPtr.start_frame_acquisition()
+            self.goodFrames += 1
         except pv.VimbaException as err:
             self.badFrames += 1
             raise FrameCaptureFailed("{} ROI frame capture failed: {}".format(getTimestamp(), str(err)))
-        self.goodFrames += 1
-        self.cameraPtr.run_feature_command('AcquisitionStart')
-        self.cameraPtr.run_feature_command('AcquisitionStop')
-        try:
-            self.frame.wait_for_capture(1)
-        except pv.VimbaException as err:
-            self.goodFrames -= 1
-            self.badFrames += 1
-            raise FrameCaptureFailed("{} ROI frame capture wait failed: {}".format(getTimestamp(), str(err)))
-        frameData = self.frame.buffer_data()
 
-        img = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.roiSize, self.roiSize))
-        return img
+        self.cameraPtr.stop_frame_acquisition()
+
+        return self.image
 
     def resetOffset(self):
         """Reset the camera offsets back to zero.
@@ -200,12 +222,6 @@ class VimbaCamera(BaseCamera):
         self.offsetY = 0
         self.cameraPtr.Height = self.height
         self.cameraPtr.Width = self.width
-
-    def safeShutdown(self):
-        """Check camera status before shutting down.
-        """
-        if self.cameraPtr is not None:
-            self.shutdown()
 
     def setConfiguration(self, config):
         """Set the comfiguration on the camera.
@@ -249,8 +265,6 @@ class VimbaCamera(BaseCamera):
         self.totalFrames = 0
         self.vimba = pv.Vimba()
         self.vimba.startup()
-        system = self.vimba.system()
-        system.run_feature_command('GeVDiscoveryAllOnce')
         time.sleep(0.2)
         cameraIds = self.vimba.camera_ids()
         try:
@@ -259,10 +273,11 @@ class VimbaCamera(BaseCamera):
             raise CameraNotFound('Camera not found ... check power or connection!')
 
         self.cameraPtr.open()
-        self.cameraPtr.GevSCPSPacketSize = 1500
+        #self.cameraPtr.GevSCPSPacketSize = 1500
         self.cameraPtr.StreamBytesPerSecond = 124000000
         self.height = self.cameraPtr.HeightMax
         self.width = self.cameraPtr.WidthMax
+        self.frameShape = (self.height, self.width)
         self.cameraPtr.Height = self.height
         self.cameraPtr.Width = self.width
         self.cameraPtr.OffsetX = 0
@@ -270,26 +285,26 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.GainAuto = 'Off'
         self.cameraPtr.GainRaw = 0
         self.cameraPtr.ExposureAuto = 'Off'
-        self.cameraPtr.AcquisitionMode = 'Continuous'
         self.cameraPtr.TriggerSource = 'Freerun'
         self.cameraPtr.PixelFormat = 'Mono12'
         self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
 
-        self.frame = self.cameraPtr.new_frame()
-        self.frame.announce()
-        self.cameraPtr.start_capture()
+        self.cameraPtr.arm('Continuous', self.convertFrame)
 
     def shutdown(self):
         """Handle the shutdown of the camera.
         """
-        try:
-            self.cameraPtr.end_capture()
-            self.cameraPtr.revoke_all_frames()
-            self.cameraPtr.close()
-        except pv.VimbaException:
-            pass
+        if self.cameraPtr is not None:
+            try:
+                self.cameraPtr.disarm()
+                self.cameraPtr.close()
+            except pv.VimbaException:
+                pass
+            except FrameCaptureFailed:
+                pass
         self.vimba.shutdown()
         self.cameraPtr = None
+        self.image = None
 
     def updateOffset(self, centroidX, centroidY):
         """Update the camera's internal offset values from the provided centroid.

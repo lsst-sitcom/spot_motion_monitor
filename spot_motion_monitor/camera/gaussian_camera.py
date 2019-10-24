@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import numpy as np
@@ -177,13 +177,6 @@ class GaussianCamera(BaseCamera):
 
     def resetOffset(self):
         """Reset the camera offsets back to zero.
-
-        For the Gaussian camera, this is a no-op.
-        """
-        pass
-
-    def safeShutdown(self):
-        """Check camera status before shutting down.
 
         For the Gaussian camera, this is a no-op.
         """
