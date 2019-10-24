@@ -70,6 +70,8 @@ class VimbaCamera(BaseCamera):
         self.offsetX = 0
         self.offsetY = 0
         self.image = None
+        self.frameShape = None
+        self.isRoiMode = False
 
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
@@ -122,8 +124,7 @@ class VimbaCamera(BaseCamera):
         """
         try:
             frameData = frame.buffer_data()
-            self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.cameraPtr.Height,
-                                                                              self.cameraPtr.Width))
+            self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=self.frameShape)
         except pv.VimbaException:
             raise FrameCaptureFailed(f"{datetime.now()} Frame conversion failed.")
 
@@ -155,6 +156,10 @@ class VimbaCamera(BaseCamera):
             Raises this if the camera fails to capture the frame when
             requested.
         """
+        if self.isRoiMode:
+            self.isRoiMode = False
+            self.frameShape = (self.height, self.width)
+
         try:
             self.cameraPtr.start_frame_acquisition()
         except pv.VimbaException as err:
@@ -186,6 +191,10 @@ class VimbaCamera(BaseCamera):
             Raises this if the camera fails to capture the frame when
             requested.
         """
+        if not self.isRoiMode:
+            self.isRoiMode = True
+            self.frameShape = (self.roiSize, self.roiSize)
+
         self.totalFrames += 1
         try:
             self.cameraPtr.start_frame_acquisition()
@@ -262,6 +271,7 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.StreamBytesPerSecond = 124000000
         self.height = self.cameraPtr.HeightMax
         self.width = self.cameraPtr.WidthMax
+        self.frameShape = (self.height, self.width)
         self.cameraPtr.Height = self.height
         self.cameraPtr.Width = self.width
         self.cameraPtr.OffsetX = 0
