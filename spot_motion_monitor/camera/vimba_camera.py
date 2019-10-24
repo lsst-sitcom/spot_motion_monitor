@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from datetime import datetime
@@ -108,8 +108,24 @@ class VimbaCamera(BaseCamera):
         return flux > self.fluxMinRoi
 
     def convertFrame(self, frame):
-        frameData = frame.buffer_data()
-        self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.height, self.width))
+        """Convert frame into numpy array.
+
+        Parameters
+        ----------
+        frame: `pymba.Frame`
+            The current frame from the camera to convert.
+
+        Raises
+        ------
+        FrameCaptureFailed
+            Raises this if conversion of frame fails.
+        """
+        try:
+            frameData = frame.buffer_data()
+            self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=(self.cameraPtr.Height,
+                                                                              self.cameraPtr.Width))
+        except pv.VimbaException:
+            raise FrameCaptureFailed(f"{datetime.now()} Frame conversion failed.")
 
     def getConfiguration(self):
         """Get the current camera configuration.
@@ -287,7 +303,7 @@ class VimbaCamera(BaseCamera):
         self.cameraPtr.feature('GainRaw').value = 0
         self.cameraPtr.ExposureAuto = 'Off'
         #self.cameraPtr.AcquisitionMode = 'Continuous'
-        #self.cameraPtr.TriggerSource = 'Freerun'
+        self.cameraPtr.TriggerSource = 'Freerun'
         self.cameraPtr.PixelFormat = 'Mono12'
         self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
 
