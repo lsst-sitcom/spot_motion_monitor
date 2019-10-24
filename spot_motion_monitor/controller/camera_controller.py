@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import time
@@ -302,7 +302,7 @@ class CameraController():
     def shutdownCamera(self):
         """Shutdown the camera safely.
         """
-        self.camera.safeShutdown()
+        self.camera.shutdown()
 
     def startStopCamera(self, state):
         """Start or stop the camera.

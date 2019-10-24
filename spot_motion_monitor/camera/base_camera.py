@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 _all__ = ['BaseCamera']
@@ -118,15 +118,6 @@ class BaseCamera():
 
     def resetOffset(self):
         """Reset the camera offsets back to zero.
-
-        Raises
-        ------
-        NotImplementedError
-        """
-        raise NotImplementedError
-
-    def safeShutdown(self):
-        """Check camera status before shutting down.
 
         Raises
         ------

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import collections
@@ -300,16 +300,6 @@ class TestCameraController():
 
         fps = cc.currentCameraFps()
         assert fps == 40
-
-    def test_safeShutdown(self, qtbot, mocker):
-        ccWidget = CameraControlWidget()
-        ccWidget.show()
-        qtbot.addWidget(ccWidget)
-        cc = CameraController(ccWidget)
-        cc.setupCamera("GaussianCamera")
-        mocker.patch('spot_motion_monitor.camera.gaussian_camera.GaussianCamera.safeShutdown')
-        cc.shutdownCamera()
-        assert cc.camera.safeShutdown.call_count == 1
 
     def test_stateAtAcquireFramesStop(self, qtbot):
         ccWidget = CameraControlWidget()
