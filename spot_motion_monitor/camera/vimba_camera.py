@@ -34,10 +34,16 @@ class VimbaCamera(BaseCamera):
         The Frames per Second rate in ROI frame mode.
     frame : pymba.VimbaFrame
         Instance of the frame object for the camera.
+    frameShape : tuple(int, int)
+        Describe the shape of the frame being converted.
     goodFrames : int
         Counter for the number of capture frames.
     height : int
         The pixel height of the CCD.
+    image : numpy.array
+        The current converted CCD frame.
+    isRoiMode : bool
+        Whether or not the camera is in ROI mode.
     offsetX : int
         The current offset in X for the camera.
     offsetY : int
