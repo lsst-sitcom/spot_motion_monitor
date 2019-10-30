@@ -45,7 +45,10 @@ def fwhm_calculator(frame, cx, cy):
         fwhm = i2 - i1 + 1 + a1 + a2
         return fwhm
 
-    fwhmX = getFWHM1D(frame[cy, :])
-    fwhmY = getFWHM1D(frame[:, cx])
+    try:
+        fwhmX = getFWHM1D(frame[cy, :])
+        fwhmY = getFWHM1D(frame[:, cx])
 
-    return (fwhmX + fwhmY) / 2
+        return (fwhmX + fwhmY) / 2
+    except IndexError:
+        return np.nan

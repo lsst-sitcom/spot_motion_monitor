@@ -88,7 +88,7 @@ class BufferModel():
         if self.rollBuffer:
             meanFlux = np.mean(self.flux)
             meanMaxAdc = np.mean(self.maxAdc)
-            meanFwhm = np.mean(self.fwhm)
+            meanFwhm = np.nanmean(self.fwhm)
             meanCenterX = np.mean(self.centerX)
             meanCenterY = np.mean(self.centerY)
             rmsX = self.pixelScale * np.std(self.centerX)
