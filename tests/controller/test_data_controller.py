@@ -56,6 +56,7 @@ class TestDataController():
                                                                                                400.2,
                                                                                                32042.42,
                                                                                                145.422,
+                                                                                               17.525,
                                                                                                70,
                                                                                                None))
         dc.passFrame(self.frame, self.fullFrameStatus)
@@ -87,6 +88,7 @@ class TestDataController():
                                                                                               286.2,
                                                                                               2519.534,
                                                                                               104.343,
+                                                                                              11.963,
                                                                                               50,
                                                                                               1.532))
 
@@ -157,7 +159,7 @@ class TestDataController():
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
-        truthInfo = GenericFrameInformation(self.timestamp, 300.3, 400.2, 32042.42, 145.422, 70, None)
+        truthInfo = GenericFrameInformation(self.timestamp, 300.3, 400.2, 32042.42, 145.422, 15.532, 70, None)
         dc.fullFrameModel.calculateCentroid = mocker.Mock(return_value=truthInfo)
         info = dc.getCentroidForUpdate(self.frame)
         assert info.centerX == truthInfo.centerX
@@ -173,6 +175,7 @@ class TestDataController():
                                       286.3,
                                       2501.42,
                                       104.753,
+                                      13.672,
                                       2.5432,
                                       2.2353,
                                       (1000, 25))
@@ -230,19 +233,19 @@ class TestDataController():
         dc.setBufferSize(4)
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp,
                                                                  300.3, 400.2,
-                                                                 32042.42, 145.422,
+                                                                 32042.42, 145.422, 14.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime,
                                                                  300.4, 400.4,
-                                                                 32045.42, 146.422,
+                                                                 32045.42, 146.422, 15.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 2,
                                                                  300.2, 400.5,
-                                                                 32040.42, 142.422,
+                                                                 32040.42, 142.422, 12.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 3,
                                                                  300.1, 400.3,
-                                                                 32043.42, 143.422,
+                                                                 32043.42, 143.422, 13.836,
                                                                  70, None), (0, 0))
         assert dc.bufferModel.rollBuffer is True
         centroidOutputFile = 'smm_centroid_20181030_223015.h5'
@@ -271,19 +274,19 @@ class TestDataController():
         dc.setBufferSize(4)
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp,
                                                                  300.3, 400.2,
-                                                                 32042.42, 145.422,
+                                                                 32042.42, 145.422, 14.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime,
                                                                  300.4, 400.4,
-                                                                 32045.42, 146.422,
+                                                                 32045.42, 146.422, 15.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 2,
                                                                  300.2, 400.5,
-                                                                 32040.42, 142.422,
+                                                                 32040.42, 142.422, 12.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 3,
                                                                  300.1, 400.3,
-                                                                 32043.42, 143.422,
+                                                                 32043.42, 143.422, 13.836,
                                                                  70, None), (0, 0))
         telemetryFile = 'dsm_20181030_223015.dat'
         configFile = 'dsm_ui_config.yaml'
@@ -313,19 +316,19 @@ class TestDataController():
         dc.setBufferSize(4)
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp,
                                                                  300.3, 400.2,
-                                                                 32042.42, 145.422,
+                                                                 32042.42, 145.422, 14.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime,
                                                                  300.4, 400.4,
-                                                                 32045.42, 146.422,
+                                                                 32045.42, 146.422, 15.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 2,
                                                                  300.2, 400.5,
-                                                                 32040.42, 142.422,
+                                                                 32040.42, 142.422, 12.836,
                                                                  70, None), (0, 0))
         dc.bufferModel.updateInformation(GenericFrameInformation(self.timestamp + self.deltaTime * 3,
                                                                  300.1, 400.3,
-                                                                 32043.42, 143.422,
+                                                                 32043.42, 143.422, 13.836,
                                                                  70, None), (0, 0))
 
         telemetryFile = 'dsm_20181030_223015.dat'

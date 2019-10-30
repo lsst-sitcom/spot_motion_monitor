@@ -24,6 +24,7 @@ class TestBufferModel():
         assert model.timestamp is not None
         assert model.maxAdc is not None
         assert model.flux is not None
+        assert model.fwhm is not None
         assert model.centerX is not None
         assert model.centerY is not None
         assert model.objectSize is not None
@@ -31,11 +32,13 @@ class TestBufferModel():
 
     def test_listsAfterPassingGenericFrameInfo(self):
         model = BufferModel()
-        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 15.363,
+                                       60, 1.432435)
         model.updateInformation(info, self.offset)
         assert model.timestamp == [info.timestamp]
         assert model.maxAdc == [info.maxAdc]
         assert model.flux == [info.flux]
+        assert model.fwhm == [info.fwhm]
         assert model.centerX == [info.centerX + self.offset[0]]
         assert model.centerY == [info.centerY + self.offset[1]]
         assert model.objectSize == [info.objectSize]
@@ -48,7 +51,8 @@ class TestBufferModel():
         bufferSize = 3
         model.bufferSize = bufferSize
         assert model.counter == 0
-        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 15.363,
+                                       60, 1.432435)
         for i in range(bufferSize):
             model.updateInformation(info, self.offset)
         assert model.rollBuffer is True
@@ -63,13 +67,15 @@ class TestBufferModel():
         model = BufferModel()
         bufferSize = 3
         model.bufferSize = bufferSize
-        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 15.363,
+                                       60, 1.432435)
         for i in range(bufferSize):
             model.updateInformation(info, self.offset)
         model.reset()
         assert len(model.timestamp) == 0
         assert len(model.maxAdc) == 0
         assert len(model.flux) == 0
+        assert len(model.fwhm) == 0
         assert len(model.centerX) == 0
         assert len(model.centerY) == 0
         assert len(model.objectSize) == 0
@@ -93,6 +99,7 @@ class TestBufferModel():
         model.rollBuffer = True
         model.maxAdc = 119.53 + x
         model.flux = 2434.35 + x
+        model.fwhm = 14.253 + x
         model.centerX = 200 + x
         model.centerY = 321.3 + x
         model.objectSize = np.random.randint(60, 65, bufferSize)
@@ -102,6 +109,7 @@ class TestBufferModel():
         info = model.getInformation(currentFps)
         assert info.flux == 2434.8911626243757
         assert info.maxAdc == 120.07116262437593
+        assert info.fwhm == 14.794162624375938
         assert info.centerX == 200.54116262437594
         assert info.centerY == 321.84116262437595
         assert info.rmsX == 0.013075758426286251
@@ -120,7 +128,8 @@ class TestBufferModel():
         model.bufferSize = bufferSize
         centroids = model.getCentroids()
         assert centroids == (None, None)
-        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 20.42, 30.42, 3245.32543, 119.24245, 15.363,
+                                       60, 1.432435)
         model.updateInformation(info, self.offset)
         centroidX = info.centerX + self.offset[0]
         centroidY = info.centerY + self.offset[1]
@@ -143,6 +152,7 @@ class TestBufferModel():
         model.timestamp = [self.timestamp] * 3
         model.maxAdc = (119.53 + x).tolist()
         model.flux = (2434.35 + x).tolist()
+        model.fwhm = (14.253 + x).tolist()
         model.centerX = (200 + x).tolist()
         model.centerY = (321.3 + x).tolist()
         model.objectSize = np.random.randint(60, 65, bufferSize).tolist()
@@ -156,7 +166,8 @@ class TestBufferModel():
         assert psd[2] is not None
 
         # Update by hand
-        info = GenericFrameInformation(self.timestamp, 200.1423, 321.583, 2434.35982, 119.5382, 60, 1.432435)
+        info = GenericFrameInformation(self.timestamp, 200.1423, 321.583, 2434.35982, 119.5382, 15.363,
+                                       60, 1.432435)
         model.updateInformation(info, self.offset)
 
         assert model.counter == bufferSize + 1

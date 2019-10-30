@@ -86,7 +86,7 @@ class FullFrameModel():
                 centerX = comX + xSlice.start
                 centerY = comY + ySlice.start
                 return GenericFrameInformation(getTimestamp(), centerX, centerY,
-                                               flux, maxAdc, objectSize, None)
+                                               flux, maxAdc, None, objectSize, None)
             else:
                 msg = 'Full frame rejected: flux = {}, maxAdc = {}, centroid = ({}, {})'.format(flux,
                                                                                                 maxAdc,

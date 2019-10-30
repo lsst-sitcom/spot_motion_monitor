@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 #from datetime import datetime
@@ -26,6 +26,8 @@ class BufferModel():
         Running counter for buffer insertions.
     flux : list
         Array of ROI total fluxes.
+    fwhm : list
+        Array of spot FWHMs.
     maxAdc : list
         Array of ROI maximum ADC values.
     objectSize : list
@@ -50,6 +52,7 @@ class BufferModel():
         self.timestamp = []
         self.maxAdc = []
         self.flux = []
+        self.fwhm = []
         self.centerX = []
         self.centerY = []
         self.objectSize = []
@@ -85,13 +88,14 @@ class BufferModel():
         if self.rollBuffer:
             meanFlux = np.mean(self.flux)
             meanMaxAdc = np.mean(self.maxAdc)
+            meanFwhm = np.mean(self.fwhm)
             meanCenterX = np.mean(self.centerX)
             meanCenterY = np.mean(self.centerY)
             rmsX = self.pixelScale * np.std(self.centerX)
             rmsY = self.pixelScale * np.std(self.centerY)
             # meanObjectSize = np.mean(self.objectSize)
             # meanStdMax = np.nanmean(self.stdMax)
-            return RoiFrameInformation(meanCenterX, meanCenterY, meanFlux, meanMaxAdc,
+            return RoiFrameInformation(meanCenterX, meanCenterY, meanFlux, meanMaxAdc, meanFwhm,
                                        rmsX, rmsY, (self.bufferSize, self.bufferSize / currentFps))
         else:
             return None
@@ -124,6 +128,7 @@ class BufferModel():
         self.timestamp = []
         self.maxAdc = []
         self.flux = []
+        self.fwhm = []
         self.centerX = []
         self.centerY = []
         self.objectSize = []
@@ -143,6 +148,7 @@ class BufferModel():
             self.timestamp.pop(0)
             self.maxAdc.pop(0)
             self.flux.pop(0)
+            self.fwhm.pop(0)
             self.centerX.pop(0)
             self.centerY.pop(0)
             self.objectSize.pop(0)
@@ -151,6 +157,7 @@ class BufferModel():
         self.timestamp.append(info.timestamp)
         self.maxAdc.append(info.maxAdc)
         self.flux.append(info.flux)
+        self.fwhm.append(info.fwhm)
         self.centerX.append(info.centerX + offset[0])
         self.centerY.append(info.centerY + offset[1])
         self.objectSize.append(info.objectSize)
