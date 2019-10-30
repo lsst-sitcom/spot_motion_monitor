@@ -1,11 +1,12 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import numpy as np
 from scipy import ndimage
 
 from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, getTimestamp, passFrame
+from spot_motion_monitor.utils import fwhm_calculator
 
 __all__ = ['RoiFrameModel']
 
@@ -60,7 +61,7 @@ class RoiFrameModel():
         if self.frameCheck(flux):
             comY, comX = ndimage.center_of_mass(newFrame)
             objectSize = np.count_nonzero(newFrame)
-            fwhm = None
+            fwhm = fwhm_calculator(newFrame, int(comX), int(comY))
             # Get standard deviation of original image without object pixels
             # Removing this for speed improvement. MAR 2018/10/05
             # maxStd = np.std(np.ma.masked_array(roiFrame, mask=newFrame))
