@@ -41,13 +41,14 @@ def fwhm_calculator(frame, cx, cy):
         i1 = np.argmax(p > hm)
         i2 = n - np.argmax(p[::-1] > hm) - 1
         a2 = 0 if i2 >= n - 1 else (p[i2] - hm) / (p[i2] - p[i2 + 1])
-        a1 = 0 if i1 <= n - 1 else (p[i1] - hm) / (p[i1] - p[i1 + 1])
+        a1 = 0 if i1 <= 0 else (p[i1] - hm) / (p[i1] - p[i1 - 1])
         fwhm = i2 - i1 + 1 + a1 + a2
         return fwhm
 
     try:
-        fwhmX = getFWHM1D(frame[cy, :])
-        fwhmY = getFWHM1D(frame[:, cx])
+        py, px = np.where(frame == np.max(frame))
+        fwhmX = getFWHM1D(frame[int(py[0]), :])
+        fwhmY = getFWHM1D(frame[:, int(px[0])])
 
         return (fwhmX + fwhmY) / 2
     except IndexError:

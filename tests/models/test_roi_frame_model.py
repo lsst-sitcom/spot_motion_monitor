@@ -31,7 +31,7 @@ class TestRoiFrameModel():
         assert info.centerY == 24.46080549340329
         assert info.flux == 2592.2000000000003
         assert info.maxAdc == 125.30000000000001
-        assert info.fwhm == 4.775
+        assert info.fwhm == 5.471227956825783
         assert info.objectSize == 54
         #assert info.stdNoObjects == 5.1785375980622534
         # See speed improvement in RoiFrameModel::calculateCentroid

@@ -19,4 +19,4 @@ class TestFwhmCalculator:
         z += np.random.uniform(size=2500).reshape(50, 50)
 
         fwhm = fwhm_calculator(z, x0, y0)
-        assert fwhm == pytest.approx(5.58, rel=1e-2)
+        assert fwhm == pytest.approx(6.11, rel=1e-2)
