@@ -40,7 +40,9 @@ def fwhm_calculator(frame, cx, cy):
         n = len(p)
         i1 = np.argmax(p > hm)
         i2 = n - np.argmax(p[::-1] > hm) - 1
-        fwhm = i2 - i1 + 1 + (p[i1] - hm) / (p[i1] - p[i1 - 1]) + (p[i2] - hm) / (p[i2] - p[i2 + 1])
+        a2 = 0 if i2 >= n - 1 else (p[i2] - hm) / (p[i2] - p[i2 + 1])
+        a1 = 0 if i1 <= n - 1 else (p[i1] - hm) / (p[i1] - p[i1 + 1])
+        fwhm = i2 - i1 + 1 + a1 + a2
         return fwhm
 
     fwhmX = getFWHM1D(frame[cy, :])
