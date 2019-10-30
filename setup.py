@@ -43,7 +43,7 @@ with open('requirements/test.txt') as testFile:
 
 setup(
     name='spot_motion_monitor',
-    version='1.4.0',
+    version='1.4.1',
     description='User interface for Spot Seeing Monitor.',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Michael Reuter',
