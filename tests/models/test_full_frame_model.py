@@ -33,7 +33,7 @@ class TestFullFrameModel():
         assert info.centerY == 224.45394404821826
         assert info.flux == 3235.9182163661176
         assert info.maxAdc == 135.83703259361937
-        assert info.fwhm == 5.7553366138399245
+        assert info.fwhm == 5.84582444277552
         assert info.stdNoObjects is None
 
     def test_badFrameCalculation(self):
