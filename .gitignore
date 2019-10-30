@@ -51,3 +51,6 @@ docs/modules.rst
 # Saved data
 *.h5
 dsm_telemetry
+
+# Visual Studio Code
+.vscode
