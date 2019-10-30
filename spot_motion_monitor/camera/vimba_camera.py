@@ -294,6 +294,8 @@ class VimbaCamera(BaseCamera):
     def shutdown(self):
         """Handle the shutdown of the camera.
         """
+        if self.vimba is None:
+            return
         if self.cameraPtr is not None:
             try:
                 self.cameraPtr.disarm()
