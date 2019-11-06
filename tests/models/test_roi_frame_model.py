@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import pytest
@@ -31,6 +31,7 @@ class TestRoiFrameModel():
         assert info.centerY == 24.46080549340329
         assert info.flux == 2592.2000000000003
         assert info.maxAdc == 125.30000000000001
+        assert info.fwhm == 5.471227956825783
         assert info.objectSize == 54
         #assert info.stdNoObjects == 5.1785375980622534
         # See speed improvement in RoiFrameModel::calculateCentroid

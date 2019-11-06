@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from datetime import datetime
@@ -21,6 +21,7 @@ class TestCameraDataWidget():
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
         assert cdw.fluxValueLabel.text() == NO_DATA_VALUE
         assert cdw.maxAdcValueLabel.text() == NO_DATA_VALUE
+        assert cdw.fwhmValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == NO_DATA_VALUE
         assert cdw.centroidYLabel.text() == NO_DATA_VALUE
         assert cdw.rmsXLabel.text() == NO_DATA_VALUE
@@ -31,7 +32,7 @@ class TestCameraDataWidget():
         cdw.show()
         qtbot.addWidget(cdw)
 
-        ffi = FullFrameInformation(200, 342, 4032.428492, 170.482945)
+        ffi = FullFrameInformation(200, 342, 4032.428492, 170.482945, 12.7264)
         cdw.updateFullFrameData(ffi)
 
         assert cdw.bufferUpdatedValueLabel.text() == NO_DATA_VALUE
@@ -40,6 +41,7 @@ class TestCameraDataWidget():
         assert cdw.centroidYLabel.text() == str(ffi.centerY)
         assert cdw.fluxValueLabel.text() == self.formatFloatText(ffi.flux)
         assert cdw.maxAdcValueLabel.text() == self.formatFloatText(ffi.maxAdc)
+        assert cdw.fwhmValueLabel.text() == self.formatFloatText(ffi.fwhm)
         assert cdw.rmsXLabel.text() == NO_DATA_VALUE
         assert cdw.rmsYLabel.text() == NO_DATA_VALUE
 
@@ -48,7 +50,8 @@ class TestCameraDataWidget():
         cdw.show()
         qtbot.addWidget(cdw)
 
-        rfi = RoiFrameInformation(243.23, 354.97, 2763.58328, 103.53245, 1.4335, 1.97533, (1000, 25.0))
+        rfi = RoiFrameInformation(243.23, 354.97, 2763.58328, 103.53245, 14.2542, 1.4335, 1.97533,
+                                  (1000, 25.0))
         cdw.updateRoiFrameData(rfi)
 
         assert cdw.bufferUpdatedValueLabel.text() != NO_DATA_VALUE
@@ -57,6 +60,7 @@ class TestCameraDataWidget():
         assert cdw.centroidYLabel.text() == self.formatFloatText(rfi.centerY)
         assert cdw.fluxValueLabel.text() == self.formatFloatText(rfi.flux)
         assert cdw.maxAdcValueLabel.text() == self.formatFloatText(rfi.maxAdc)
+        assert cdw.fwhmValueLabel.text() == self.formatFloatText(rfi.fwhm)
         assert cdw.rmsXLabel.text() == self.formatFloatText(rfi.rmsX)
         assert cdw.rmsYLabel.text() == self.formatFloatText(rfi.rmsY)
 
@@ -72,6 +76,7 @@ class TestCameraDataWidget():
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
         assert cdw.fluxValueLabel.text() == NO_DATA_VALUE
         assert cdw.maxAdcValueLabel.text() == NO_DATA_VALUE
+        assert cdw.fwhmValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == NO_DATA_VALUE
         assert cdw.centroidYLabel.text() == NO_DATA_VALUE
         assert cdw.rmsXLabel.text() == NO_DATA_VALUE
@@ -87,6 +92,7 @@ class TestCameraDataWidget():
         cdw.centroidXLabel.setText('300.24')
         cdw.centroidYLabel.setText('242.53')
         cdw.fluxValueLabel.setText('2532.42')
+        cdw.fwhmValueLabel.setText('14.53')
         cdw.maxAdcValueLabel.setText('453.525')
         cdw.rmsXLabel.setText('0.353')
         cdw.rmsYLabel.setText('1.533')
@@ -97,6 +103,7 @@ class TestCameraDataWidget():
         assert cdw.accumPeriodValueLabel.text() == NO_DATA_VALUE
         assert cdw.fluxValueLabel.text() == NO_DATA_VALUE
         assert cdw.maxAdcValueLabel.text() == NO_DATA_VALUE
+        assert cdw.fwhmValueLabel.text() == NO_DATA_VALUE
         assert cdw.centroidXLabel.text() == NO_DATA_VALUE
         assert cdw.centroidYLabel.text() == NO_DATA_VALUE
         assert cdw.rmsXLabel.text() == NO_DATA_VALUE

@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from datetime import datetime
@@ -54,6 +54,7 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         self.rmsYLabel.setText(NO_DATA_VALUE)
         self.fluxValueLabel.setText(NO_DATA_VALUE)
         self.maxAdcValueLabel.setText(NO_DATA_VALUE)
+        self.fwhmValueLabel.setText(NO_DATA_VALUE)
 
     def updateFullFrameData(self, fullFrameInfo):
         """Update the labels with full frame information.
@@ -67,6 +68,7 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         self.centroidYLabel.setText(str(fullFrameInfo.centerY))
         self.fluxValueLabel.setText(self.formatFloat(fullFrameInfo.flux))
         self.maxAdcValueLabel.setText(self.formatFloat(fullFrameInfo.maxAdc))
+        self.fwhmValueLabel.setText(self.formatFloat(fullFrameInfo.fwhm))
 
         # Full frames do not set any of this information
         self.accumPeriodValueLabel.setText(NO_DATA_VALUE)
@@ -92,3 +94,4 @@ class CameraDataWidget(QWidget, Ui_CameraData):
         self.rmsYLabel.setText(self.formatFloat(roiFrameInfo.rmsY))
         self.fluxValueLabel.setText(self.formatFloat(roiFrameInfo.flux))
         self.maxAdcValueLabel.setText(self.formatFloat(roiFrameInfo.maxAdc))
+        self.fwhmValueLabel.setText(self.formatFloat(roiFrameInfo.fwhm))

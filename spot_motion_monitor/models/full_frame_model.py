@@ -1,11 +1,12 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import numpy as np
 from scipy import ndimage
 
 from spot_motion_monitor.utils import GenericFrameInformation, FrameRejected, getTimestamp, passFrame
+from spot_motion_monitor.utils import fwhm_calculator
 
 __all__ = ["FullFrameModel"]
 
@@ -83,10 +84,11 @@ class FullFrameModel():
             maxAdc = objectFrame.max()
             comY, comX = ndimage.center_of_mass(objectFrame)
             if self.frameCheck(flux, maxAdc, comX, comY):
+                fwhm = fwhm_calculator(objectFrame, int(comX), int(comY))
                 centerX = comX + xSlice.start
                 centerY = comY + ySlice.start
                 return GenericFrameInformation(getTimestamp(), centerX, centerY,
-                                               flux, maxAdc, objectSize, None)
+                                               flux, maxAdc, fwhm, objectSize, None)
             else:
                 msg = 'Full frame rejected: flux = {}, maxAdc = {}, centroid = ({}, {})'.format(flux,
                                                                                                 maxAdc,

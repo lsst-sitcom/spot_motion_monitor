@@ -131,7 +131,7 @@ class DataController():
         try:
             return self.fullFrameModel.calculateCentroid(frame)
         except FrameRejected:
-            return GenericFrameInformation(getTimestamp(), 300, 200, -1, -1, -1, None)
+            return GenericFrameInformation(getTimestamp(), 300, 200, -1, -1, -1, -1, None)
 
     def getCentroids(self, isRoiMode):
         """Return the current x, y coordinate of the centroid.
@@ -233,7 +233,8 @@ class DataController():
                 genericFrameInfo = self.fullFrameModel.calculateCentroid(frame)
                 fullFrameInfo = FullFrameInformation(int(genericFrameInfo.centerX),
                                                      int(genericFrameInfo.centerY),
-                                                     genericFrameInfo.flux, genericFrameInfo.maxAdc)
+                                                     genericFrameInfo.flux, genericFrameInfo.maxAdc,
+                                                     genericFrameInfo.fwhm)
                 self.cameraDataWidget.updateFullFrameData(fullFrameInfo)
         except FrameRejected as err:
             self.updater.displayStatus.emit(str(err), STATUSBAR_FAST_TIMEOUT)
