@@ -64,6 +64,8 @@ class TestGaussianCamera():
     def test_getConfiguration(self):
         truthConfig = GaussianCameraConfig()
         truthConfig.roiSize = 50
+        truthConfig.fpsRoiFrame = 40
+        truthConfig.fpsFullFrame = 24
         truthConfig.doSpotOscillation = True
         truthConfig.xAmplitude = 10
         truthConfig.xFrequency = 1.0
@@ -77,6 +79,8 @@ class TestGaussianCamera():
 
         truthConfig = GaussianCameraConfig()
         truthConfig.roiSize = 75
+        truthConfig.fpsRoiFrame = 20
+        truthConfig.fpsFullFrame = 10
         truthConfig.doSpotOscillation = True
         truthConfig.xAmplitude = 1
         truthConfig.xFrequency = 40.0
@@ -85,6 +89,8 @@ class TestGaussianCamera():
 
         camera.setConfiguration(truthConfig)
         assert camera.roiSize == truthConfig.roiSize
+        assert camera.fpsRoiFrame == truthConfig.fpsRoiFrame
+        assert camera.fpsFullFrame == truthConfig.fpsFullFrame
         assert camera.doSpotOscillation == truthConfig.doSpotOscillation
         assert camera.xAmp == truthConfig.xAmplitude
         assert camera.xFreq == truthConfig.xFrequency

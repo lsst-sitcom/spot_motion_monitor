@@ -334,3 +334,13 @@ class CameraController():
             The current y component of the centroid from a full frame.
         """
         self.camera.updateOffset(centroidX, centroidY)
+
+    def updateRoiFps(self, roiFps):
+        """Update the ROI FPS widget.
+
+        Parameters
+        ----------
+        roiFps : int
+            The current ROI FPS to display on the widget.
+        """
+        self.cameraControlWidget.roiFpsSpinBox.setValue(roiFps)

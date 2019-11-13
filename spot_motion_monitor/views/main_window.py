@@ -386,6 +386,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.bufferSize(dataConf.buffer.bufferSize, updateWidget=True)
 
         self.cameraController.setCameraConfiguration(cameraConf)
+        self.cameraController.updateRoiFps(cameraConf.fpsRoiFrame)
+
         if plotConfPresent:
             self.plotCentroidController.setPlotConfiguration(centroidPlotConf)
             self.plotPsdController.setPlotConfiguration(psdPlotConf)

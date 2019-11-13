@@ -32,8 +32,10 @@ class TestVimbaCameraConfig:
         config_dict = {"roi": {}, "full": {}}
         config_dict["modelName"] = "GT-3300"
         config_dict["roi"]["size"] = 75
+        config_dict["roi"]["fps"] = 50
         config_dict["roi"]["fluxMin"] = 1000
         config_dict["roi"]["exposureTime"] = 5000
+        config_dict["full"]["fps"] = 20
         config_dict["full"]["exposureTime"] = 5000
         config_dict["cameraIndex"] = 1
         self.config.fromDict(config_dict)

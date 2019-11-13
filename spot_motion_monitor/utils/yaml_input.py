@@ -9,6 +9,9 @@ YAML_INPUT = \
     camera:
       roi:
         size: 50
+        fps: 50
+      full:
+        fps: 30
       spotOscillation:
         do: true
         x:

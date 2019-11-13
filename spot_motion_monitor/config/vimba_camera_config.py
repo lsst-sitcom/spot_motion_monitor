@@ -2,11 +2,11 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.config import BaseConfig
+from . import CameraConfig
 
 __all__ = ['VimbaCameraConfig']
 
-class VimbaCameraConfig(BaseConfig):
+class VimbaCameraConfig(CameraConfig):
     """Class that handles the configuration of the Vimba class cameras.
 
     Attributes
@@ -21,8 +21,6 @@ class VimbaCameraConfig(BaseConfig):
         The exposure time (microseconds) in ROI mode.
     roiFluxMinimum : int
         The minimum flux allowed in an ROI.
-    roiSize : int
-        The size (pixels) of the ROI on the camera.
     """
 
     def __init__(self):
@@ -30,7 +28,6 @@ class VimbaCameraConfig(BaseConfig):
         """
         super().__init__()
         self.modelName = None
-        self.roiSize = 50
         self.roiFluxMinimum = 2000
         self.roiExposureTime = 8000  # microseconds
         self.fullExposureTime = 8000  # microseconds
@@ -45,11 +42,11 @@ class VimbaCameraConfig(BaseConfig):
             The configuration to translate.
         """
         self.modelName = config["modelName"]
-        self.roiSize = config["roi"]["size"]
         self.roiFluxMinimum = config["roi"]["fluxMin"]
         self.roiExposureTime = config["roi"]["exposureTime"]
         self.fullExposureTime = config["full"]["exposureTime"]
         self.cameraIndex = config["cameraIndex"]
+        super().fromDict(config)
 
     def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
@@ -64,10 +61,9 @@ class VimbaCameraConfig(BaseConfig):
         dict
             The currently stored configuration.
         """
-        config = {"roi": {}, "full": {}}
+        config = super().toDict(writeEmpty)
         if writeEmpty or self.modelName is not None:
             config["modelName"] = self.modelName
-        config["roi"]["size"] = self.roiSize
         config["roi"]["fluxMin"] = self.roiFluxMinimum
         config["roi"]["exposureTime"] = self.roiExposureTime
         config["full"]["exposureTime"] = self.fullExposureTime

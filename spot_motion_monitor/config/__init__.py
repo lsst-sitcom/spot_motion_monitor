@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 from .base_config import BaseConfig
 from .buffer_model_config import BufferModelConfig
+from .camera_config import CameraConfig
 from .centroid_plot_config import CentroidPlotConfig
 from .data_config import DataConfig
 from .full_frame_model_config import FullFrameModelConfig

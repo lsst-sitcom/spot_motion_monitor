@@ -2,19 +2,17 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.config import BaseConfig
+from . import CameraConfig
 
 __all__ = ['GaussianCameraConfig']
 
-class GaussianCameraConfig(BaseConfig):
+class GaussianCameraConfig(CameraConfig):
     """Class that handles the configuration of the Gaussian camera.
 
     Attributes
     ----------
     doSpotOscillation : bool
         Flag tp make the generated spot oscillate.
-    roiSize : int
-        The size (pixels) of the ROI on the camera.
     xAmplitude : int
         The amplitude of the x component of the spot oscillation.
     xFrequency : float
@@ -29,7 +27,6 @@ class GaussianCameraConfig(BaseConfig):
         """Summary
         """
         super().__init__()
-        self.roiSize = 50
         self.doSpotOscillation = False
         self.xAmplitude = 10
         self.xFrequency = 5.0
@@ -44,7 +41,7 @@ class GaussianCameraConfig(BaseConfig):
         config : dict
             The configuration to translate.
         """
-        self.roiSize = config["roi"]["size"]
+        super().fromDict(config)
         self.doSpotOscillation = config["spotOscillation"]["do"]
         self.xAmplitude = config["spotOscillation"]["x"]["amplitude"]
         self.xFrequency = config["spotOscillation"]["x"]["frequency"]
@@ -64,8 +61,8 @@ class GaussianCameraConfig(BaseConfig):
         dict
             The currently stored configuration.
         """
-        config = {"roi": {}, "spotOscillation": {"x": {}, "y": {}}}
-        config["roi"]["size"] = self.roiSize
+        config = super().toDict(writeEmpty)
+        config["spotOscillation"] = {"x": {}, "y": {}}
         config["spotOscillation"]["do"] = self.doSpotOscillation
         config["spotOscillation"]["x"]["amplitude"] = self.xAmplitude
         config["spotOscillation"]["x"]["frequency"] = self.xFrequency

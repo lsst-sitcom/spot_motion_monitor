@@ -104,6 +104,8 @@ class GaussianCamera(BaseCamera):
             The set of current configuration parameters.
         """
         self.config.roiSize = self.roiSize
+        self.config.fpsRoiFrame = self.fpsRoiFrame
+        self.config.fpsFullFrame = self.fpsFullFrame
         self.config.doSpotOscillation = self.doSpotOscillation
         self.config.xAmplitude = self.xAmp
         self.config.xFrequency = self.xFreq
@@ -195,6 +197,8 @@ class GaussianCamera(BaseCamera):
         """
 
         self.roiSize = config.roiSize
+        self.fpsRoiFrame = config.fpsRoiFrame
+        self.fpsFullFrame = config.fpsFullFrame
         self.doSpotOscillation = config.doSpotOscillation
         self.xFreq = config.xFrequency
         self.xAmp = config.xAmplitude

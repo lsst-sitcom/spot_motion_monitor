@@ -152,6 +152,8 @@ class VimbaCamera(BaseCamera):
             The set of current configuration parameters.
         """
         self.config.roiSize = self.roiSize
+        self.config.fpsRoiFrame = self.fpsRoiFrame
+        self.config.fpsFullFrame = self.fpsFullFrame
         self.config.roiFluxMinimum = self.fluxMinRoi
         self.config.roiExposureTime = self.roiExposureTime
         self.config.fullExposureTime = self.fullExposureTime
@@ -242,6 +244,8 @@ class VimbaCamera(BaseCamera):
         """
         self.cameraIndex = config.cameraIndex
         self.roiSize = config.roiSize
+        self.fpsRoiFrame = config.fpsRoiFrame
+        self.fpsFullFrame = config.fpsFullFrame
         self.fluxMinRoi = config.roiFluxMinimum
         self.roiExposureTime = config.roiExposureTime
         self.fullExposureTime = config.fullExposureTime
