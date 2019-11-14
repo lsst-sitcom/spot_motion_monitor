@@ -62,8 +62,6 @@ class DataController():
         The default name for the telemetry UI configuration file.
     updater : .InformationUpdater
         An instance of the information updater.
-    writeData : bool
-        Whether or not data writing is available.
     """
 
     TELEMETRY_SAVEDIR = 'dsm_telemetry'
@@ -83,7 +81,6 @@ class DataController():
         self.bufferModel = BufferModel()
         self.updater = InformationUpdater()
         self.roiResetDone = False
-        self.writeData = False
         self.filesCreated = False
         self.centroidFilename = None
         self.psdFilename = None
@@ -221,7 +218,7 @@ class DataController():
         checked : bool
             State of the Save Buffer Data checkbox.
         """
-        self.writeData = checked
+        self.generalConfig.saveBufferData = checked
 
     def passFrame(self, frame, currentStatus):
         """Get a frame, do calculations and update information.
@@ -300,6 +297,7 @@ class DataController():
             The new configuration parameters.
         """
         self.generalConfig = config
+        self.cameraDataWidget.saveDataCheckBox.setChecked(self.generalConfig.saveBufferData)
         self.fullTelemetrySavePath = config.fullTelemetrySavePath
         self.removeTelemetryDir = config.removeTelemetryDir
         self.configVersion = config.configVersion
@@ -330,7 +328,7 @@ class DataController():
         currentFps : int
             The current camera FPS.
         """
-        if not self.writeData:
+        if not self.generalConfig.saveBufferData:
             return
 
         if psd[0] is None:

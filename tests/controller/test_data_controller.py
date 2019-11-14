@@ -35,7 +35,6 @@ class TestDataController():
         assert dc.roiFrameModel is not None
         assert dc.bufferModel is not None
         assert dc.roiResetDone is False
-        assert dc.writeData is False
         assert dc.filesCreated is False
         assert dc.centroidFilename is None
         assert dc.psdFilename is None
@@ -45,6 +44,7 @@ class TestDataController():
         assert dc.configVersion is None
         assert dc.configFile is None
         assert dc.dataConfig is not None
+        assert dc.generalConfig is not None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -223,7 +223,7 @@ class TestDataController():
         currentFps = 40
         dc = DataController(cdw)
         assert dc.cameraDataWidget.saveDataCheckBox.isChecked() is False
-        assert dc.writeData is False
+        assert dc.generalConfig.saveBufferData is False
         assert dc.filesCreated is False
 
         nonePsd = (None, None, None)
@@ -232,7 +232,7 @@ class TestDataController():
         assert dc.filesCreated is False
 
         qtbot.mouseClick(cdw.saveDataCheckBox, Qt.LeftButton)
-        assert dc.writeData is True
+        assert dc.generalConfig.saveBufferData is True
 
         dc.writeDataToFile(nonePsd, currentFps)
         assert dc.filesCreated is False

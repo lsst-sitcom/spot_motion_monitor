@@ -26,6 +26,8 @@ class GeneralConfig(BaseConfig):
         ends.
     removeTelemetryFiles : bool
         Whether or not to remove the telemetry files when ROI acquisition ends.
+    saveBufferData : bool
+        Whether or not to write buffer data to file.
     site : str
         The location the program is used.
     timezone : str
@@ -41,6 +43,7 @@ class GeneralConfig(BaseConfig):
         self.site = None
         self.autorun = False
         self.timezone = "UTC"
+        self.saveBufferData = False
         self.fullTelemetrySavePath = None
         self.removeTelemetryDir = True
         self.removeTelemetryFiles = True
@@ -57,6 +60,7 @@ class GeneralConfig(BaseConfig):
         self.check("site", config["general"], "site")
         self.check("autorun", config["general"], "autorun")
         self.check("timezone", config["general"], "timezone")
+        self.check("saveBufferData", config["general"], "saveBufferData")
         try:
             td = config["general"]["telemetry"]["directory"]
             if td is not None:
@@ -88,6 +92,7 @@ class GeneralConfig(BaseConfig):
             config["general"]["site"] = self.site
         config["general"]["autorun"] = self.autorun
         config["general"]["timezone"] = self.timezone
+        config["general"]["saveBufferData"] = self.saveBufferData
         config["general"]["telemetry"] = {}
         if writeEmpty or self.fullTelemetrySavePath is not None:
             config["general"]["telemetry"]["directory"] = self.fullTelemetrySavePath
