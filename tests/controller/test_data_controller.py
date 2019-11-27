@@ -45,6 +45,7 @@ class TestDataController():
         assert dc.configFile is None
         assert dc.dataConfig is not None
         assert dc.generalConfig is not None
+        assert dc.timeHandler is not None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -379,8 +380,10 @@ class TestDataController():
         truthConfig = GeneralConfig()
         truthConfig.site = "Cerro Pachon"
         truthConfig.configVersion = "0.1.10"
+        truthConfig.timezone = "TAI"
         dc.setGeneralConfiguration(truthConfig)
         assert dc.generalConfig == truthConfig
         assert dc.fullTelemetrySavePath == truthConfig.fullTelemetrySavePath
         assert dc.removeTelemetryDir == truthConfig.removeTelemetryDir
         assert dc.configVersion == truthConfig.configVersion
+        assert dc.timeHandler.timezone == truthConfig.timezone

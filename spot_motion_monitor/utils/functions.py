@@ -30,6 +30,9 @@ def getLutFromColorMap(name):
 def getTimestamp():
     """Get the current date/time in UTC.
 
+    NOTE: This should only be used for unit tests. The `TimeHandler` class
+    should be used internally to the program.
+
     Returns
     -------
     datetime.datetime

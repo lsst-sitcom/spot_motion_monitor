@@ -3,7 +3,6 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import csv
-from datetime import datetime
 import os
 
 import numpy as np
@@ -13,7 +12,7 @@ import tables
 from ..config import DataConfig, GeneralConfig
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation, GenericFrameInformation
-from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, getTimestamp
+from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, TimeHandler
 from spot_motion_monitor.utils import writeYamlFile
 from spot_motion_monitor import __version__ as version
 
@@ -92,6 +91,7 @@ class DataController():
         self.configFile = None
         self.dataConfig = DataConfig()
         self.generalConfig = GeneralConfig()
+        self.timeHandler = TimeHandler()
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -131,7 +131,7 @@ class DataController():
         try:
             return self.fullFrameModel.calculateCentroid(frame)
         except FrameRejected:
-            return GenericFrameInformation(getTimestamp(), 300, 200, -1, -1, -1, -1, None)
+            return GenericFrameInformation(self.timeHandler.getTime(), 300, 200, -1, -1, -1, -1, None)
 
     def getCentroids(self, isRoiMode):
         """Return the current x, y coordinate of the centroid.
@@ -297,6 +297,7 @@ class DataController():
             The new configuration parameters.
         """
         self.generalConfig = config
+        self.timeHandler.timezone = self.generalConfig.timezone
         self.cameraDataWidget.saveDataCheckBox.setChecked(self.generalConfig.saveBufferData)
         self.fullTelemetrySavePath = config.fullTelemetrySavePath
         self.removeTelemetryDir = config.removeTelemetryDir
@@ -339,7 +340,7 @@ class DataController():
         centroidY = np.array(self.bufferModel.centerY)
 
         if not self.filesCreated:
-            dateTag = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+            dateTag = self.timeHandler.getFormattedTimeStamp()
             self.centroidFilename = 'smm_centroid_{}.h5'.format(dateTag)
             self.psdFilename = 'smm_psd_{}.h5'.format(dateTag)
             self.filesCreated = True
@@ -355,6 +356,18 @@ class DataController():
             info['roiFramesPerSecond'] = currentFps
             info.append()
             cameraInfo.flush()
+
+            generalGroup = centroidFile.create_group('/', 'general', 'General Information')
+
+            class GeneralInfo(tables.IsDescription):
+                timezone = tables.StringCol(48, pos=1)
+
+            generalInfo = centroidFile.create_table(generalGroup, 'info', GeneralInfo)
+            info = generalInfo.row
+            info['timezone'] = self.generalConfig.timezone
+            info.append()
+            generalInfo.flush()
+
             centroidFile.close()
 
         centDf = pd.DataFrame({
@@ -366,7 +379,7 @@ class DataController():
                              'X': psd[0],
                              'Y': psd[1]
                              })
-        dateKey = 'DT_{}'.format(datetime.utcnow().strftime('%Y%m%d_%H%M%S'))
+        dateKey = 'DT_{}'.format(self.timeHandler.getFormattedTimeStamp())
 
         centDf.to_hdf(self.centroidFilename, key=dateKey)
         psdDf.to_hdf(self.psdFilename, key=dateKey)
@@ -392,7 +405,7 @@ class DataController():
             if not os.path.exists(self.fullTelemetrySavePath):
                 os.makedirs(self.fullTelemetrySavePath)
 
-            content = {'timestamp': getTimestamp().isoformat(),
+            content = {'timestamp': self.timeHandler.getFormattedTimeStamp(format="iso"),
                        'ui_versions': {'code': version, 'config': self.configVersion,
                                        'config_file': self.configFile},
                        'camera': {'name': currentStatus.name,
@@ -403,7 +416,7 @@ class DataController():
 
             self.telemetrySetup = True
 
-        currentTimestamp = getTimestamp()
+        currentTimestamp = self.timeHandler.getTime()
         telemetryFile = 'dsm_{}.dat'.format(currentTimestamp.strftime('%Y%m%d_%H%M%S'))
         output = [currentTimestamp.isoformat(),
                   self.bufferModel.timestamp[0].isoformat(),
