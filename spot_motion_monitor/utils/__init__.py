@@ -11,7 +11,7 @@ from .frame_information import *
 from .fwhm_calculator import *
 from .information_updater import InformationUpdater
 from .functions import *
-from .time_formatter import *
+from .time_handler import *
 from .parser import *
 from .psd_calculator import *
 from .yaml_input import *
