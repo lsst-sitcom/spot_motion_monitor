@@ -5,9 +5,9 @@
 from astropy.time import Time
 import pytz
 
-__all__ = ["TimeFormatter"]
+__all__ = ["TimeHandler"]
 
-class TimeFormatter():
+class TimeHandler():
 
     def __init__(self):
         self.timezone = "UTC"
