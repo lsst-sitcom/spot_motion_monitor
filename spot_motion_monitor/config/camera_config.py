@@ -34,9 +34,9 @@ class CameraConfig(BaseConfig):
         config : dict
             The configuration to translate.
         """
-        self.roiSize = config["roi"]["size"]
-        self.fpsRoiFrame = config["roi"]["fps"]
-        self.fpsFullFrame = config["full"]["fps"]
+        self.check("roiSize", config["roi"], "size")
+        self.check("fpsRoiFrame", config["roi"], "fps")
+        self.check("fpsFullFrame", config["full"], "fps")
 
     def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
