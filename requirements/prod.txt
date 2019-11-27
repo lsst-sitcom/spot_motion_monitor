@@ -7,4 +7,5 @@ pyqtgraph
 matplotlib
 tables
 pymba==0.3.5
+pytz
 PyYAML

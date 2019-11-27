@@ -12,9 +12,33 @@ class TestTimeFormatter():
         cls.tf = TimeFormatter()
 
     def test_parametersAfterConstruction(self):
-        assert self.tf.timezone == "UTC"
-        assert self.tf.standard_format == "%Y%m%d_%H%M%S"
+        tf = TimeFormatter()
+        tf.timezone == "UTC"
+        assert tf.standard_format == "%Y%m%d_%H%M%S"
 
     @freeze_time("2019-11-26 13:45:23")
-    def test_timeFormatting(self):
-        assert self.tf.getTimeStamp() == "20191126_134523"
+    def test_utc_timezone(self):
+        tf = TimeFormatter()
+        assert tf.getTimeStamp() == 1574775923
+        assert tf.getFormattedTimeStamp() == "20191126_134523"
+
+    @freeze_time("2019-11-26 13:45:23")
+    def test_tai_timezone(self):
+        tf = TimeFormatter()
+        tf.timezone = "TAI"
+        assert tf.getTimeStamp() == 1574775960
+        assert tf.getFormattedTimeStamp() == "20191126_134600"
+
+    @freeze_time("2019-11-26 13:45:23")
+    def test_arizona_timezone(self):
+        tf = TimeFormatter()
+        tf.timezone = "US/Arizona"
+        assert tf.getTimeStamp() == 1574775923
+        assert tf.getFormattedTimeStamp() == "20191126_064523"
+
+    @freeze_time("2019-11-26 13:45:23")
+    def test_chile_timezone(self):
+        tf = TimeFormatter()
+        tf.timezone = "America/Santiago"
+        assert tf.getTimeStamp() == 1574775923
+        assert tf.getFormattedTimeStamp() == "20191126_104523"
