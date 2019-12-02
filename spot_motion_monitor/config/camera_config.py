@@ -36,7 +36,10 @@ class CameraConfig(BaseConfig):
         """
         self.check("roiSize", config["roi"], "size")
         self.check("fpsRoiFrame", config["roi"], "fps")
-        self.check("fpsFullFrame", config["full"], "fps")
+        try:
+            self.check("fpsFullFrame", config["full"], "fps")
+        except KeyError:
+            pass
 
     def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
