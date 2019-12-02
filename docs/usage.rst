@@ -22,12 +22,9 @@ User Interface Description
 
 The user interface is designed to follow a spot on a CCD over time. The centroid of the spot
 is calculated on a frame-by-frame basis. The main operational mode for the UI acquires the CCD
-frame in a region-of-interest (ROI) mode around the spot. This allows the camera to run at higher
-frame rates while still doing the centroid calculation frame-by-frame. The x and y (in pixels) components of the centroid are stored in a buffer after each calculation. The size of the buffer sets the total acquisition time along with the frame rate for the camera. Each time a buffer fills, a set of calculations is performed and the plots and information on the user interface are updated. 
+frame in a region-of-interest (ROI) mode around the spot. This allows the camera to run at higher frame rates while still doing the centroid calculation frame-by-frame. The x and y (in pixels) components of the centroid are stored in a buffer after each calculation. The size of the buffer sets the total acquisition time along with the frame rate for the camera. Each time a buffer fills, a set of calculations is performed and the plots and information on the user interface are updated. 
 
-The following sections will describe the sections of the user interface. The user interface looks
-like the following when first started (minus the blue lettering) and shows the seven main areas
-along with the program menu.
+The following sections will describe the sections of the user interface. The user interface looks like the following when first started (minus the blue lettering) and shows the seven main areas along with the program menu.
 
 .. image:: _static/ui_annotated.png
   :alt: Annotated User Interface
@@ -41,8 +38,7 @@ While the camera is running, information from the acquired frames is displayed i
 *Flux*, *Maximum* and *Centroid* widgets display information. When acquiring in ROI mode, all widgets
 are reset until the first buffer fills. Once that happens, the *Updated* widget shows the local time when the information was written to all the widgets. The *Accumulation Period* widget is filled based on the size of the current buffer and the current frame rate of the camera (:math:`T_{Acq} = L\,/ FPS`). The *Flux* widget displays the mean of all the fluxes stored in the buffer. The *Maximum* widget shows the mean of the maximum values stored in the buffer. The *x* and *y* *Centroid* widgets show the mean of the x and y centroid values respectively. The *RMS* widget shows the standard deviation of the x and y centroid values in the buffer times the pixel scale for the optical system. 
 
-The *Save Buffer Data* checkbox in the *Data Information* section can be used to write out the current
-buffer being displayed by the widgets. When this option is checked and a buffer is filled and calculated, two HDF5 files are written to the execution directory. One file, called ``smm_centroid_YYYYMMDD_HHMMSS.h5``, writes the *x* and *y* centroid component arrays and the other, called ``smm_psd_YYYYMMDD_HHMMSS.h5``, writes out the currently calculated 1D *x* and *y* power spectrum distributions (see PSD_). The time tag is the current UTC time at file creation. The contents for each file are wrapped into a ``pandas.DataFrame`` and placed as an entry in the file indexed by the UTC time of the data insertion: ``DT_YYYYMMDD_HHMMSS``. More contents are stored in separate time coded entries within the corresponding files. The centroid file also contains an entry for the current camera frame rate.
+The *Save Buffer Data* checkbox in the *Data Information* section can be used to write out the current buffer being displayed by the widgets. When this option is checked and a buffer is filled and calculated, two HDF5 files are written to the execution directory. One file, called ``smm_centroid_YYYYMMDD_HHMMSS.h5``, writes the *x* and *y* centroid component arrays and the other, called ``smm_psd_YYYYMMDD_HHMMSS.h5``, writes out the currently calculated 1D *x* and *y* power spectrum distributions (see PSD_). The time tag is the current timezone aware (default is UTC) time at file creation. The contents for each file are wrapped into a ``pandas.DataFrame`` and placed as an entry in the file indexed by the timezone aware time of the data insertion: ``DT_YYYYMMDD_HHMMSS``. More contents are stored in separate time coded entries within the corresponding files. The centroid file also contains an entry for the current camera and general information from the program.
 
 As soon as the first centroid is calculated in ROI mode, the *1D Centroid* plots begin to update. They plot the pixel position of the frame calculated centroid in both the x and y directions. The plots fill to the right until the buffer is filled. Once that occurs, a new centroid value is plotted on the right while the oldest one on the left is removed. The plot now becomes a rolling buffer.
 
@@ -67,8 +63,7 @@ The figure below shows a user interface that has been operating long enough to f
 .. image:: _static/ui_operating.png
   :alt: Operating User Interface
 
-The program menu offers four entries for further control: *File*, *Camera*, *Config* and *Help*.
-The *File* menu only offers one entry: *Exit* which is self explanatory. The *Camera* menu is dynamically created and will be filled based on the camera APIs available to the program. The default camera, *Gaussian* will always have an entry. The currently supported cameras besides that are *Vimba*. This menu allows one to switch back and forth between camera types. The checked entry will be the interface used when the *Start Camera* button is clicked. Also, when the *Start Camera* button is clicked, the *Camera* menu is disabled. It will return to enabled when the *Stop Camera* button is clicked. The *Help* menu provides one entry: *About*. This brings up a dialog with a brief program description and version information.
+The program menu offers four entries for further control: *File*, *Camera*, *Config* and *Help*. The *File* menu only offers one entry: *Exit* which is self explanatory. The *Camera* menu is dynamically created and will be filled based on the camera APIs available to the program. The default camera, *Gaussian* will always have an entry. The currently supported cameras besides that are *Vimba*. This menu allows one to switch back and forth between camera types. The checked entry will be the interface used when the *Start Camera* button is clicked. Also, when the *Start Camera* button is clicked, the *Camera* menu is disabled. It will return to enabled when the *Stop Camera* button is clicked. The *Help* menu provides one entry: *About*. This brings up a dialog with a brief program description and version information.
 
 User Interface Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -173,14 +168,12 @@ acquisition_time
   This is the total time it takes to fill a buffer at the above size and FPS
 
 
-The second file, generally called ``dsm_YYYYMMDD_HHMMSS.dat``, contains the telemetry
-information at the time a buffer is filled. The timestamp is the UTC time when
-the file was created. The file contains a comma-delimited set of information in the
-following order.
+The second file, generally called ``dsm_YYYYMMDD_HHMMSS.dat``, contains the telemetry information at the time a buffer is filled. The timestamp is the timezone aware time when
+the file was created. The default program timezone is UTC. The file contains a comma-delimited set of information in the following order.
 
-  1. The file creation UTC timestamp in ISO format
-  #. The UTC time when the first value of the buffer was filled in ISO format
-  #. The UTC time when the last value of the buffer was filled in ISO format
+  1. The file creation timestamp in ISO format
+  #. The timezone aware time when the first value of the buffer was filled in ISO format
+  #. The timezone aware time when the last value of the buffer was filled in ISO format
   #. The RMS of the centroid in the X direction on the camera in units of arcseconds
   #. The RMS of the centroid in the Y direction on the camera in units of arcseconds
 
