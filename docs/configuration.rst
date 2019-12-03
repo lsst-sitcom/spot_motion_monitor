@@ -122,6 +122,110 @@ amplitude
 frequency
   A decimal parameter that sets the frequency of the oscillation in the y direction. Parameter units are Hz.
 
+plot
+~~~~
+
+This section contains the paramters for the various plots in the program. The only plot that is not configurable via this file is the CCD frame plot.
+
+centroid
+--------
+
+This section contains the parameters for the three different centroid plots: scatter, 1D x and y.
+
+scatterPlot
+^^^^^^^^^^^
+
+This section contains parameters associated with the scatter plot.
+
+histograms
+++++++++++
+
+This section contains parameters associated with the scatter plot projection histograms.
+
+numBins
+  An integer parameter that sets the number of bins for each of the projection histograms.
+
+xCentroid
+^^^^^^^^^
+
+This section contains parameters for the 1D x centroid plot.
+
+autoscaleY
+  An enumerated string parameter that sets the scaling for the y axis. The potential values are:
+
+  * ON - Autoscaling is applied.
+  * PARTIAL - Plot is autoscaled for first 15 frames, then a minimum and maximum are calculated from the captured values and set on the plot.
+  * OFF - No autoscaling applied. Minimum and maximum values need to be set for the plot.
+
+minimumY
+  A decimal parameter that controls the minimum value for the y axis. Only applies when ``autoscaleY`` is in ``OFF`` mode.
+
+maximumY
+  A decimal parameter that controls the maximum value for the y axis. Only applies when ``autoscaleY`` is in ``OFF`` mode.
+
+yCentroid
+^^^^^^^^^
+
+This section contains parameters for the 1D y centroid plot.
+
+autoscaleY
+  An enumerated string parameter that sets the scaling for the y axis. The potential values are:
+
+  * ON - Autoscaling is applied.
+  * PARTIAL - Plot is autoscaled for first 15 frames, then a minimum and maximum are calculated from the captured values and set on the plot.
+  * OFF - No autoscaling applied. Minimum and maximum values need to be set for the plot.
+
+minimumY
+  A decimal parameter that controls the minimum value for the y axis. Only applies when ``autoscaleY`` is in ``OFF`` mode.
+
+maximumY
+  A decimal parameter that controls the maximum value for the y axis. Only applies when ``autoscaleY`` is in ``OFF`` mode.
+
+psd
+---
+
+This section contains the parameters for the four different power spectrum distribution plots: Waterfall x and y, 1D x and y.
+
+waterfall
+^^^^^^^^^
+
+This section contains parameters for the x and y waterfall plots.
+
+colormap
+  A string parameter that sets the color map for the waterfall plot. The currently supported options are:
+
+  * viridis
+  * plasma
+  * inferno
+  * magma
+  * cividis
+
+numBins
+  An integer parameter that controls the number of bins (N) kept in the vertical direction on the plot. This sets the hold time (H) of the data based on the current buffer accumulation time (T) as H = N x T
+
+xPSD
+^^^^
+
+This section contains parameters for the 1D x power spectrum distribution plot.
+
+autoscaleY
+  A boolean parameter that controls the automatic scaling of the y axis.
+
+maximumY
+  A decimal parameter that controls the maximum value of the y axis. This does not need to be set if ``autoscaleY`` is ``false``.
+
+yPSD
+^^^^
+
+This section contains parameters for the 1D y power spectrum distribution plot.
+
+autoscaleY
+  A boolean parameter that controls the automatic scaling of the y axis.
+
+maximumY
+  A decimal parameter that controls the maximum value of the y axis. This does not need to be set if ``autoscaleY`` is ``false``.
+
+
 Full Example
 ~~~~~~~~~~~~
 
