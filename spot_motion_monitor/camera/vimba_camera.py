@@ -52,6 +52,8 @@ class VimbaCamera(BaseCamera):
         The camera exposure time (microseconds) in ROI mode.
     roiSize : int
         The size of a (square) ROI region in pixels.
+    STREAM_BYTES_PER_SECOND : int
+        The maximum value for a GigE interface.
     totalFrames : int
         Counter for the total number of requested frames.
     vimba : pymba.Vimba
@@ -78,6 +80,8 @@ class VimbaCamera(BaseCamera):
         self.image = None
         self.frameShape = None
         self.isRoiMode = False
+
+        self.STREAM_BYTES_PER_SECOND = 124000000
 
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
@@ -274,7 +278,13 @@ class VimbaCamera(BaseCamera):
 
         self.cameraPtr.open()
         #self.cameraPtr.GevSCPSPacketSize = 1500
-        self.cameraPtr.StreamBytesPerSecond = 124000000
+        try:
+            currentSbps = self.cameraPtr.StreamBytesPerSecond
+            self.cameraPtr.StreamBytesPerSecond = self.STREAM_BYTES_PER_SECOND
+        except pv.VimbaException:
+            message = f'Issue with ethernet cable ... StreamBytesPerSecond: {currentSbps}'
+            message += f' instead of {self.STREAM_BYTES_PER_SECOND}'
+            raise CameraNotFound(message)
         self.height = self.cameraPtr.HeightMax
         self.width = self.cameraPtr.WidthMax
         self.frameShape = (self.height, self.width)

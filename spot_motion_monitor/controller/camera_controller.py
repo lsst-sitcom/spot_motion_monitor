@@ -321,7 +321,9 @@ class CameraController():
                 self.updater.cameraState.emit(state)
             except smmUtils.CameraNotFound as err:
                 self.updater.displayStatus.emit(str(err),
-                                                smmUtils.ONE_SECOND_IN_MILLISECONDS * 5)
+                                                smmUtils.ONE_SECOND_IN_MILLISECONDS * 10)
+                self.cameraControlWidget.acquireFramesButton.setEnabled(False)
+                self.cameraControlWidget.acquireRoiCheckBox.setEnabled(False)
 
         else:
             self.updater.displayStatus.emit('Stopping Camera', smmUtils.ONE_SECOND_IN_MILLISECONDS)

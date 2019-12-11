@@ -73,7 +73,6 @@ class GaussianCameraConfigTab(BaseConfigTab, Ui_GaussianCameraConfigForm):
             config['yAmplitude'] = utils.convertValueOrNone(yAmp)
             yFreq = utils.defaultToNoneOrValue(self.yFreqLineEdit.text())
             config['yFrequency'] = utils.convertValueOrNone(yFreq, convert=float)
-        print(config)
         return config
 
     def setConfiguration(self, config):
