@@ -3,6 +3,11 @@
 History
 -------
 
+1.5.1 (2019-12-11)
+~~~~~~~~~~~~~~~~~~
+
+* Trap crash if bad ethernet cable is present for Vimba camera
+
 1.5.0 (2019-11-06)
 ~~~~~~~~~~~~~~~~~~
 
