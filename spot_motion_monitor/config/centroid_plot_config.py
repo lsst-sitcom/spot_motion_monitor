@@ -64,9 +64,11 @@ class CentroidPlotConfig(BaseConfig):
         self.autoscaleX = getattr(utils.AutoscaleState, config["xCentroid"]["autoscaleY"])
         self.minimumX = config["xCentroid"]["minimumY"]
         self.maximumX = config["xCentroid"]["maximumY"]
+        self.pixelRangeAdditionX = config["xCentroid"]["pixelRangeAddition"]
         self.autoscaleY = getattr(utils.AutoscaleState, config["yCentroid"]["autoscaleY"])
         self.minimumY = config["yCentroid"]["minimumY"]
         self.maximumY = config["yCentroid"]["maximumY"]
+        self.pixelRangeAdditionY = config["yCentroid"]["pixelRangeAddition"]
         self.numHistogramBins = config["scatterPlot"]["histograms"]["numBins"]
 
     def toDict(self, writeEmpty=False):
@@ -88,10 +90,14 @@ class CentroidPlotConfig(BaseConfig):
             config["xCentroid"]["minimumY"] = self.minimumX
         if writeEmpty or self.maximumX is not None:
             config["xCentroid"]["maximumY"] = self.maximumX
+        if writeEmpty or self.pixelRangeAdditionX is not None:
+            config["xCentroid"]["pixelRangeAddition"] = self.pixelRangeAdditionX
         config["yCentroid"]["autoscaleY"] = self.autoscaleY.name
         if writeEmpty or self.minimumY is not None:
             config["yCentroid"]["minimumY"] = self.minimumY
         if writeEmpty or self.maximumY is not None:
             config["yCentroid"]["maximumY"] = self.maximumY
+        if writeEmpty or self.pixelRangeAdditionY is not None:
+            config["yCentroid"]["pixelRangeAddition"] = self.pixelRangeAdditionY
         config["scatterPlot"]["histograms"]["numBins"] = self.numHistogramBins
         return config

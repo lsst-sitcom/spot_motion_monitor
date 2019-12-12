@@ -182,6 +182,9 @@ minimumY
 maximumY
   A decimal parameter that controls the maximum value for the y axis. Only applies when ``autoscaleY`` is in ``OFF`` mode.
 
+pixelRangeAddition
+  An integer parameter to add to the quick average of the centroid values when using ``autoscaleY`` in ``PARTIAL`` mode. This sets the minimum and maximum value for the plot.
+
 yCentroid
 ^^^^^^^^^
 
@@ -199,6 +202,9 @@ minimumY
 
 maximumY
   A decimal parameter that controls the maximum value for the y axis. Only applies when ``autoscaleY`` is in ``OFF`` mode.
+
+pixelRangeAddition
+  An integer parameter to add to the quick average of the centroid values when using ``autoscaleY`` in ``PARTIAL`` mode. This sets the minimum and maximum value for the plot.
 
 psd
 ---
@@ -295,10 +301,12 @@ This section will show a full example of all items that are configurable based o
         autoscaleY: PARTIAL
         maximumY: null
         minimumY: null
+        pixelRangeAddition: 10
       yCentroid:
         autoscaleY: PARTIAL
         maximumY: null
         minimumY: null
+        pixelRangeAddition: 10
     psd:
       waterfall:
         colorMap: viridis
