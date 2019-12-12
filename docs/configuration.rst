@@ -45,7 +45,7 @@ directory
   A boolean parameter specifying if the telemetry directory is removed when ROI acquistion is stopped.
   
 files
-  A boolean parameter specifying if the telemetry files are removed when ROI acquistion is stopped. If ``directory`` is ``true``, setting this parameter to ``false`` has no effect. 
+  A boolean parameter specifying if the telemetry files are removed when ROI acquisition is stopped. If ``directory`` is ``true``, setting this parameter to ``false`` has no effect. 
 
 data
 ~~~~
@@ -85,7 +85,12 @@ full
 ----
 
 fps
-  An integer parameter that sets the frame rate (frames per second) for CCD full frame acquisition. Note: The Gaussian camera does not support frame rates over 40 due to the poisson background generation. For a Vimba camera, consult the appropriate documentation to find the supported range. 
+  An integer parameter that sets the frame rate (frames per second) for CCD full frame acquisition. Note: The Gaussian camera does not support frame rates over 40 due to the Poisson background generation. For a Vimba camera, consult the appropriate documentation to find the supported range. 
+
+exposureTime
+  This attribute only applies to Vimba cameras. An integer parameter giving the exposure time of the camera when using full frame mode in units of microseconds.
+
+  .. microseconds replace:: :math:`musec`
 
 roi
 ---
@@ -96,12 +101,26 @@ fps
 size
   An integer parameter that sets the size of the ROI region in pixels. By the nature of the program, the ROI region is fixed to be a square.
 
+exposureTime
+  This attribute only applies to Vimba cameras. An integer parameter giving the exposure time of the camera when using ROI frame mode in units of microseconds.
+
+  .. microseconds replace:: :math:`musec`
+
+fluxMin
+  This attribute only applies to Vimba cameras. An integer parameter setting the minimum ADC sum of the ROI for a given frame. Frames lower than this minimum are rejected.
+
+modelName
+---------
+
+This attribute only applies to Vimba cameras. A string parameter that defines the make and model of the camera.
+
 spotOscillation
 ---------------
 
 This section only applies to a Gaussian camera.
 
 do
+^^
   A boolean parameter that determines if the sport oscillation is executed.
 
 x
@@ -125,7 +144,7 @@ frequency
 plot
 ~~~~
 
-This section contains the paramters for the various plots in the program. The only plot that is not configurable via this file is the CCD frame plot.
+This section contains the parameters for the various plots in the program. The only plot that is not configurable via this file is the CCD frame plot.
 
 centroid
 --------
@@ -292,3 +311,16 @@ This section will show a full example of all items that are configurable based o
         maximumY: null
 
 The following shows the camera section of a Vimba camera configuration.
+
+::
+
+  camera:
+    full:
+      exposureTime: 8000
+      fps: 24
+    modelName: null
+    roi:
+      exposureTime: 8000
+      fluxMin: 2000
+      fps: 40
+      size: 50
