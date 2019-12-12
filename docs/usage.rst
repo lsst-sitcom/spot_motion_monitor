@@ -34,9 +34,7 @@ The plots are made using the `pyqtgraph <http://pyqtgraph.org/>`_ library and ha
 The camera is interacted with via the *Camera Control* section. It contains spinners to set
 the camera frame rate (FPS or frames per second)and the number of frames kept in the internal program buffer. The *Start/Stop Camera* button controls the startup or shutdown of the currently chosen camera. The *Start/Stop Acquire Frames* button controls frame acquisition from the CCD. The *Acquire ROI* checkbox restricts the camera readout to a 50x50 (default) ROI section around the spot centroid. Once the camera is started and acquiring frames, the current images from the CCD is displayed in the *CCD* plot. The *Show Frames* checkbox turns the *CCD* plot display on and off. With the camera acquiring in ROI mode (the *Acquire ROI* checkbox is checked), the *ROI FPS* and *Buffer Size* spinners are disabled to prevent modification of the buffer information during running. To enable the spinners again, uncheck the *Acquire ROI* checkbox.
 
-While the camera is running, information from the acquired frames is displayed in the *Data Information* section. Not all widgets display information while acquiring full CCD frames. In this mode, only the
-*Flux*, *Maximum* and *Centroid* widgets display information. When acquiring in ROI mode, all widgets
-are reset until the first buffer fills. Once that happens, the *Updated* widget shows the local time when the information was written to all the widgets. The *Accumulation Period* widget is filled based on the size of the current buffer and the current frame rate of the camera (:math:`T_{Acq} = L\,/ FPS`). The *Flux* widget displays the mean of all the fluxes stored in the buffer. The *Maximum* widget shows the mean of the maximum values stored in the buffer. The *x* and *y* *Centroid* widgets show the mean of the x and y centroid values respectively. The *RMS* widget shows the standard deviation of the x and y centroid values in the buffer times the pixel scale for the optical system. 
+While the camera is running, information from the acquired frames is displayed in the *Data Information* section. Not all widgets display information while acquiring full CCD frames. In this mode, only the *Flux*, *Maximum*, *FWHM* and *Centroid* widgets display information. When acquiring in ROI mode, all widgets are reset until the first buffer fills. Once that happens, the *Updated* widget shows the local time when the information was written to all the widgets. The *Accumulation Period* widget is filled based on the size of the current buffer and the current frame rate of the camera (:math:`T_{Acq} = L\,/ FPS`). The *Flux* widget displays the mean of all the fluxes stored in the buffer. The *Maximum* widget shows the mean of the maximum values stored in the buffer. The *FWHM* widget displays the calculated 2D full-width, half maximum of the spot. The *x* and *y* *Centroid* widgets show the mean of the x and y centroid values respectively. The *RMS* widget shows the standard deviation of the x and y centroid values in the buffer times the pixel scale for the optical system. 
 
 .. _saveBufferData:
 
@@ -65,12 +63,22 @@ The figure below shows a user interface that has been operating long enough to f
 .. image:: _static/ui_operating.png
   :alt: Operating User Interface
 
-The program menu offers four entries for further control: *File*, *Camera*, *Config* and *Help*. The *File* menu only offers one entry: *Exit* which is self explanatory. The *Camera* menu is dynamically created and will be filled based on the camera APIs available to the program. The default camera, *Gaussian* will always have an entry. The currently supported cameras besides that are *Vimba*. This menu allows one to switch back and forth between camera types. The checked entry will be the interface used when the *Start Camera* button is clicked. Also, when the *Start Camera* button is clicked, the *Camera* menu is disabled. It will return to enabled when the *Stop Camera* button is clicked. The *Help* menu provides one entry: *About*. This brings up a dialog with a brief program description and version information.
+The program menu offers four entries for further control: *File*, *Camera*, *Config* and *Help*. The *File* menu is described in the section below. The *Camera* menu is dynamically created and will be filled based on the camera APIs available to the program. The default camera, *Gaussian* will always have an entry. The currently supported cameras besides that are *Vimba*. This menu allows one to switch back and forth between camera types. The checked entry will be the interface used when the *Start Camera* button is clicked. Also, when the *Start Camera* button is clicked, the *Camera* menu is disabled. It will return to enabled when the *Stop Camera* button is clicked. The *Help* menu provides one entry: *About*. This brings up a dialog with a brief program description and version information.
+
+File Menu
+---------
+
+.. image:: _static/file_menu.png
+  :align: center
+  :alt: File Menu
+
+
+The *File* menu contains entries that deal with program configuration and the *Exit* entry which is self explanatory. The *Open Configuration* entry allows one to load a configuration file and set values internal to the program based on the information in the file. See the :ref:`configuration` section for more details on file structure. The *Save Configuration* entry allows one to save the current program configuration to a file. The *Write Plot Config* and *Write Empty Config* checkboxes enhance the configuration information that is saved to a file. The default save mode does not write plot configuration or any configuration that has a ``None`` internal value. The checkboxes can be marked in order to write this information to the resulting file.
 
 User Interface Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The *Configure* menu contains the following entries: *Camera*, *Plots* and *General*. Each entry brings up a configuration dialog containing different widgets depending on the chosen entry. The following will detail each of the configuration dialogs. A general note about the entry widgets. Many of them have input validators which will cause the entered value's text to turn blue, the dialog's *OK* button to be disabled or may not allow further typing of a value if that entered value violates the validator. To see the valid range, hover over the particular entry widget to get the details.
+The *Configure* menu contains the following entries: *Camera*, *Plots*, *Data* and *General*. Each entry brings up a configuration dialog containing different widgets depending on the chosen entry. The following will detail each of the configuration dialogs. A general note about the entry widgets. Many of them have input validators which will cause the entered value's text to turn blue, the dialog's *OK* button to be disabled or may not allow further typing of a value if that entered value violates the validator. To see the valid range, hover over the particular entry widget to get the details.
 
 .. image:: _static/data_config.png
   :width: 243
@@ -78,7 +86,15 @@ The *Configure* menu contains the following entries: *Camera*, *Plots* and *Gene
   :align: center
   :alt: Data Configuration Dialog
 
-The *General* configuration dialog has only one widget: *Pixel Scale*. This is the factor that multiplies the standard deviation of the centroid component array to get the value posted in the *RMS* widget in the *Data Information* section. 
+The *Data* configuration entry will bring up a dialog containing widgets that effect how data is processed. The *Pixel Scale* widget sets the factor that multiplies the standard deviation of the centroid component array to get the value posted in the *RMS* widget in the *Data Information* section. The *Sigma Scale* widget sets the scale factor for the standard deviation subtraction of a full CCD frame. The *Min Num Pixels* widget specifies the minimum number of pixels in the found object when calculating the center-of-masses within a CCD frame. The *Threshold Factor* widget specifies the scale factor for the maximum ADC value from a ROI CCD frame.
+
+.. image:: _static/general_config.png
+  :width: 243
+  :height: 345
+  :align: center
+  :alt: General Configuration Dialog
+
+The *General* configuation entry will bring a dialog containing widgets to set general information and behavior of the program. The *Site Name* widget allows the entry of a name for the site where the monitor is being run. The *Config Version* entry can be used to set a version number for the current program configuration. This is useful upon saving the configuration to a file to cross-reference what was specified. The *Autorun* checkbox allows for the program to automatically start in ROI mode upon launch. NOTE: Checking the box and saving the configuration does not auto run the program. The *Timezone* widget allows one to specify the timezone used when saving the buffer data to a file or saving the telemetry information. The default is UTC. The *Telemetry* section contains a number of widgets that handle the telemetry saving behavior. See the :ref:`telemetry` section for more details on file content. To set a directory where the telemetry files will be saved, click the *Select* button and set a directory via the resulting dialog. To remove that and save the files where the program executes, click the *Clear* button. The save in execution location is the default behavior. When the program leave ROI acquisition mode, the generated telemetry files are removed from disk. The last two checkboxes change this behavior. The unchecking the *Remove Directory* checkbox will stop the save directory from being removed. However, the telemetry files are still deleted. Unchecking the *Remove Directory* checkbox enables the *Remove Files* checkbox. Unchecking this stops the telemetry files from being deleted.
 
 The *Camera* configuration entry will bring up a dialog that is dependent on the checked *Camera* entry in the main menu. Each of the currently supported cameras will be shown in turn. When the *Start Camera* button is clicked, the *Camera* configuration entry is disabled. It will return to enabled when the *Stop Camera* button is clicked.
 
@@ -96,7 +112,7 @@ This dialog is used for configuring the default Gaussian camera. The *ROI Size* 
   :align: center
   :alt: Vimba Camera Configuration Dialog
 
-This dialog is used for configuring the Vimba class of cameras. The *ROI Size* sets the size in pixels of the region around the centroid when in ROI mode. The *ROI Flux Minimum* sets the lowest acceptable flux for an ROI frame when the flux is summed over the ROI region. The *ROI Exposure Time* widget sets the length of exposure before capturing a CCD frame.
+This dialog is used for configuring the Vimba class of cameras. The *Model Name* widget can be used to set the make ans model of the camera. The *Full Frame Exposure Time* widget sets the length of exposure before capturing a CCD frame in full frame mode. The *ROI Size* sets the size in pixels of the region around the centroid when in ROI mode. The *ROI Flux Minimum* sets the lowest acceptable flux for an ROI frame when the flux is summed over the ROI region. The *ROI Exposure Time* widget sets the length of exposure before capturing a CCD frame in ROI mode.
 
 .. _PlotConfig:
 
@@ -117,6 +133,8 @@ The *X* and *Y* *1D* widgets control the plots in the *1D Centroid* section of t
   :alt: PSD Plot Configuration Dialog
 
 The *Auto Scale 1D* checkboxes control the automatic y axis scaling for each of the *1D PSD* plots. When checked, the y axis will automatically scale to any data changes. If unchecked, the *1D Maximum* widgets will become active. This allows for the maximum y axis value to be specified for plotting. The minimum value of the y axis is set to zero. The *Waterfall Number of Bins* widget is used to set the number of rows kept in the *PSD Waterfall* plots. The *Waterfall Color Map* widget is a drop-down list of color map selections to use for data display on the *PSD Waterfall* plots.
+
+.. _telemetry:
 
 Telemetry
 ~~~~~~~~~
