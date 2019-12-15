@@ -46,6 +46,7 @@ class TestDataController():
         assert dc.dataConfig is not None
         assert dc.generalConfig is not None
         assert dc.timeHandler is not None
+        assert dc.cameraModelName is None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -387,3 +388,12 @@ class TestDataController():
         assert dc.removeTelemetryDir == truthConfig.removeTelemetryDir
         assert dc.configVersion == truthConfig.configVersion
         assert dc.timeHandler.timezone == truthConfig.timezone
+
+    def test_setCameraModelName(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+
+        modelName = "ProSilice GT-650"
+        dc.setCameraModelName(modelName)
+        assert dc.cameraModelName == modelName

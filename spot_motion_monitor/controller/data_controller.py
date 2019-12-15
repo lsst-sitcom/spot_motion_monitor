@@ -29,6 +29,8 @@ class DataController():
         An instance of the buffer model.
     cameraDataWidget : .CameraDataWidget
         An instance of the camera data widget.
+    cameraModelName : str
+        The camera model used to take the data.
     centroidFilename : str
         The current name for the centroid output file.
     configFile : str
@@ -92,6 +94,7 @@ class DataController():
         self.dataConfig = DataConfig()
         self.generalConfig = GeneralConfig()
         self.timeHandler = TimeHandler()
+        self.cameraModelName = None
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -262,6 +265,16 @@ class DataController():
         """
         self.bufferModel.bufferSize = value
 
+    def setCameraModelName(self, modelName):
+        """Set the current camera model name.
+
+        Parameters
+        ----------
+        modelName : str
+            The camera model name.
+        """
+        self.cameraModelName = modelName
+
     def setDataConfiguration(self, config):
         """Set a new configuration for the data controller.
 
@@ -350,20 +363,24 @@ class DataController():
 
             class CameraInfo(tables.IsDescription):
                 roiFramesPerSecond = tables.IntCol(pos=1)
+                modelName = tables.StringCol(128, pos=2)
 
             cameraInfo = centroidFile.create_table(cameraGroup, 'info', CameraInfo)
             info = cameraInfo.row
             info['roiFramesPerSecond'] = currentFps
+            info['modelName'] = 'None Provided' if self.cameraModelName is None else self.cameraModelName
             info.append()
             cameraInfo.flush()
 
             generalGroup = centroidFile.create_group('/', 'general', 'General Information')
 
             class GeneralInfo(tables.IsDescription):
-                timezone = tables.StringCol(48, pos=1)
+                siteName = tables.StringCol(128, pos=1)
+                timezone = tables.StringCol(48, pos=2)
 
             generalInfo = centroidFile.create_table(generalGroup, 'info', GeneralInfo)
             info = generalInfo.row
+            info['siteName'] = 'None Provided' if self.generalConfig.site is None else self.generalConfig.site
             info['timezone'] = self.generalConfig.timezone
             info.append()
             generalInfo.flush()

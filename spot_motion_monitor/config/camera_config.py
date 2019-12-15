@@ -14,6 +14,8 @@ class CameraConfig(BaseConfig):
         The acquisition frame rate for full frames.
     fpsRoiFrame : int
         The acquisition frame rate for ROI frames.
+    modelName : str or None
+        The model name of the camera.
     roiSize : int
         The size (pixels) of the ROI on the camera.
     """
@@ -25,6 +27,7 @@ class CameraConfig(BaseConfig):
         self.roiSize = 50
         self.fpsFullFrame = 24
         self.fpsRoiFrame = 40
+        self.modelName = None
 
     def fromDict(self, config):
         """Translate config to class attributes.
@@ -40,6 +43,7 @@ class CameraConfig(BaseConfig):
             self.check("fpsFullFrame", config["full"], "fps")
         except KeyError:
             pass
+        self.check("modelName", config, "modelName")
 
     def toDict(self, writeEmpty=False):
         """Translate class attributes to configuration dict.
@@ -58,4 +62,6 @@ class CameraConfig(BaseConfig):
         config["roi"]["size"] = self.roiSize
         config["roi"]["fps"] = self.fpsRoiFrame
         config["full"]["fps"] = self.fpsFullFrame
+        if writeEmpty or self.modelName is not None:
+            config["modelName"] = self.modelName
         return config

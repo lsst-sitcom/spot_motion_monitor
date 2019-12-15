@@ -112,7 +112,7 @@ fluxMin
 modelName
 ---------
 
-This attribute only applies to Vimba cameras. A string parameter that defines the make and model of the camera.
+A string parameter that defines the make and model of the camera. For the Gaussian camera, this defaults to ``Gaussian``.
 
 spotOscillation
 ---------------
@@ -261,6 +261,7 @@ This section will show a full example of all items that are configurable based o
   camera:
     full:
       fps: 24
+    modelName: Gaussian
     roi:
       fps: 40
       size: 50

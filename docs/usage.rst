@@ -38,7 +38,25 @@ While the camera is running, information from the acquired frames is displayed i
 
 .. _saveBufferData:
 
-The *Save Buffer Data* checkbox in the *Data Information* section can be used to write out the current buffer being displayed by the widgets. When this option is checked and a buffer is filled and calculated, two HDF5 files are written to the execution directory. One file, called ``smm_centroid_YYYYMMDD_HHMMSS.h5``, writes the *x* and *y* centroid component arrays and the other, called ``smm_psd_YYYYMMDD_HHMMSS.h5``, writes out the currently calculated 1D *x* and *y* power spectrum distributions (see PSD_). The time tag is the current timezone aware (default is UTC) time at file creation. The contents for each file are wrapped into a ``pandas.DataFrame`` and placed as an entry in the file indexed by the timezone aware time of the data insertion: ``DT_YYYYMMDD_HHMMSS``. More contents are stored in separate time coded entries within the corresponding files. The centroid file also contains an entry for the current camera and general information from the program.
+The *Save Buffer Data* checkbox in the *Data Information* section can be used to write out the current buffer being displayed by the widgets. When this option is checked and a buffer is filled and calculated, two HDF5 files are written to the execution directory. One file, called ``smm_centroid_YYYYMMDD_HHMMSS.h5``, writes the *x* and *y* centroid component arrays and the other, called ``smm_psd_YYYYMMDD_HHMMSS.h5``, writes out the currently calculated 1D *x* and *y* power spectrum distributions (see PSD_). The time tag is the current timezone aware (default is UTC) time at file creation. The contents for each file are wrapped into a ``pandas.DataFrame`` and placed as an entry in the file indexed by the timezone aware time of the data insertion: ``DT_YYYYMMDD_HHMMSS``. More contents are stored in separate time coded entries within the corresponding files. The centroid file also contains entries for the following information from the program given by the section headings below.
+
+camera
+------
+
+roiFramesPerSecond
+  The current frame rate of the camera in ROI mode.
+
+modelName
+  A string providing the make and model of the camera. The default is ``None Provided``.
+
+general
+-------
+
+siteName
+  A string providing the site at which the data was taken. The default is ``None Provided``.
+
+timeZone
+  A string providing the timezone used for all of the timestamps.
 
 As soon as the first centroid is calculated in ROI mode, the *1D Centroid* plots begin to update. They plot the pixel position of the frame calculated centroid in both the x and y directions. The plots fill to the right until the buffer is filled. Once that occurs, a new centroid value is plotted on the right while the oldest one on the left is removed. The plot now becomes a rolling buffer.
 
