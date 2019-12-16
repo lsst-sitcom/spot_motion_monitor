@@ -42,6 +42,22 @@ class TimeHandler():
         else:
             return now.datetime.replace(tzinfo=pytz.utc)
 
+    @classmethod
+    def getTimezones(cls):
+        """Get the list of timezones
+
+        Returns
+        -------
+        list[str]
+            The current list of timezones with TAI added.
+        """
+        timezones = pytz.all_timezones
+        timezones.remove("UTC")
+        timezones.insert(0, "TAI")
+        timezones.insert(0, "UTC")
+
+        return timezones
+
     def getFormattedTimeStamp(self, format=None):
         """Get a formatted string of the current timezone aware date/time.
 

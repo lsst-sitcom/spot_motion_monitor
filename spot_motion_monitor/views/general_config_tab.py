@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QFileDialog
 from ..config import GeneralConfig
 from . import BaseConfigTab
 from .forms.ui_general_config import Ui_GeneralConfigForm
-from ..utils import defaultToNoneOrValue, noneToDefaultOrValue
+from ..utils import defaultToNoneOrValue, noneToDefaultOrValue, TimeHandler
 
 __all__ = ["GeneralConfigTab"]
 
@@ -31,6 +31,8 @@ class GeneralConfigTab(BaseConfigTab, Ui_GeneralConfigForm):
         """
         super().__init__(parent)
         self.setupUi(self)
+        timezones = TimeHandler.getTimezones()
+        self.timezoneComboBox.insertItems(len(timezones), timezones)
         self.name = 'General'
         self.config = GeneralConfig()
         self.telemetryDirPushButton.clicked.connect(self.handleTelemetryDir)
@@ -59,7 +61,7 @@ class GeneralConfigTab(BaseConfigTab, Ui_GeneralConfigForm):
         self.config.site = defaultToNoneOrValue(self.siteNameLineEdit.text())
         self.config.configVersion = defaultToNoneOrValue(self.configVersionLineEdit.text())
         self.config.autorun = self.autorunCheckBox.isChecked()
-        timezone = self.timezoneLineEdit.text()
+        timezone = self.timezoneComboBox.currentText()
         self.config.timezone = 'UTC' if timezone == '' else timezone
         self.config.fullTelemetrySavePath = defaultToNoneOrValue(self.telemetryDirLineEdit.text())
         self.config.removeTelemetryDir = self.removeDirectoryCheckBox.isChecked()
@@ -100,7 +102,7 @@ class GeneralConfigTab(BaseConfigTab, Ui_GeneralConfigForm):
         self.siteNameLineEdit.setText(noneToDefaultOrValue(config.site))
         self.configVersionLineEdit.setText(noneToDefaultOrValue(config.configVersion))
         self.autorunCheckBox.setChecked(config.autorun)
-        self.timezoneLineEdit.setText(config.timezone)
+        self.timezoneComboBox.setCurrentText(config.timezone)
         self.telemetryDirLineEdit.setText(noneToDefaultOrValue(config.fullTelemetrySavePath))
         self.removeDirectoryCheckBox.setChecked(config.removeTelemetryDir)
         self.removeFilesCheckBox.setChecked(config.removeTelemetryFiles)

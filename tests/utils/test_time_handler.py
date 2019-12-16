@@ -56,3 +56,10 @@ class TestTimeHandler():
         assert th.getTimeStamp() == 1574775923
         assert th.getFormattedTimeStamp() == "20191126_104523"
         assert th.getFormattedTimeStamp(format="iso") == "2019-11-26T10:45:23-03:00"
+
+    def test_timezone_list(self):
+        timezones = TimeHandler.getTimezones()
+        assert len(timezones) == 593
+        assert timezones.count("UTC") == 1
+        assert timezones[0] == "UTC"
+        assert timezones[1] == "TAI"

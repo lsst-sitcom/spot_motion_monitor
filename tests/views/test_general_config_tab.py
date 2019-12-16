@@ -24,7 +24,7 @@ class TestGeneralConfigTab:
         assert gcConfigTab.siteNameLineEdit.text() == ''
         assert gcConfigTab.configVersionLineEdit.text() == ''
         assert gcConfigTab.autorunCheckBox.isChecked() is False
-        assert gcConfigTab.timezoneLineEdit.text() == truthConfig.timezone
+        assert gcConfigTab.timezoneComboBox.currentText() == truthConfig.timezone
         assert gcConfigTab.telemetryDirLineEdit.text() == ''
         assert gcConfigTab.removeDirectoryCheckBox.isChecked() is True
         assert gcConfigTab.removeFilesCheckBox.isEnabled() is False
@@ -32,6 +32,7 @@ class TestGeneralConfigTab:
 
         truthConfig.site = "Testing"
         truthConfig.configVersion = "0.0.1"
+        truthConfig.timezone = "US/Arizona"
         truthConfig.autorun = True
         truthConfig.fullTelemetrySavePath = "/home/testuser/telemetry"
         truthConfig.removeTelemetryDir = False
@@ -39,6 +40,7 @@ class TestGeneralConfigTab:
         gcConfigTab.setConfiguration(truthConfig)
         assert gcConfigTab.siteNameLineEdit.text() == truthConfig.site
         assert gcConfigTab.configVersionLineEdit.text() == truthConfig.configVersion
+        assert gcConfigTab.timezoneComboBox.currentText() == truthConfig.timezone
         assert gcConfigTab.autorunCheckBox.isChecked() is True
         assert gcConfigTab.telemetryDirLineEdit.text() == truthConfig.fullTelemetrySavePath
         assert gcConfigTab.removeDirectoryCheckBox.isChecked() is False
