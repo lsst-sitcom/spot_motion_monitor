@@ -2,6 +2,8 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from collections import OrderedDict
+
 import numpy as np
 
 from spot_motion_monitor.camera import BaseCamera
@@ -26,6 +28,8 @@ class GaussianCamera(BaseCamera):
         The Frames per Second rate in ROI frame mode.
     height : int
         The pixel height of the CCD.
+    modelName : str
+        The model name of the camera. This is the same as the name attribute.
     postageStamp : numpy.array
         The array containing the Gaussian postage stamp.
     roiSize : int
@@ -80,6 +84,7 @@ class GaussianCamera(BaseCamera):
         self.xPointOriginal = None
         self.yPointOriginal = None
         self.config = GaussianCameraConfig()
+        self.modelName = self.name
 
     def findInsertionPoint(self):
         """Determine the Gaussian spot insertion point.
@@ -94,6 +99,21 @@ class GaussianCamera(BaseCamera):
         self.yPoint = np.random.randint(yHalfwidth - yRange, yHalfwidth + yRange + 1)
         self.xPointOriginal = self.xPoint
         self.yPointOriginal = self.yPoint
+
+    def getCameraInfo(self):
+        """Return the current camera related information.
+
+        Returns
+        -------
+        OrderedDict
+            The set of camera information.
+        """
+        info = OrderedDict()
+        info['Model'] = self.modelName
+        info['Width'] = self.width
+        info['Height'] = self.height
+
+        return info
 
     def getConfiguration(self):
         """Get the current camera configuration.

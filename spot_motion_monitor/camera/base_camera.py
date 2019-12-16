@@ -2,7 +2,7 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-_all__ = ['BaseCamera']
+__all__ = ['BaseCamera']
 
 class BaseCamera():
     """Base API for all Camera classes
@@ -17,6 +17,8 @@ class BaseCamera():
         The Frames per Second rate in ROI frame mode.
     height : int
         The height in pixels of the camera CCD
+    modelName : str
+        The model name of the camera.
     roiSize : int
         The size of a (square) ROI region in pixels.
     width : int
@@ -29,6 +31,7 @@ class BaseCamera():
     fpsRoiFrame = None
     roiSize = None
     config = None
+    modelName = None
 
     def __init__(self):
         """Initialize the class.
@@ -82,6 +85,15 @@ class BaseCamera():
             True if frame is valid, False if not.
         """
         return True
+
+    def getCameraInformation(self):
+        """Return information about the camera.
+
+        Raises
+        ------
+        NotImplementedError
+        """
+        raise NotImplementedError
 
     def getConfiguration(self):
         """Return the current camera configuration.

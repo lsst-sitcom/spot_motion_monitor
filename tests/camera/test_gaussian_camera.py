@@ -30,6 +30,7 @@ class TestGaussianCamera():
         assert self.camera.yAmp == 5
         assert self.camera.yFreq == 2.0
         assert self.camera.config is not None
+        assert self.camera.modelName == 'Gaussian'
 
     def test_parametersAfterStartup(self):
         self.camera.startup()
@@ -96,3 +97,11 @@ class TestGaussianCamera():
         assert camera.xFreq == truthConfig.xFrequency
         assert camera.yAmp == truthConfig.yAmplitude
         assert camera.yFreq == truthConfig.yFrequency
+
+    def test_cameraInformation(self):
+        camera = GaussianCamera()
+        cameraInfo = camera.getCameraInfo()
+
+        assert cameraInfo['Model'] == 'Gaussian'
+        assert cameraInfo['Width'] == 640
+        assert cameraInfo['Height'] == 480

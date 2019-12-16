@@ -2,6 +2,7 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from collections import OrderedDict
 from datetime import datetime
 import time
 
@@ -47,6 +48,8 @@ class VimbaCamera(BaseCamera):
         The current converted CCD frame.
     isRoiMode : bool
         Whether or not the camera is in ROI mode.
+    modelVendor : str
+        The name of the camera manufacturer.
     offsetX : int
         The current offset in X for the camera.
     offsetY : int
@@ -85,6 +88,7 @@ class VimbaCamera(BaseCamera):
         self.frameShape = None
         self.isRoiMode = False
         self.config = VimbaCameraConfig()
+        self.modelVendor = None
 
         self.STREAM_BYTES_PER_SECOND = 124000000
 
@@ -142,6 +146,25 @@ class VimbaCamera(BaseCamera):
             self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=self.frameShape)
         except pv.VimbaException:
             raise FrameCaptureFailed(f"{datetime.now()} Frame conversion failed.")
+
+    def getCameraInfo(self):
+        """Return the current camera related information.
+
+        Returns
+        -------
+        OrderedDict
+            The set of camera information.
+        """
+        info = OrderedDict()
+        info['Model'] = self.modelName
+        info['Vendor'] = self.modelVendor
+        info['Width'] = self.width
+        info['Height'] = self.height
+        info['Pixel Format'] = self.cameraPtr.PixelFormat
+        info['Gain Auto'] = self.cameraPtr.GainAuto
+        info['Exposure Auto'] = self.cameraPtr.ExposureAuto
+
+        return info
 
     def getConfiguration(self):
         """Get the current camera configuration.
@@ -293,6 +316,8 @@ class VimbaCamera(BaseCamera):
         self.height = self.cameraPtr.HeightMax
         self.width = self.cameraPtr.WidthMax
         self.frameShape = (self.height, self.width)
+        self.modelName = self.cameraPtr.DeviceModelName
+        self.modelVendor = self.cameraPtr.DeviceVendorName
         self.cameraPtr.Height = self.height
         self.cameraPtr.Width = self.width
         self.cameraPtr.OffsetX = 0

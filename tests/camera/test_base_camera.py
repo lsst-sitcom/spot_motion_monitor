@@ -19,6 +19,7 @@ class TestBaseCamera(object):
         assert self.baseCamera.roiSize is None
         assert self.baseCamera.name == 'Base'
         assert self.baseCamera.config is None
+        assert self.baseCamera.modelName is None
 
     def test_noApiAfterConstruction(self):
         with pytest.raises(NotImplementedError):
@@ -56,3 +57,6 @@ class TestBaseCamera(object):
 
         assert self.baseCamera.checkFullFrame(1, 1, 1, 1) is True
         assert self.baseCamera.checkRoiFrame(1) is True
+
+        with pytest.raises(NotImplementedError):
+            self.baseCamera.getCameraInformation()
