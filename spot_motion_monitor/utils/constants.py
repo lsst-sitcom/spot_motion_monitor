@@ -1,10 +1,10 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import enum
 
-"""Contants for program use.
+"""Constants for program use.
 
 Attributes
 ----------
@@ -16,6 +16,8 @@ DEFAULT_PSD_ARRAY_SIZE : int
     The default size of the Power Spectrum Distribution plot vertical axis.
 HTML_NU : str
     The HTML string representation for the Greek letter nu.
+LARGE_FLOAT_VALUE_FOR_VALIDATOR : float
+    Default value for QDoubleValidators.
 LARGE_VALUE_FOR_VALIDATOR
     Default value for QIntValidators.
 NO_DATA_VALUE : str
@@ -36,6 +38,7 @@ COLORMAPS = ('viridis', 'plasma', 'inferno', 'magma', 'cividis')
 TIMEFMT = '%Y-%m-%d %H:%M:%S'
 HTML_NU = '&#957;'
 LARGE_VALUE_FOR_VALIDATOR = 1e9
+LARGE_FLOAT_VALUE_FOR_VALIDATOR = 1.0e200
 
 class AutoscaleState(enum.Enum):
     """Enumeration for handling autoscale states.
@@ -52,3 +55,16 @@ class AutoscaleState(enum.Enum):
     OFF = 0
     PARTIAL = 1
     ON = 2
+
+class SaveConfigMask(enum.IntFlag):
+    """Enumeration for saving configuration information.
+
+    Attributes
+    ----------
+    EMPTY : int
+        Write out attributes that contain None types.
+    PLOT : int
+        Write out plot configuration.
+    """
+    PLOT = 1
+    EMPTY = 2

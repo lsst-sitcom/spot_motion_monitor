@@ -2,6 +2,8 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from .. import config
+
 __all__ = ['PlotPsdController']
 
 class PlotPsdController:
@@ -11,6 +13,8 @@ class PlotPsdController:
 
     Attributes
     ----------
+    config : `config.PsdPlotConfig`
+        The instance that holds the current configuration.
     psd1dXPlot : Psd1dPlotWidget
         The instance of the 1d plot for the PSD x coordinates.
     psd1dYPlot : Psd1dPlotWidget
@@ -39,20 +43,26 @@ class PlotPsdController:
         self.psdWaterfallYPlot = psdwfy
         self.psd1dXPlot = psd1dx
         self.psd1dYPlot = psd1dy
+        self.config = config.PsdPlotConfig()
 
     def getPlotConfiguration(self):
         """Get the current camera configuration.
 
         Returns
         -------
-        dict
+        `config.PsdPlotConfig`
             The set of current camera configuration parameters.
         """
-        config = {}
-        config['waterfall'] = self.psdWaterfallXPlot.getConfiguration()
-        config['xPSD'] = self.psd1dXPlot.getConfiguration()
-        config['yPSD'] = self.psd1dYPlot.getConfiguration()
-        return config
+
+        self.config.numWaterfallBins, self.config.waterfallColorMap = \
+            self.psdWaterfallXPlot.getConfiguration()
+        self.config.autoscaleX1d, ixrange = self.psd1dXPlot.getConfiguration()
+        self.config.x1dMinimum = ixrange[0]
+        self.config.x1dMaximum = ixrange[1]
+        self.config.autoscaleY1d, iyrange = self.psd1dYPlot.getConfiguration()
+        self.config.y1dMinimum = iyrange[0]
+        self.config.y1dMaximum = iyrange[1]
+        return self.config
 
     def handleAcquireRoiStateChange(self, checked):
         """Deal with changes in the Acquire ROI checkbox.
@@ -73,13 +83,13 @@ class PlotPsdController:
 
         Parameters
         ----------
-        config : dict
+        config : `config.PsdPlotConfig`
             The new configuration parameters.
         """
-        self.psdWaterfallXPlot.setConfiguration(config['waterfall'])
-        self.psdWaterfallYPlot.setConfiguration(config['waterfall'])
-        self.psd1dXPlot.setConfiguration(config['xPSD'])
-        self.psd1dYPlot.setConfiguration(config['yPSD'])
+        self.psdWaterfallXPlot.setConfiguration(config)
+        self.psdWaterfallYPlot.setConfiguration(config)
+        self.psd1dXPlot.setConfiguration(config)
+        self.psd1dYPlot.setConfiguration(config)
 
     def setup(self, arraySize, timeScale):
         """Setup the controller's internal information.

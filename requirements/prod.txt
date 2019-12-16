@@ -1,3 +1,4 @@
+astropy
 numpy
 PyQt5
 scipy
@@ -6,4 +7,5 @@ pyqtgraph
 matplotlib
 tables
 pymba==0.3.5
+pytz
 PyYAML

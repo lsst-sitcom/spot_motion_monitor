@@ -6,6 +6,9 @@ from .base_config_tab import BaseConfigTab
 from .base_configuration_dialog import BaseConfigurationDialog
 
 from .data_config_tab import DataConfigTab
+from .data_configuration_dialog import DataConfigurationDialog
+
+from .general_config_tab import GeneralConfigTab
 from .general_configuration_dialog import GeneralConfigurationDialog
 
 from .centroid_plot_config_tab import CentroidPlotConfigTab

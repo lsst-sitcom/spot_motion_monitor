@@ -1,13 +1,14 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
 
-import spot_motion_monitor.utils as utils
-from spot_motion_monitor.views import BaseConfigTab
-from spot_motion_monitor.views.forms.ui_psd_plots_config import Ui_PsdPlotConfigForm
+from .. import config
+from .. import utils
+from . import BaseConfigTab
+from .forms.ui_psd_plots_config import Ui_PsdPlotConfigForm
 
 __all__ = ['PsdPlotConfigTab']
 
@@ -45,26 +46,23 @@ class PsdPlotConfigTab(BaseConfigTab, Ui_PsdPlotConfigForm):
 
         Returns
         -------
-        dict
+        `config.PsdPlotConfig`
             The current set of configuration parameters.
         """
-        config = {}
-        config['waterfall'] = {}
-        config['waterfall']['numBins'] = int(self.waterfallNumBinsLineEdit.text())
-        config['waterfall']['colorMap'] = self.waterfallColorMapComboBox.currentText()
-        config['xPSD'] = {}
+        outConfig = config.PsdPlotConfig()
+        outConfig.numWaterfallBins = int(self.waterfallNumBinsLineEdit.text())
+        outConfig.waterfallColorMap = self.waterfallColorMapComboBox.currentText()
         xAutoscale = utils.checkStateToBool(self.autoscaleX1dCheckBox.checkState())
-        config['xPSD']['autoscale'] = xAutoscale
+        outConfig.autoscaleX1d = xAutoscale
         if not xAutoscale:
             xMax = utils.defaultToNoneOrValue(self.x1dMaximumLineEdit.text())
-            config['xPSD']['maximum'] = xMax if xMax is None else float(xMax)
-        config['yPSD'] = {}
+            outConfig.x1dMaximum = xMax if xMax is None else float(xMax)
         yAutoscale = utils.checkStateToBool(self.autoscaleY1dCheckBox.checkState())
-        config['yPSD']['autoscale'] = yAutoscale
+        outConfig.autoscaleY1d = yAutoscale
         if not yAutoscale:
             yMax = utils.defaultToNoneOrValue(self.y1dMaximumLineEdit.text())
-            config['yPSD']['maximum'] = yMax if yMax is None else float(yMax)
-        return config
+            outConfig.y1dMaximum = yMax if yMax is None else float(yMax)
+        return outConfig
 
     def handleAutoscaleChange(self, currentState):
         """Change state of line edits based on autoscale state.
@@ -87,13 +85,13 @@ class PsdPlotConfigTab(BaseConfigTab, Ui_PsdPlotConfigForm):
 
         Parameters
         ----------
-        config : dict
+        config : `config.PsdPlotConfig`
             The current set of configuration parameters.
         """
-        self.waterfallNumBinsLineEdit.setText(str(config['waterfall']['numBins']))
-        value = utils.noneToDefaultOrValue(config['waterfall']['colorMap'])
+        self.waterfallNumBinsLineEdit.setText(str(config.numWaterfallBins))
+        value = utils.noneToDefaultOrValue(config.waterfallColorMap)
         self.waterfallColorMapComboBox.setCurrentText(value)
-        self.autoscaleX1dCheckBox.setCheckState(utils.boolToCheckState(config['xPSD']['autoscale']))
-        self.x1dMaximumLineEdit.setText(str(utils.noneToDefaultOrValue(config['xPSD']['maximum'])))
-        self.autoscaleY1dCheckBox.setCheckState(utils.boolToCheckState(config['yPSD']['autoscale']))
-        self.y1dMaximumLineEdit.setText(str(utils.noneToDefaultOrValue(config['yPSD']['maximum'])))
+        self.autoscaleX1dCheckBox.setCheckState(utils.boolToCheckState(config.autoscaleX1d))
+        self.x1dMaximumLineEdit.setText(str(utils.noneToDefaultOrValue(config.x1dMaximum)))
+        self.autoscaleY1dCheckBox.setCheckState(utils.boolToCheckState(config.autoscaleY1d))
+        self.y1dMaximumLineEdit.setText(str(utils.noneToDefaultOrValue(config.y1dMaximum)))

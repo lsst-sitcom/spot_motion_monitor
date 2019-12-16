@@ -3,16 +3,16 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import csv
-from datetime import datetime
 import os
 
 import numpy as np
 import pandas as pd
 import tables
 
+from ..config import DataConfig, GeneralConfig
 from spot_motion_monitor.models import BufferModel, FullFrameModel, RoiFrameModel
 from spot_motion_monitor.utils import FrameRejected, FullFrameInformation, GenericFrameInformation
-from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, getTimestamp
+from spot_motion_monitor.utils import InformationUpdater, STATUSBAR_FAST_TIMEOUT, TimeHandler
 from spot_motion_monitor.utils import writeYamlFile
 from spot_motion_monitor import __version__ as version
 
@@ -29,6 +29,8 @@ class DataController():
         An instance of the buffer model.
     cameraDataWidget : .CameraDataWidget
         An instance of the camera data widget.
+    cameraModelName : str
+        The camera model used to take the data.
     centroidFilename : str
         The current name for the centroid output file.
     configFile : str
@@ -61,8 +63,6 @@ class DataController():
         The default name for the telemetry UI configuration file.
     updater : .InformationUpdater
         An instance of the information updater.
-    writeData : bool
-        Whether or not data writing is available.
     """
 
     TELEMETRY_SAVEDIR = 'dsm_telemetry'
@@ -82,7 +82,6 @@ class DataController():
         self.bufferModel = BufferModel()
         self.updater = InformationUpdater()
         self.roiResetDone = False
-        self.writeData = False
         self.filesCreated = False
         self.centroidFilename = None
         self.psdFilename = None
@@ -92,6 +91,10 @@ class DataController():
         self.removeTelemetryDir = True
         self.configVersion = None
         self.configFile = None
+        self.dataConfig = DataConfig()
+        self.generalConfig = GeneralConfig()
+        self.timeHandler = TimeHandler()
+        self.cameraModelName = None
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -131,7 +134,7 @@ class DataController():
         try:
             return self.fullFrameModel.calculateCentroid(frame)
         except FrameRejected:
-            return GenericFrameInformation(getTimestamp(), 300, 200, -1, -1, -1, -1, None)
+            return GenericFrameInformation(self.timeHandler.getTime(), 300, 200, -1, -1, -1, -1, None)
 
     def getCentroids(self, isRoiMode):
         """Return the current x, y coordinate of the centroid.
@@ -157,12 +160,25 @@ class DataController():
 
         Returns
         -------
-        dict
+        `config.DataConfig`
             The set of current data configuration parameters.
         """
-        config = {}
-        config['pixelScale'] = self.bufferModel.pixelScale
-        return config
+        self.dataConfig.buffer.pixelScale = self.bufferModel.pixelScale
+        self.dataConfig.buffer.bufferSize = self.bufferModel.bufferSize
+        self.dataConfig.fullFrame.sigmaScale = self.fullFrameModel.sigmaScale
+        self.dataConfig.fullFrame.minimumNumPixels = self.fullFrameModel.minimumNumPixels
+        self.dataConfig.roiFrame.thresholdFactor = self.roiFrameModel.thresholdFactor
+        return self.dataConfig
+
+    def getGeneralConfiguration(self):
+        """Get the current general configuration.
+
+        Returns
+        -------
+        `config.GeneralConfig`
+            The set of current general configuration parameters.
+        """
+        return self.generalConfig
 
     def getPsd(self, isRoiMode, currentFps):
         """Return the power spectrum distribution (PSD).
@@ -205,7 +221,7 @@ class DataController():
         checked : bool
             State of the Save Buffer Data checkbox.
         """
-        self.writeData = checked
+        self.generalConfig.saveBufferData = checked
 
     def passFrame(self, frame, currentStatus):
         """Get a frame, do calculations and update information.
@@ -249,60 +265,28 @@ class DataController():
         """
         self.bufferModel.bufferSize = value
 
-    def setCommandLineConfig(self, options):
-        """Set new configurations based on command-line options.
+    def setCameraModelName(self, modelName):
+        """Set the current camera model name.
 
         Parameters
         ----------
-        options : Namespace
-            The options from command-line arguments.
+        modelName : str
+            The camera model name.
         """
-        try:
-            try:
-                ps = options.config['general']['pixel_scale']
-                self.bufferModel.pixelScale = ps
-            except KeyError:
-                pass
-
-            try:
-                td = options.config['general']['telemetry_dir']
-                self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(td))
-            except KeyError:
-                pass
-
-            try:
-                rtd = options.config['general']['remove_telemetry_dir']
-                self.removeTelemetryDir = rtd
-            except KeyError:
-                pass
-
-            try:
-                cv = options.config['general']['version']
-                self.configVersion = cv
-            except KeyError:
-                pass
-
-            try:
-                f = options.config['file']
-                self.configFile = f
-            except KeyError:
-                pass
-        except TypeError:
-            # No configuration passed
-            pass
-
-        if options.telemetry_dir is not None:
-            self.fullTelemetrySavePath = os.path.abspath(os.path.expanduser(options.telemetry_dir))
+        self.cameraModelName = modelName
 
     def setDataConfiguration(self, config):
         """Set a new configuration for the data controller.
 
         Parameters
         ----------
-        config : dict
+        config : `config.DataConfig`
             The new configuration parameters.
         """
-        self.bufferModel.pixelScale = config['pixelScale']
+        self.bufferModel.pixelScale = config.buffer.pixelScale
+        self.fullFrameModel.sigmaScale = config.fullFrame.sigmaScale
+        self.fullFrameModel.minimumNumPixels = config.fullFrame.minimumNumPixels
+        self.roiFrameModel.thresholdFactor = config.roiFrame.thresholdFactor
 
     def setFrameChecks(self, fullFrameCheck, roiFrameCheck):
         """Set the frame checks to the corresponding models.
@@ -316,6 +300,22 @@ class DataController():
         """
         self.fullFrameModel.frameCheck = fullFrameCheck
         self.roiFrameModel.frameCheck = roiFrameCheck
+
+    def setGeneralConfiguration(self, config):
+        """Set a new configuration for the general information.
+
+        Parameters
+        ----------
+        config : `config.GeneralConfig`
+            The new configuration parameters.
+        """
+        self.generalConfig = config
+        self.timeHandler.timezone = self.generalConfig.timezone
+        self.cameraDataWidget.saveDataCheckBox.setChecked(self.generalConfig.saveBufferData)
+        self.fullTelemetrySavePath = config.fullTelemetrySavePath
+        self.removeTelemetryDir = config.removeTelemetryDir
+        self.configVersion = config.configVersion
+        self.configFile = config.configFile
 
     def showRoiInformation(self, show, currentStatus):
         """Display the current ROI information on camera data widget.
@@ -342,7 +342,7 @@ class DataController():
         currentFps : int
             The current camera FPS.
         """
-        if not self.writeData:
+        if not self.generalConfig.saveBufferData:
             return
 
         if psd[0] is None:
@@ -353,7 +353,7 @@ class DataController():
         centroidY = np.array(self.bufferModel.centerY)
 
         if not self.filesCreated:
-            dateTag = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+            dateTag = self.timeHandler.getFormattedTimeStamp()
             self.centroidFilename = 'smm_centroid_{}.h5'.format(dateTag)
             self.psdFilename = 'smm_psd_{}.h5'.format(dateTag)
             self.filesCreated = True
@@ -363,12 +363,28 @@ class DataController():
 
             class CameraInfo(tables.IsDescription):
                 roiFramesPerSecond = tables.IntCol(pos=1)
+                modelName = tables.StringCol(128, pos=2)
 
             cameraInfo = centroidFile.create_table(cameraGroup, 'info', CameraInfo)
             info = cameraInfo.row
             info['roiFramesPerSecond'] = currentFps
+            info['modelName'] = 'None Provided' if self.cameraModelName is None else self.cameraModelName
             info.append()
             cameraInfo.flush()
+
+            generalGroup = centroidFile.create_group('/', 'general', 'General Information')
+
+            class GeneralInfo(tables.IsDescription):
+                siteName = tables.StringCol(128, pos=1)
+                timezone = tables.StringCol(48, pos=2)
+
+            generalInfo = centroidFile.create_table(generalGroup, 'info', GeneralInfo)
+            info = generalInfo.row
+            info['siteName'] = 'None Provided' if self.generalConfig.site is None else self.generalConfig.site
+            info['timezone'] = self.generalConfig.timezone
+            info.append()
+            generalInfo.flush()
+
             centroidFile.close()
 
         centDf = pd.DataFrame({
@@ -380,7 +396,7 @@ class DataController():
                              'X': psd[0],
                              'Y': psd[1]
                              })
-        dateKey = 'DT_{}'.format(datetime.utcnow().strftime('%Y%m%d_%H%M%S'))
+        dateKey = 'DT_{}'.format(self.timeHandler.getFormattedTimeStamp())
 
         centDf.to_hdf(self.centroidFilename, key=dateKey)
         psdDf.to_hdf(self.psdFilename, key=dateKey)
@@ -406,7 +422,7 @@ class DataController():
             if not os.path.exists(self.fullTelemetrySavePath):
                 os.makedirs(self.fullTelemetrySavePath)
 
-            content = {'timestamp': getTimestamp().isoformat(),
+            content = {'timestamp': self.timeHandler.getFormattedTimeStamp(format="iso"),
                        'ui_versions': {'code': version, 'config': self.configVersion,
                                        'config_file': self.configFile},
                        'camera': {'name': currentStatus.name,
@@ -417,7 +433,7 @@ class DataController():
 
             self.telemetrySetup = True
 
-        currentTimestamp = getTimestamp()
+        currentTimestamp = self.timeHandler.getTime()
         telemetryFile = 'dsm_{}.dat'.format(currentTimestamp.strftime('%Y%m%d_%H%M%S'))
         output = [currentTimestamp.isoformat(),
                   self.bufferModel.timestamp[0].isoformat(),

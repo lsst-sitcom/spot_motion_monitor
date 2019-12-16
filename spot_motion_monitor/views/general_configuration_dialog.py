@@ -1,18 +1,17 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018-2019 LSST Systems Engineering
-# Distributed under the MIT License. See LICENSE for more information.
+# See LICENSE for more information.
 #------------------------------------------------------------------------------
-from spot_motion_monitor.views import BaseConfigurationDialog, DataConfigTab
+from . import BaseConfigurationDialog, GeneralConfigTab
 
 __all__ = ['GeneralConfigurationDialog']
 
 class GeneralConfigurationDialog(BaseConfigurationDialog):
-    """Class that generates the dialog for handling general data configuration.
+    """Class that generates the dialog for handling general configuration.
 
     Attributes
     ----------
-    dataConfigTab : DataConfigTab
-        Instance of the data configuration tab.
+    generalConfigTab : GeneralConfigTab
+        Instance of the general configuration tab.
     """
 
     def __init__(self, parent=None):
@@ -24,28 +23,28 @@ class GeneralConfigurationDialog(BaseConfigurationDialog):
             Top-level widget.
         """
         super().__init__(parent)
-        self.dataConfigTab = DataConfigTab()
+        self.generalConfigTab = GeneralConfigTab()
 
-        self.tabWidget.addTab(self.dataConfigTab, self.dataConfigTab.name)
-        self.dataConfigTab.hasValidInput.connect(self.inputFromTabsValid)
+        self.tabWidget.addTab(self.generalConfigTab, self.generalConfigTab.name)
+        self.setMinimumSize(self.generalConfigTab.minimumSize())
 
     def getConfiguration(self):
-        """Get the current data configuration from the tab.
+        """Get the current general configuration from the tab.
 
         Returns
         -------
-        dict
+        `config.GeneralConfig`
             The current set of configuration parameters.
         """
-        config = self.dataConfigTab.getConfiguration()
+        config = self.generalConfigTab.getConfiguration()
         return config
 
     def setConfiguration(self, config):
-        """Set the current data configuration in the tab.
+        """Set the current general configuration in the tab.
 
         Parameters
         ----------
-        config : dict
+        config : `config.GeneralConfig`
           The current set of configuration parameters.
         """
-        self.dataConfigTab.setConfiguration(config)
+        self.generalConfigTab.setConfiguration(config)

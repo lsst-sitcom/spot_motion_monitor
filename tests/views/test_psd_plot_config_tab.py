@@ -2,6 +2,7 @@
 # Copyright (c) 2018 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from spot_motion_monitor.config import PsdPlotConfig
 import spot_motion_monitor.utils as utils
 from spot_motion_monitor.views import PsdPlotConfigTab
 
@@ -36,29 +37,39 @@ class TestPsdPlotConfigTab:
         configTab = PsdPlotConfigTab()
         qtbot.addWidget(configTab)
 
-        config = {'waterfall': {'numBins': 15, 'colorMap': 'plasma'},
-                  'xPSD': {'autoscale': True, 'minimum': None, 'maximum': None},
-                  'yPSD': {'autoscale': False, 'minimum': 10, 'maximum': 1320}}
-        configTab.setConfiguration(config)
-        assert int(configTab.waterfallNumBinsLineEdit.text()) == config['waterfall']['numBins']
-        assert configTab.waterfallColorMapComboBox.currentText() == config['waterfall']['colorMap']
+        truthConfig = PsdPlotConfig()
+        truthConfig.autoscaleX1d = True
+        truthConfig.x1dMaximum = None
+        truthConfig.autoscaleY1d = False
+        truthConfig.y1dMaximum = 1320
+        truthConfig.numWaterfallBins = 15
+        truthConfig.waterfallColorMap = "plasma"
+
+        configTab.setConfiguration(truthConfig)
+        assert int(configTab.waterfallNumBinsLineEdit.text()) == truthConfig.numWaterfallBins
+        assert configTab.waterfallColorMapComboBox.currentText() == truthConfig.waterfallColorMap
         assert utils.checkStateToBool(configTab.autoscaleX1dCheckBox.checkState()) is True
         assert configTab.x1dMaximumLineEdit.isEnabled() is False
         assert utils.checkStateToBool(configTab.autoscaleY1dCheckBox.checkState()) is False
         assert configTab.y1dMaximumLineEdit.isEnabled() is True
-        assert int(configTab.y1dMaximumLineEdit.text()) == config['yPSD']['maximum']
+        assert int(configTab.y1dMaximumLineEdit.text()) == truthConfig.y1dMaximum
 
     def test_getParametersFromConfiguration(self, qtbot):
         configTab = PsdPlotConfigTab()
         qtbot.addWidget(configTab)
-        truthConfig = {'waterfall': {'numBins': 35, 'colorMap': 'magma'},
-                       'xPSD': {'autoscale': True},
-                       'yPSD': {'autoscale': False, 'maximum': 1320.0}}
-        configTab.waterfallNumBinsLineEdit.setText(str(truthConfig['waterfall']['numBins']))
-        configTab.waterfallColorMapComboBox.setCurrentText(truthConfig['waterfall']['colorMap'])
-        configTab.autoscaleX1dCheckBox.setChecked(utils.boolToCheckState(truthConfig['xPSD']['autoscale']))
-        configTab.autoscaleY1dCheckBox.setChecked(utils.boolToCheckState(truthConfig['yPSD']['autoscale']))
-        configTab.y1dMaximumLineEdit.setText(str(truthConfig['yPSD']['maximum']))
+
+        truthConfig = PsdPlotConfig()
+        truthConfig.autoscaleX1d = True
+        truthConfig.autoscaleY1d = False
+        truthConfig.y1dMaximum = 1320.0
+        truthConfig.numWaterfallBins = 35
+        truthConfig.waterfallColorMap = "magma"
+
+        configTab.waterfallNumBinsLineEdit.setText(str(truthConfig.numWaterfallBins))
+        configTab.waterfallColorMapComboBox.setCurrentText(truthConfig.waterfallColorMap)
+        configTab.autoscaleX1dCheckBox.setChecked(utils.boolToCheckState(truthConfig.autoscaleX1d))
+        configTab.autoscaleY1dCheckBox.setChecked(utils.boolToCheckState(truthConfig.autoscaleY1d))
+        configTab.y1dMaximumLineEdit.setText(str(truthConfig.y1dMaximum))
         config = configTab.getConfiguration()
         assert config == truthConfig
 

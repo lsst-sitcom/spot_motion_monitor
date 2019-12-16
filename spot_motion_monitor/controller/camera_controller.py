@@ -113,7 +113,7 @@ class CameraController():
             self.cameraControlWidget.acquireFramesButton.click()
             self.cameraControlWidget.acquireRoiCheckBox.click()
 
-    def bufferSize(self, value):
+    def bufferSize(self, value, updateWidget=False):
         """Rebroadcast a buffer size change request.
 
         Parameters
@@ -122,6 +122,9 @@ class CameraController():
             The requested buffer size.
         """
         self.updater.bufferSizeChanged.emit(value)
+        if updateWidget:
+            self.cameraControlWidget.currentBufferSize = value
+            self.cameraControlWidget.bufferSizeSpinBox.setValue(value)
 
     def currentCameraFps(self):
         """Get the current camera FPS.
@@ -193,7 +196,7 @@ class CameraController():
 
         Returns
         -------
-        dict
+        Derived camera type of `config.BaseConfig`
             The set of current camera configuration parameters.
         """
         return self.camera.getConfiguration()
@@ -261,22 +264,10 @@ class CameraController():
 
         Parameters
         ----------
-        config : dict
+        config : Derived camera type of `config.BaseConfig`
             The current configuration parameters.
         """
         self.camera.setConfiguration(config)
-
-    def setCommandLineConfig(self, options):
-        """Set new configurations based on command-line options.
-
-        Parameters
-        ----------
-        options : Namespace
-            The options from command-line arguments.
-        """
-        self.doAutoRun = options.auto_run
-        config = {'cameraIndex': options.vimba_camera_index}
-        self.setCameraConfiguration(config)
 
     def setupCamera(self, cameraStr):
         """Create a specific concrete instance of a camera.
@@ -343,3 +334,13 @@ class CameraController():
             The current y component of the centroid from a full frame.
         """
         self.camera.updateOffset(centroidX, centroidY)
+
+    def updateRoiFps(self, roiFps):
+        """Update the ROI FPS widget.
+
+        Parameters
+        ----------
+        roiFps : int
+            The current ROI FPS to display on the widget.
+        """
+        self.cameraControlWidget.roiFpsSpinBox.setValue(roiFps)

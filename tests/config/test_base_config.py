@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import pytest
@@ -14,4 +14,34 @@ class TestBaseConfig:
     def test_noApiAfterConstruction(self):
 
         with pytest.raises(NotImplementedError):
-            self.baseConfig.toYaml()
+            self.baseConfig.toDict()
+
+        with pytest.raises(NotImplementedError):
+            self.baseConfig.fromDict({})
+
+    def test_equality(self):
+        config1 = BaseConfig()
+        config1.x = 10
+        config2 = BaseConfig()
+        config2.x = 4
+        config3 = BaseConfig()
+        config3.x = 10
+        config4 = BaseConfig()
+        config4.x = None
+        config5 = BaseConfig()
+        config5.x = None
+
+        assert config1 != config2
+        assert config1 == config3
+        assert config1 != config4
+        assert config4 == config5
+
+    def test_check(self):
+        config1 = BaseConfig()
+        config1.x = 10
+        config1.y = 2.5
+        idict = {"x": 14}
+        config1.check("x", idict, "x")
+        assert config1.x == idict["x"]
+        config1.check("y", idict, "y")
+        assert config1.y == 2.5

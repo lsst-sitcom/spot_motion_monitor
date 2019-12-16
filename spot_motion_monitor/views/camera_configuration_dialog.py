@@ -30,6 +30,7 @@ class CameraConfigurationDialog(BaseConfigurationDialog):
         self.cameraConfigTab = getattr(spot_motion_monitor.views, '{}ConfigTab'.format(camera))()
 
         self.tabWidget.addTab(self.cameraConfigTab, self.cameraConfigTab.name)
+        self.setMinimumSize(self.cameraConfigTab.minimumSize())
         self.cameraConfigTab.hasValidInput.connect(self.inputFromTabsValid)
 
     def getCameraConfiguration(self):

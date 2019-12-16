@@ -1,11 +1,11 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import numpy as np
 from pyqtgraph import GraphicsLayoutWidget
 
-from spot_motion_monitor.utils import AutoscaleState
+from ..utils import AutoscaleState, noneToDefaultOrValue
 
 __all__ = ['Centroid1dPlotWidget']
 
@@ -16,6 +16,10 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
 
     Attributes
     ----------
+    autoscale : `utils.AutoscaleState`
+        State of plot auto scaling.
+    axis : str
+        Component axis (X or Y).
     curve : pyqtgraph.PlotDataItem
         Instance of the line in the plot.
     data : numpy.array
@@ -61,6 +65,7 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         self.yRange = None
         self.pixelRangeAddition = 10
         self.numAccumFrames = 15
+        self.axis = None
 
     def clearPlot(self):
         """Reset all data and clear the plot.
@@ -78,38 +83,33 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
 
         Returns
         -------
-        dict
+        bool, tuple, int
             The set of current configuration parameters.
         """
-        config = {}
-        config['autoscale'] = self.autoscale.name
         if self.yRange is not None:
-            config['minimum'] = self.yRange[0]
-            config['maximum'] = self.yRange[1]
+            yRange = [self.yRange[0], self.yRange[1]]
         else:
-            config['minimum'] = None
-            config['maximum'] = None
-        config['pixelAddition'] = self.pixelRangeAddition
-        return config
+            yRange = [None, None]
+        return self.autoscale, yRange, self.pixelRangeAddition
 
     def setConfiguration(self, config):
         """Set the new parameters into the widget.
 
         Parameters
         ----------
-        config : dict
+        config : `config.CentroidPlotConfig`
             The new parameters to apply.
         """
-        self.autoscale = getattr(AutoscaleState, config['autoscale'])
+        self.autoscale = getattr(config, f'autoscale{self.axis}')
         if self.autoscale == AutoscaleState.ON:
             self.plot.enableAutoRange()
             self.yRange = None
         elif self.autoscale == AutoscaleState.PARTIAL:
             self.yRange = None
-            self.pixelRangeAddition = config['pixelAddition']
+            self.pixelRangeAddition = getattr(config, f'pixelRangeAddition{self.axis}')
         else:
-            minimum = config['minimum'] if config['minimum'] is not None else 0
-            maximum = config['maximum'] if config['maximum'] is not None else 1000
+            minimum = noneToDefaultOrValue(getattr(config, f'minimum{self.axis}'), default=0)
+            maximum = noneToDefaultOrValue(getattr(config, f'maximum{self.axis}'), default=1000)
             self.yRange = [minimum, maximum]
             self.plot.setRange(yRange=self.yRange)
             self.plot.disableAutoRange()
@@ -126,6 +126,7 @@ class Centroid1dPlotWidget(GraphicsLayoutWidget):
         roiFps : float
             The camera ROI FPS.
         """
+        self.axis = axisLabel
         self.dataSize = arraySize
         self.data = np.zeros(self.dataSize)
         self.roiFps = roiFps

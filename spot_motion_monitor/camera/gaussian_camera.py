@@ -5,6 +5,7 @@
 import numpy as np
 
 from spot_motion_monitor.camera import BaseCamera
+from ..config import GaussianCameraConfig
 
 __all__ = ['GaussianCamera']
 
@@ -15,6 +16,8 @@ class GaussianCamera(BaseCamera):
 
     Attributes
     ----------
+    config : `config.GaussianCameraConfig`
+        The instance containing the camera configuration.
     counter : int
         The progress of the oscillation in time.
     fpsFullFrame : int
@@ -76,6 +79,7 @@ class GaussianCamera(BaseCamera):
         self.yAmp = 5
         self.xPointOriginal = None
         self.yPointOriginal = None
+        self.config = GaussianCameraConfig()
 
     def findInsertionPoint(self):
         """Determine the Gaussian spot insertion point.
@@ -96,17 +100,18 @@ class GaussianCamera(BaseCamera):
 
         Returns
         -------
-        dict
+        `config.GaussianCameraConfig`
             The set of current configuration parameters.
         """
-        config = {}
-        config['roiSize'] = self.roiSize
-        config['doSpotOscillation'] = self.doSpotOscillation
-        config['xAmplitude'] = self.xAmp
-        config['xFrequency'] = self.xFreq
-        config['yAmplitude'] = self.yAmp
-        config['yFrequency'] = self.yFreq
-        return config
+        self.config.roiSize = self.roiSize
+        self.config.fpsRoiFrame = self.fpsRoiFrame
+        self.config.fpsFullFrame = self.fpsFullFrame
+        self.config.doSpotOscillation = self.doSpotOscillation
+        self.config.xAmplitude = self.xAmp
+        self.config.xFrequency = self.xFreq
+        self.config.yAmplitude = self.yAmp
+        self.config.yFrequency = self.yFreq
+        return self.config
 
     def getFullFrame(self):
         """Get the full frame from the CCD.
@@ -187,23 +192,18 @@ class GaussianCamera(BaseCamera):
 
         Parameters
         ----------
-        config : dict
+        config : `config.GaussianCameraConfig`
             The current configuration.
         """
 
-        if 'roiSize' in config:
-            self.roiSize = config['roiSize']
-        if 'doSpotOscillation' in config:
-            self.doSpotOscillation = config['doSpotOscillation']
-            if self.doSpotOscillation:
-                if 'xFrequency' in config:
-                    self.xFreq = config['xFrequency']
-                if 'xAmplitude' in config:
-                    self.xAmp = config['xAmplitude']
-                if 'yFrequency' in config:
-                    self.yFreq = config['yFrequency']
-                if 'yAmplitude' in config:
-                    self.yAmp = config['yAmplitude']
+        self.roiSize = config.roiSize
+        self.fpsRoiFrame = config.fpsRoiFrame
+        self.fpsFullFrame = config.fpsFullFrame
+        self.doSpotOscillation = config.doSpotOscillation
+        self.xFreq = config.xFrequency
+        self.xAmp = config.xAmplitude
+        self.yFreq = config.yFrequency
+        self.yAmp = config.yAmplitude
 
     def showFrameStatus(self):
         """Show frame status from the camera.

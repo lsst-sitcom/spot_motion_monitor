@@ -1,12 +1,13 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtGui import QIntValidator
 
-import spot_motion_monitor.utils as utils
-from spot_motion_monitor.views import BaseConfigTab
-from spot_motion_monitor.views.forms.ui_centroid_plots_config import Ui_CentroidPlotsConfigForm
+from .. import config
+from .. import utils
+from . import BaseConfigTab
+from .forms.ui_centroid_plots_config import Ui_CentroidPlotsConfigForm
 
 __all__ = ['CentroidPlotConfigTab']
 
@@ -62,34 +63,31 @@ class CentroidPlotConfigTab(BaseConfigTab, Ui_CentroidPlotsConfigForm):
         dict
             The current set of configuration parameters.
         """
-        config = {}
-        config['xCentroid'] = {}
+        outConfig = config.CentroidPlotConfig()
         xAutoscale = self.autoscaleXComboBox.currentText()
-        config['xCentroid']['autoscale'] = xAutoscale
+        outConfig.autoscaleX = getattr(utils.AutoscaleState, xAutoscale)
         if xAutoscale == utils.AutoscaleState.OFF.name:
             xMin = utils.defaultToNoneOrValue(self.minXLimitLineEdit.text())
-            config['xCentroid']['minimum'] = xMin if xMin is None else int(xMin)
+            outConfig.minimumX = xMin if xMin is None else int(xMin)
             xMax = utils.defaultToNoneOrValue(self.maxXLimitLineEdit.text())
-            config['xCentroid']['maximum'] = xMax if xMax is None else int(xMax)
+            outConfig.maximumX = xMax if xMax is None else int(xMax)
         elif xAutoscale == utils.AutoscaleState.PARTIAL.name:
             xPixelAddition = utils.defaultToNoneOrValue(self.pixelAdditionXLineEdit.text())
             xValue = xPixelAddition if xPixelAddition is None else int(xPixelAddition)
-            config['xCentroid']['pixelAddition'] = xValue
-        config['yCentroid'] = {}
+            outConfig.pixelRangeAdditionX = xValue
         yAutoscale = self.autoscaleYComboBox.currentText()
-        config['yCentroid']['autoscale'] = yAutoscale
+        outConfig.autoscaleY = getattr(utils.AutoscaleState, yAutoscale)
         if yAutoscale == utils.AutoscaleState.OFF.name:
             yMin = utils.defaultToNoneOrValue(self.minYLimitLineEdit.text())
-            config['yCentroid']['minimum'] = yMin if yMin is None else int(yMin)
+            outConfig.minimumY = yMin if yMin is None else int(yMin)
             yMax = utils.defaultToNoneOrValue(self.maxYLimitLineEdit.text())
-            config['yCentroid']['maximum'] = yMax if yMax is None else int(yMax)
+            outConfig.maximumY = yMax if yMax is None else int(yMax)
         elif yAutoscale == utils.AutoscaleState.PARTIAL.name:
             yPixelAddition = utils.defaultToNoneOrValue(self.pixelAdditionYLineEdit.text())
             yValue = yPixelAddition if yPixelAddition is None else int(yPixelAddition)
-            config['yCentroid']['pixelAddition'] = yValue
-        config['scatterPlot'] = {}
-        config['scatterPlot']['numHistogramBins'] = int(self.numHistoBinsLineEdit.text())
-        return config
+            outConfig.pixelRangeAdditionY = yValue
+        outConfig.numHistogramBins = int(self.numHistoBinsLineEdit.text())
+        return outConfig
 
     def handleAutoscaleChange(self, currentIndex):
         """Change state of line edits based on autoscale state.
@@ -127,18 +125,18 @@ class CentroidPlotConfigTab(BaseConfigTab, Ui_CentroidPlotsConfigForm):
 
         Parameters
         ----------
-        config : dict
+        config : `config.CentroidPlotConfig`
             The current set of configuration parameters.
         """
-        self.autoscaleXComboBox.setCurrentText(config['xCentroid']['autoscale'])
-        xPixelAddition = utils.noneToDefaultOrValue(config['xCentroid']['pixelAddition'])
+        self.autoscaleXComboBox.setCurrentText(config.autoscaleX.name)
+        xPixelAddition = utils.noneToDefaultOrValue(config.pixelRangeAdditionX)
         self.pixelAdditionXLineEdit.setText(str(xPixelAddition))
-        self.minXLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config['xCentroid']['minimum'])))
-        self.maxXLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config['xCentroid']['maximum'])))
-        self.autoscaleYComboBox.setCurrentText(config['yCentroid']['autoscale'])
-        yPixelAddition = utils.noneToDefaultOrValue(config['yCentroid']['pixelAddition'])
+        self.minXLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config.minimumX)))
+        self.maxXLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config.maximumX)))
+        self.autoscaleYComboBox.setCurrentText(config.autoscaleY.name)
+        yPixelAddition = utils.noneToDefaultOrValue(config.pixelRangeAdditionY)
         self.pixelAdditionYLineEdit.setText(str(yPixelAddition))
-        self.minYLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config['yCentroid']['minimum'])))
-        self.maxYLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config['yCentroid']['maximum'])))
-        value = utils.noneToDefaultOrValue(config['scatterPlot']['numHistogramBins'])
+        self.minYLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config.minimumY)))
+        self.maxYLimitLineEdit.setText(str(utils.noneToDefaultOrValue(config.maximumY)))
+        value = utils.noneToDefaultOrValue(config.numHistogramBins)
         self.numHistoBinsLineEdit.setText(str(value))

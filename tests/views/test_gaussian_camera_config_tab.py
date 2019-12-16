@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
 
+from spot_motion_monitor.config import GaussianCameraConfig
 from spot_motion_monitor.utils import boolToCheckState
 from spot_motion_monitor.views import GaussianCameraConfigTab
 
@@ -33,6 +34,7 @@ class TestGaussianCameraConfigTab:
         qtbot.addWidget(gcConfigTab)
 
         assert gcConfigTab.name == 'Gaussian'
+        assert gcConfigTab.config is not None
         assert gcConfigTab.spotOscillationCheckBox.isChecked() is False
         assert gcConfigTab.spotOscillationGroupBox.isEnabled() is False
 
@@ -40,43 +42,52 @@ class TestGaussianCameraConfigTab:
         gcConfigTab = GaussianCameraConfigTab()
         qtbot.addWidget(gcConfigTab)
 
-        config = {'roiSize': 30, 'doSpotOscillation': False,
-                  'xAmplitude': 2, 'xFrequency': 50.0,
-                  'yAmplitude': 7, 'yFrequency': 25.0}
+        truthConfig = GaussianCameraConfig()
+        truthConfig.roiSize = 30
+        truthConfig.doSpotOscillation = False
+        truthConfig.xAmplitude = 2
+        truthConfig.xFrequency = 50.0
+        truthConfig.yAmplitude = 7
+        truthConfig.yFrequency = 25.0
 
-        gcConfigTab.setConfiguration(config)
-        assert int(gcConfigTab.roiSizeLineEdit.text()) == config['roiSize']
+        gcConfigTab.setConfiguration(truthConfig)
+        assert int(gcConfigTab.roiSizeLineEdit.text()) == truthConfig.roiSize
         state = gcConfigTab.spotOscillationCheckBox.checkState()
         boolState = True if state == Qt.Checked else False
-        assert boolState == config['doSpotOscillation']
-        assert int(gcConfigTab.xAmpLineEdit.text()) == config['xAmplitude']
-        assert float(gcConfigTab.xFreqLineEdit.text()) == config['xFrequency']
-        assert int(gcConfigTab.yAmpLineEdit.text()) == config['yAmplitude']
-        assert float(gcConfigTab.yFreqLineEdit.text()) == config['yFrequency']
+        assert boolState == truthConfig.doSpotOscillation
+        assert int(gcConfigTab.xAmpLineEdit.text()) == truthConfig.xAmplitude
+        assert float(gcConfigTab.xFreqLineEdit.text()) == truthConfig.xFrequency
+        assert int(gcConfigTab.yAmpLineEdit.text()) == truthConfig.yAmplitude
+        assert float(gcConfigTab.yFreqLineEdit.text()) == truthConfig.yFrequency
 
     def test_getParametersFromConfiguration(self, qtbot):
         gcConfigTab = GaussianCameraConfigTab()
         qtbot.addWidget(gcConfigTab)
         gcConfigTab.show()
 
-        truthConfig = {'roiSize': 30, 'doSpotOscillation': True,
-                       'xAmplitude': 2, 'xFrequency': 50.0,
-                       'yAmplitude': 7, 'yFrequency': 25.0}
+        truthConfig = GaussianCameraConfig()
+        truthConfig.roiSize = 30
+        truthConfig.doSpotOscillation = True
+        truthConfig.xAmplitude = 2
+        truthConfig.xFrequency = 50.0
+        truthConfig.yAmplitude = 7
+        truthConfig.yFrequency = 25.0
 
-        gcConfigTab.roiSizeLineEdit.setText(str(truthConfig['roiSize']))
-        gcConfigTab.spotOscillationCheckBox.setChecked(boolToCheckState(truthConfig['doSpotOscillation']))
-        gcConfigTab.xAmpLineEdit.setText(str(truthConfig['xAmplitude']))
-        gcConfigTab.xFreqLineEdit.setText(str(truthConfig['xFrequency']))
-        gcConfigTab.yAmpLineEdit.setText(str(truthConfig['yAmplitude']))
-        gcConfigTab.yFreqLineEdit.setText(str(truthConfig['yFrequency']))
+        gcConfigTab.roiSizeLineEdit.setText(str(truthConfig.roiSize))
+        gcConfigTab.spotOscillationCheckBox.setChecked(boolToCheckState(truthConfig.doSpotOscillation))
+        gcConfigTab.xAmpLineEdit.setText(str(truthConfig.xAmplitude))
+        gcConfigTab.xFreqLineEdit.setText(str(truthConfig.xFrequency))
+        gcConfigTab.yAmpLineEdit.setText(str(truthConfig.yAmplitude))
+        gcConfigTab.yFreqLineEdit.setText(str(truthConfig.yFrequency))
 
         config = gcConfigTab.getConfiguration()
         assert config == truthConfig
 
-        truthConfig = {'roiSize': 50, 'doSpotOscillation': False}
+        truthConfig.roiSize = 50
+        truthConfig.doSpotOscillation = False
 
-        gcConfigTab.roiSizeLineEdit.setText(str(truthConfig['roiSize']))
-        gcConfigTab.spotOscillationCheckBox.setChecked(boolToCheckState(truthConfig['doSpotOscillation']))
+        gcConfigTab.roiSizeLineEdit.setText(str(truthConfig.roiSize))
+        gcConfigTab.spotOscillationCheckBox.setChecked(boolToCheckState(truthConfig.doSpotOscillation))
 
         config = gcConfigTab.getConfiguration()
         assert config == truthConfig

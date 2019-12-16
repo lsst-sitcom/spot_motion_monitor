@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
+from spot_motion_monitor.config import PsdPlotConfig
 from spot_motion_monitor.views import Psd1dPlotWidget
 
 class TestPsd1dPlotWidget:
@@ -15,6 +16,7 @@ class TestPsd1dPlotWidget:
         assert p1dpw.curve is not None
         assert p1dpw.autoscale is True
         assert p1dpw.yRange is None
+        assert p1dpw.axis is None
 
     def test_updatePlot(self, qtbot, mocker):
         p1dpw = Psd1dPlotWidget()
@@ -31,24 +33,31 @@ class TestPsd1dPlotWidget:
         p1dpw = Psd1dPlotWidget()
         p1dpw.show()
         qtbot.addWidget(p1dpw)
-        truthConfig = {'autoscale': True, 'minimum': None, 'maximum': None}
-        config = p1dpw.getConfiguration()
-        assert config == truthConfig
+        truthAutoscale = True
+        truthYRange = [None, None]
+        autoscale, yRange = p1dpw.getConfiguration()
+        assert autoscale is truthAutoscale
+        assert yRange == truthYRange
 
     def test_setConfiguration(self, qtbot):
         p1dpw = Psd1dPlotWidget()
         p1dpw.show()
         qtbot.addWidget(p1dpw)
         p1dpw.setup('X')
-        truthConfig = {'autoscale': False, 'minimum': 10, 'maximum': 100}
+        assert p1dpw.axis == 'X'
+        truthConfig = PsdPlotConfig()
+        truthConfig.x1dMinimum = 10
+        truthConfig.x1dMaximum = 100
         p1dpw.setConfiguration(truthConfig)
         assert p1dpw.autoscale is False
-        assert p1dpw.yRange == [truthConfig['minimum'], truthConfig['maximum']]
-        truthConfig = {'autoscale': True}
+        assert p1dpw.yRange == [truthConfig.x1dMinimum, truthConfig.x1dMaximum]
+        truthConfig.autoscaleX1d = True
         p1dpw.setConfiguration(truthConfig)
         assert p1dpw.autoscale is True
         assert p1dpw.yRange is None
-        truthConfig = {'autoscale': False, 'minimum': None, 'maximum': None}
+        truthConfig.autoscaleX1d = False
+        truthConfig.x1dMinimum = None
+        truthConfig.x1dMaximum = None
         p1dpw.setConfiguration(truthConfig)
         assert p1dpw.autoscale is False
         assert p1dpw.yRange == [0, 1000]

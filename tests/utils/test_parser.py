@@ -44,7 +44,7 @@ class TestArgumentParser():
     def test_autoRunFlag(self):
         args = self.parser.parse_args(['-a'])
         assert args.auto_run is True
-        args = self.parser.parse_args(['--auto_run'])
+        args = self.parser.parse_args(['--auto-run'])
         assert args.auto_run is True
 
     def test_vimbaCameraIndex(self):

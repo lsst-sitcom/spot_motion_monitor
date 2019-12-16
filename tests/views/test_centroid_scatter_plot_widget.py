@@ -1,7 +1,8 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from spot_motion_monitor.config import CentroidPlotConfig
 from spot_motion_monitor.views import CentroidScatterPlotWidget
 
 class TestCentroidScatterPlotWidget:
@@ -114,16 +115,17 @@ class TestCentroidScatterPlotWidget:
     def test_getConfiguration(self, qtbot):
         cspw = CentroidScatterPlotWidget()
         qtbot.addWidget(cspw)
-        config = {'numHistogramBins': 40}
-        currentConfig = cspw.getConfiguration()
-        assert currentConfig == config
+        truthNumHistoBins = 40
+        numHistoBins = cspw.getConfiguration()
+        assert numHistoBins == truthNumHistoBins
 
     def test_setConfiguration(self, qtbot):
         cspw = CentroidScatterPlotWidget()
         qtbot.addWidget(cspw)
-        truthConfig = {'numHistogramBins': 50}
+        truthConfig = CentroidPlotConfig()
+        truthConfig.numHistogramBins = 50
         cspw.setConfiguration(truthConfig)
-        cspw.numBins == truthConfig['numHistogramBins']
+        cspw.numBins == truthConfig.numHistogramBins
 
     def test_clearPlot(self, qtbot, mocker):
         cspw = CentroidScatterPlotWidget()

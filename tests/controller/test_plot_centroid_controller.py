@@ -1,10 +1,12 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from PyQt5.QtCore import Qt
 
+from spot_motion_monitor.config import CentroidPlotConfig
 from spot_motion_monitor.controller import PlotCentroidController
+from spot_motion_monitor.utils import AutoscaleState
 from spot_motion_monitor.views import Centroid1dPlotWidget, CentroidScatterPlotWidget
 
 class TestPlotCentroidController:
@@ -12,6 +14,16 @@ class TestPlotCentroidController:
     def setup_class(cls):
         cls.bufferSize = 3
         cls.roiFps = 2
+        cls.truthConfig = CentroidPlotConfig()
+        cls.truthConfig.autoscaleX = AutoscaleState.PARTIAL
+        cls.truthConfig.minimumX = None
+        cls.truthConfig.maximumX = None
+        cls.truthConfig.pixelRangeAdditionX = 10
+        cls.truthConfig.autoscaleY = AutoscaleState.PARTIAL
+        cls.truthConfig.minimumY = None
+        cls.truthConfig.maximumY = None
+        cls.truthConfig.pixelRangeAdditionY = 10
+        cls.truthConfig.numHistogramBins = 40
 
     def test_parametersAfterConstruction(self, qtbot):
         cxp = Centroid1dPlotWidget()
@@ -25,6 +37,7 @@ class TestPlotCentroidController:
         assert p1cc.x1dPlot is not None
         assert p1cc.y1dPlot is not None
         assert p1cc.scatterPlot is not None
+        assert p1cc.config is not None
 
     def test_parametersAfterSetup(self, qtbot):
         cxp = Centroid1dPlotWidget()
@@ -138,8 +151,7 @@ class TestPlotCentroidController:
         qtbot.addWidget(csp)
         p1cc = PlotCentroidController(cxp, cyp, csp)
         currentConfig = p1cc.getPlotConfiguration()
-        assert len(currentConfig) == 3
-        assert list(currentConfig.keys()) == ['scatterPlot', 'xCentroid', 'yCentroid']
+        assert currentConfig == self.truthConfig
 
     def test_setPlotConfiguration(self, qtbot, mocker):
         cxp = Centroid1dPlotWidget()

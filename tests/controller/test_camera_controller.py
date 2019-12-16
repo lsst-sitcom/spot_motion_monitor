@@ -2,8 +2,6 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-import collections
-
 from PyQt5.QtCore import Qt
 
 try:
@@ -12,6 +10,7 @@ try:
 except AssertionError:
     VimbaFound = False
 
+from spot_motion_monitor.config import GaussianCameraConfig
 from spot_motion_monitor.controller.camera_controller import CameraController
 from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
 from spot_motion_monitor.views.camera_control_widget import CameraControlWidget
@@ -265,7 +264,7 @@ class TestCameraController():
         cc = CameraController(ccWidget)
         cc.setupCamera("GaussianCamera")
         config = cc.getCameraConfiguration()
-        assert len(config) == 6
+        assert hasattr(config, "doSpotOscillation") is True
 
     def test_setCameraConfiguration(self, qtbot, mocker):
         ccWidget = CameraControlWidget()
@@ -276,21 +275,8 @@ class TestCameraController():
 
         mockSetCameraConfiguration = mocker.patch.object(cc.camera, 'setConfiguration')
 
-        cc.setCameraConfiguration({})
+        cc.setCameraConfiguration(GaussianCameraConfig())
         assert mockSetCameraConfiguration.call_count == 1
-
-    def test_setCommandLineConfig(self, qtbot):
-        ccWidget = CameraControlWidget()
-        ccWidget.show()
-        qtbot.addWidget(ccWidget)
-        cc = CameraController(ccWidget)
-        cc.setupCamera("GaussianCamera")
-
-        args = collections.namedtuple('args', ['auto_run', 'vimba_camera_index'])
-        args.auto_run = True
-
-        cc.setCommandLineConfig(args)
-        assert cc.doAutoRun is True
 
     def test_autoRun(self, qtbot):
         ccWidget = CameraControlWidget()

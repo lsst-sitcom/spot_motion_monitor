@@ -1,8 +1,7 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
-import collections
 from datetime import timedelta
 import os
 
@@ -11,6 +10,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 
 from spot_motion_monitor.camera import CameraStatus
+from spot_motion_monitor.config import DataConfig, GeneralConfig
 from spot_motion_monitor.controller import DataController
 from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, RoiFrameInformation
 from spot_motion_monitor.utils import getTimestamp, passFrame
@@ -35,7 +35,6 @@ class TestDataController():
         assert dc.roiFrameModel is not None
         assert dc.bufferModel is not None
         assert dc.roiResetDone is False
-        assert dc.writeData is False
         assert dc.filesCreated is False
         assert dc.centroidFilename is None
         assert dc.psdFilename is None
@@ -44,6 +43,10 @@ class TestDataController():
         assert dc.fullTelemetrySavePath is None
         assert dc.configVersion is None
         assert dc.configFile is None
+        assert dc.dataConfig is not None
+        assert dc.generalConfig is not None
+        assert dc.timeHandler is not None
+        assert dc.cameraModelName is None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -191,22 +194,29 @@ class TestDataController():
         assert mockWriteTelemetryFile.call_count == 1
         mockWriteTelemetryFile.assert_called_once_with(roiInfo, self.roiFrameStatus)
 
-    def test_setDataConfiguration(self, qtbot):
-        cdw = CameraDataWidget()
-        qtbot.addWidget(cdw)
-        dc = DataController(cdw)
-        currentConfig = dc.getDataConfiguration()
-        assert len(currentConfig) == 1
-        assert currentConfig == {'pixelScale': 1.0}
-
     def test_getDataConfiguration(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
+        currentConfig = dc.getDataConfiguration()
+        truthConfig = DataConfig()
+        assert currentConfig == truthConfig
 
-        truthConfig = {'pixelScale': 0.5}
+    def test_setDataConfiguration(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+
+        truthConfig = DataConfig()
+        truthConfig.buffer.pixelScale = 0.5
+        truthConfig.fullFrame.sigmaScale = 1.753
+        truthConfig.fullFrame.minimumNumPixels = 15
+        truthConfig.roiFrame.thresholdFactor = 0.99
         dc.setDataConfiguration(truthConfig)
-        assert dc.bufferModel.pixelScale == truthConfig['pixelScale']
+        assert dc.bufferModel.pixelScale == truthConfig.buffer.pixelScale
+        assert dc.fullFrameModel.sigmaScale == truthConfig.fullFrame.sigmaScale
+        assert dc.fullFrameModel.minimumNumPixels == truthConfig.fullFrame.minimumNumPixels
+        assert dc.roiFrameModel.thresholdFactor == truthConfig.roiFrame.thresholdFactor
 
     @freeze_time('2018-10-30 22:30:15')
     def test_writingData(self, qtbot):
@@ -215,7 +225,7 @@ class TestDataController():
         currentFps = 40
         dc = DataController(cdw)
         assert dc.cameraDataWidget.saveDataCheckBox.isChecked() is False
-        assert dc.writeData is False
+        assert dc.generalConfig.saveBufferData is False
         assert dc.filesCreated is False
 
         nonePsd = (None, None, None)
@@ -224,7 +234,7 @@ class TestDataController():
         assert dc.filesCreated is False
 
         qtbot.mouseClick(cdw.saveDataCheckBox, Qt.LeftButton)
-        assert dc.writeData is True
+        assert dc.generalConfig.saveBufferData is True
 
         dc.writeDataToFile(nonePsd, currentFps)
         assert dc.filesCreated is False
@@ -355,30 +365,35 @@ class TestDataController():
         assert mockCleanTelemetry.call_count == 1
         assert mockBufferModelReset.call_count == 1
 
-    def test_setCommandLineConfig(self, qtbot):
+    def test_getGeneralConfiguration(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+        currentConfig = dc.getGeneralConfiguration()
+        truthConfig = GeneralConfig()
+        assert currentConfig == truthConfig
+
+    def test_setGeneralConfiguration(self, qtbot):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
 
-        args = collections.namedtuple('args', ['telemetry_dir', 'config'])
-        args.telemetry_dir = '/new/path/for/telemetry'
-        content = {'file': 'default.yaml',
-                   'general': {'version': '1.2', 'pixel_scale': 0.1,
-                               'telemetry_dir': '/other/path/for/telemetry'}}
-        args.config = content
+        truthConfig = GeneralConfig()
+        truthConfig.site = "Cerro Pachon"
+        truthConfig.configVersion = "0.1.10"
+        truthConfig.timezone = "TAI"
+        dc.setGeneralConfiguration(truthConfig)
+        assert dc.generalConfig == truthConfig
+        assert dc.fullTelemetrySavePath == truthConfig.fullTelemetrySavePath
+        assert dc.removeTelemetryDir == truthConfig.removeTelemetryDir
+        assert dc.configVersion == truthConfig.configVersion
+        assert dc.timeHandler.timezone == truthConfig.timezone
 
-        dc.setCommandLineConfig(args)
-        assert dc.fullTelemetrySavePath == args.telemetry_dir
-        assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
-        assert dc.configVersion == content['general']['version']
-        assert dc.configFile == content['file']
-        assert dc.removeTelemetryDir is True
+    def test_setCameraModelName(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
 
-        args.telemetry_dir = None
-        args.config['general']['remove_telemetry_dir'] = False
-        dc.setCommandLineConfig(args)
-        assert dc.fullTelemetrySavePath == content['general']['telemetry_dir']
-        assert dc.bufferModel.pixelScale == content['general']['pixel_scale']
-        assert dc.configVersion == content['general']['version']
-        assert dc.configFile == content['file']
-        assert dc.removeTelemetryDir is False
+        modelName = "ProSilice GT-650"
+        dc.setCameraModelName(modelName)
+        assert dc.cameraModelName == modelName

@@ -64,30 +64,29 @@ class PsdWaterfallPlotWidget(GraphicsLayoutWidget):
 
         Returns
         -------
-        dict
+        int, str
             The set of current configuration parameters.
         """
-        config = {}
-        config['numBins'] = self.arraySize
-        config['colorMap'] = self.colorMap
-        return config
+        return self.arraySize, self.colorMap
 
     def setConfiguration(self, config):
         """Set the new parameters into the widget.
 
         Parameters
         ----------
-        config : dict
+        config : `config.PsdPlotConfig`
             The new parameters to apply.
         """
-        if self.arraySize != config['numBins']:
-            self.arraySize = config['numBins']
+        numBins = config.numWaterfallBins
+        if self.arraySize != numBins:
+            self.arraySize = numBins
             # Invalidate data
             self.data = None
             self.boundingRect = None
 
-        if self.colorMap != config['colorMap']:
-            self.colorMap = config['colorMap']
+        colorMap = config.waterfallColorMap
+        if self.colorMap != colorMap:
+            self.colorMap = colorMap
             self.image.setLookupTable(getLutFromColorMap(self.colorMap))
 
     def setTimeScale(self, timeScale):

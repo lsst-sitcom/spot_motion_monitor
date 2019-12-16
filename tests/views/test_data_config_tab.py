@@ -1,7 +1,8 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from spot_motion_monitor.config import DataConfig
 from spot_motion_monitor.views import DataConfigTab
 
 class TestDataConfigTab:
@@ -35,22 +36,41 @@ class TestDataConfigTab:
         gcConfigTab = DataConfigTab()
         qtbot.addWidget(gcConfigTab)
 
-        config = {'pixelScale': 0.34}
+        truthConfig = DataConfig()
+        truthConfig.buffer.pixelScale = 0.34
+        truthConfig.fullFrame.sigmaScale = 5.25
+        truthConfig.fullFrame.minimumNumPixels = 55
+        truthConfig.roiFrame.thresholdFactor = 7.2455
 
-        gcConfigTab.setConfiguration(config)
-        assert float(gcConfigTab.pixelScaleLineEdit.text()) == config['pixelScale']
+        gcConfigTab.setConfiguration(truthConfig)
+        assert float(gcConfigTab.pixelScaleLineEdit.text()) == truthConfig.buffer.pixelScale
+        assert float(gcConfigTab.sigmaScaleLineEdit.text()) == truthConfig.fullFrame.sigmaScale
+        assert int(gcConfigTab.minimumNumPixelsLineEdit.text()) == truthConfig.fullFrame.minimumNumPixels
+        assert float(gcConfigTab.thresholdFactorLineEdit.text()) == truthConfig.roiFrame.thresholdFactor
 
     def test_getParametersFromConfiguration(self, qtbot):
         gcConfigTab = DataConfigTab()
         qtbot.addWidget(gcConfigTab)
         gcConfigTab.show()
 
-        truthConfig = {'pixelScale': 0.75}
+        truthConfig = DataConfig()
+        truthConfig.buffer.pixelScale = 0.75
+        truthConfig.fullFrame.sigmaScale = 1.533
+        truthConfig.fullFrame.minimumNumPixels = 30
+        truthConfig.roiFrame.thresholdFactor = 10.42
 
-        gcConfigTab.pixelScaleLineEdit.setText(str(truthConfig['pixelScale']))
+        gcConfigTab.pixelScaleLineEdit.setText(str(truthConfig.buffer.pixelScale))
+        gcConfigTab.sigmaScaleLineEdit.setText(str(truthConfig.fullFrame.sigmaScale))
+        gcConfigTab.minimumNumPixelsLineEdit.setText(str(truthConfig.fullFrame.minimumNumPixels))
+        gcConfigTab.thresholdFactorLineEdit.setText(str(truthConfig.roiFrame.thresholdFactor))
 
         config = gcConfigTab.getConfiguration()
-        assert config == truthConfig
+        try:
+            assert config == truthConfig
+        except AssertionError:
+            print("Getter: ", config)
+            print("Truth: ", truthConfig)
+            raise
 
     def test_validLineEditParameters(self, qtbot):
         gcConfigTab = DataConfigTab()
@@ -59,6 +79,14 @@ class TestDataConfigTab:
 
         self.checkValidations(qtbot, gcConfigTab.hasValidInput, True, gcConfigTab.pixelScaleLineEdit.setText,
                               [0.0, 1e200, 15000.532])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True, gcConfigTab.sigmaScaleLineEdit.setText,
+                              [-143.502, 1.43, 10.0])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True,
+                              gcConfigTab.minimumNumPixelsLineEdit.setText,
+                              [1, int(1e3), int(1e9)])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, True,
+                              gcConfigTab.thresholdFactorLineEdit.setText,
+                              [-1.0e200, 0.0, 1e200, 34.21532])
 
     def test_invalidLineEditParameters(self, qtbot):
         gcConfigTab = DataConfigTab()
@@ -67,3 +95,11 @@ class TestDataConfigTab:
 
         self.checkValidations(qtbot, gcConfigTab.hasValidInput, False, gcConfigTab.pixelScaleLineEdit.setText,
                               [-1.0, 1e201, 0.05286930])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False, gcConfigTab.sigmaScaleLineEdit.setText,
+                              [-1e201, 1e201, 3.671867393])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False,
+                              gcConfigTab.minimumNumPixelsLineEdit.setText,
+                              [(-10, 0, int(1e10))])
+        self.checkValidations(qtbot, gcConfigTab.hasValidInput, False,
+                              gcConfigTab.thresholdFactorLineEdit.setText,
+                              [-1.0e201, 1.0e201, 13.248689603])

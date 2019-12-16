@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 import numpy as np
 
+from spot_motion_monitor.config import PsdPlotConfig
 from spot_motion_monitor.views import PsdWaterfallPlotWidget
 
 class TestPsdWaterfallPlotWidget:
@@ -87,21 +88,25 @@ class TestPsdWaterfallPlotWidget:
         qtbot.addWidget(self.pwpw1)
         arraySize = 5
         self.pwpw1.setup(arraySize, self.timeScale, 'X')
-        config = {'numBins': 5, 'colorMap': 'viridis'}
-        currentConfig = self.pwpw1.getConfiguration()
-        assert currentConfig == config
+        truthNumBins = 5
+        truthColorMap = 'viridis'
+        numBins, colorMap = self.pwpw1.getConfiguration()
+        assert numBins == truthNumBins
+        assert colorMap == truthColorMap
 
     def test_setConfiguration(self, qtbot):
         pwpw2 = PsdWaterfallPlotWidget()
         qtbot.addWidget(pwpw2)
         arraySize = 5
         pwpw2.setup(arraySize, self.timeScale, 'X')
-        truthConfig = {'numBins': 10, 'colorMap': 'plasma'}
+        truthConfig = PsdPlotConfig()
+        truthConfig.numWaterfallBins = 10
+        truthConfig.waterfallColorMap = 'plasma'
         pwpw2.setConfiguration(truthConfig)
-        assert pwpw2.arraySize == truthConfig['numBins']
+        assert pwpw2.arraySize == truthConfig.numWaterfallBins
         assert pwpw2.data is None
         assert pwpw2.boundingRect is None
-        assert pwpw2.colorMap == truthConfig['colorMap']
+        assert pwpw2.colorMap == truthConfig.waterfallColorMap
 
     def test_clearPlot(self, qtbot, mocker):
         pwpw2 = PsdWaterfallPlotWidget()

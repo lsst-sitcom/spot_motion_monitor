@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------
 from pyqtgraph import GraphicsLayoutWidget
 
-from spot_motion_monitor.utils import HTML_NU, noneToDefaultOrValue
+from ..utils import HTML_NU, noneToDefaultOrValue
 
 __all__ = ['Psd1dPlotWidget']
 
@@ -39,6 +39,7 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
         self.curve = self.plot.plot([], [])
         self.autoscale = True
         self.yRange = None
+        self.axis = None
 
     def clearPlot(self):
         """Reset all data and clear the plot.
@@ -51,34 +52,30 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
 
         Returns
         -------
-        dict
+        bool, tuple
             The set of current configuration parameters.
         """
-        config = {}
-        config['autoscale'] = self.autoscale
         if self.yRange is not None:
-            config['minimum'] = self.yRange[0]
-            config['maximum'] = self.yRange[1]
+            yRange = [self.yRange[0], self.yRange[1]]
         else:
-            config['minimum'] = None
-            config['maximum'] = None
-        return config
+            yRange = [None, None]
+        return self.autoscale, yRange
 
     def setConfiguration(self, config):
         """Set the new parameters into the widget.
 
         Parameters
         ----------
-        config : dict
+        config : `config.PsdPlotConfig`
             The new parameters to apply.
         """
-        self.autoscale = config['autoscale']
+        self.autoscale = getattr(config, f'autoscale{self.axis}1d')
         if self.autoscale:
             self.plot.enableAutoRange()
             self.yRange = None
         else:
-            minimum = noneToDefaultOrValue(config['minimum'], default=0)
-            maximum = noneToDefaultOrValue(config['maximum'], default=1000)
+            minimum = noneToDefaultOrValue(getattr(config, f'{self.axis.lower()}1dMinimum'), default=0)
+            maximum = noneToDefaultOrValue(getattr(config, f'{self.axis.lower()}1dMaximum'), default=1000)
             self.yRange = [minimum, maximum]
             self.plot.setRange(yRange=self.yRange)
             self.plot.disableAutoRange()
@@ -91,6 +88,7 @@ class Psd1dPlotWidget(GraphicsLayoutWidget):
         axisLabel : str
             The label for the axis.
         """
+        self.axis = axisLabel
         self.plot.setLabel('bottom', '{} {}'.format(axisLabel, HTML_NU), units='Hz')
         self.plot.setLabel('left', 'PSD', units='pixel^2 s')
 

@@ -1,22 +1,27 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import collections
+import os
 
 import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAction, QMainWindow
-import pytest
+import yaml
 
 from spot_motion_monitor.camera import CameraStatus
-from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS
+from spot_motion_monitor.utils import CameraNotFound, FrameRejected, ONE_SECOND_IN_MILLISECONDS, YAML_INPUT
 from spot_motion_monitor.views.main_window import SpotMotionMonitor
 
 class TestMainWindow():
 
     # def setup_class(cls):
     #     cls.fastTimeout = 1250  # ms
+
+    def write_config(self, filename):
+        with open(filename, 'w') as ofile:
+            yaml.dump(yaml.load(YAML_INPUT, yaml.Loader), ofile)
 
     def test_mainWindowExit(self, qtbot, mocker):
         mocker.patch('PyQt5.QtWidgets.QMainWindow.close')
@@ -109,10 +114,12 @@ class TestMainWindow():
         mw.cameraController.setupCamera('GaussianCamera')
         assert mw.actionCameraConfig.isEnabled() is True
         assert mw.actionPlotsConfig.isEnabled() is True
+        assert mw.actionDataConfig.isEnabled() is True
         assert mw.actionGeneralConfig.isEnabled() is True
         qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
         assert mw.actionCameraConfig.isEnabled() is False
         assert mw.actionPlotsConfig.isEnabled() is True
+        assert mw.actionDataConfig.isEnabled() is True
         assert mw.actionGeneralConfig.isEnabled() is True
 
     def test_commandLineConfiguration(self, qtbot, mocker):
@@ -121,19 +128,21 @@ class TestMainWindow():
         qtbot.addWidget(mw)
         # Force camera setup
         mw.cameraController.setupCamera('GaussianCamera')
-        mockDataContollerSetCliConf = mocker.patch.object(mw.dataController, 'setCommandLineConfig')
-        mockCameraControllerSetCliConf = mocker.patch.object(mw.cameraController, 'setCommandLineConfig')
 
-        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run'])
-        args.telemetry_dir = None
+        args = collections.namedtuple('args', ['profile', 'telemetry_dir', 'config_file', 'auto_run',
+                                               'vimba_camera_index'])
+        args.telemetry_dir = "/new/path/for/telemetry"
         args.auto_run = False
+        filename = "test_new_config.yaml"
+        args.config_file = filename
+        self.write_config(filename)
 
         mw.handleConfig(args)
-        assert mockDataContollerSetCliConf.call_count == 1
-        assert mockCameraControllerSetCliConf.call_count == 1
-        assert args.config is None
-        with pytest.raises(AttributeError):
-            args.config_file
+        assert mw.dataController.getDataConfiguration().fullTelemetrySavePath == args.telemetry_dir
+        assert mw.dataController.bufferModel.bufferSize == 512
+        assert mw.dataController.cameraModelName == "Gaussian"
+
+        os.remove(filename)
 
     def test_autoRun(self, qtbot, mocker):
         mw = SpotMotionMonitor()
@@ -151,6 +160,74 @@ class TestMainWindow():
         mw.handleConfig(args)
         mw.autoRunIfNecessary()
         assert mockCameraControllerAutoRun.call_count == 1
+
+    def test_saveConfiguration(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+
+        truthFile = "./configuration.yaml"
+
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 0
+
+        mw._saveFileDialog = mocker.Mock(return_value=truthFile)
+        mw.saveConfiguration()
+        assert os.path.exists(truthFile)
+        os.remove(truthFile)
+
+    def test_saveConfigurationMask(self, qtbot):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 0
+        mw.actionWritePlotConfig.setChecked(True)
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 1
+        mw.actionWriteEmptyConfig.setChecked(True)
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 3
+        mw.actionWritePlotConfig.setChecked(False)
+        mask = mw.getSaveConfigurationMask()
+        assert mask == 2
+
+    def test_setConfiguration(self, qtbot, mocker):
+        mw = SpotMotionMonitor()
+        mw.show()
+        qtbot.addWidget(mw)
+        # Force camera setup
+        mw.cameraController.setupCamera('GaussianCamera')
+
+        filename = "test_config.yaml"
+        self.write_config(filename)
+        mw.setConfiguration(filename)
+
+        assert mw.cameraController.doAutoRun is True
+        assert mw.dataController.getGeneralConfiguration().configVersion == "1.5.2"
+        assert mw.dataController.getDataConfiguration().buffer.bufferSize == 512
+
+        os.remove(filename)
+
+    # def test_openConfiguration(self, qtbot, mocker):
+    #     mw = SpotMotionMonitor()
+    #     mw.show()
+    #     qtbot.addWidget(mw)
+    #     # Force camera setup
+    #     mw.cameraController.setupCamera('GaussianCamera')
+
+    #     truthFile = "./configuration.yaml"
+    #     mw._configOverrideWarning = mocker.Mock()
+    #     mw._openFileDialog = mocker.Mock(return_value=truthFile)
+    #     mwSetConfigurationMock = mocker.patch.object(mw, 'setConfiguration')
+
+    #     mw.openConfiguration()
+    #     assert mwSetConfigurationMock.call_count == 1
 
     # def test_acquire_frame(self, qtbot, mocker):
     #     mw = SpotMotionMonitor()

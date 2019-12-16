@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 from PyQt5.QtGui import QDoubleValidator, QIntValidator
 
+from ..config import GaussianCameraConfig
 import spot_motion_monitor.utils as utils
 from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_gaussian_camera_config import Ui_GaussianCameraConfigForm
@@ -30,6 +31,7 @@ class GaussianCameraConfigTab(BaseConfigTab, Ui_GaussianCameraConfigForm):
         super().__init__(parent)
         self.setupUi(self)
         self.name = 'Gaussian'
+        self.config = GaussianCameraConfig()
         self.roiSizeLineEdit.setValidator(QIntValidator(20, 200))
         self.xAmpLineEdit.setValidator(QIntValidator(1, 20))
         self.xFreqLineEdit.setValidator(QDoubleValidator(0.1, 100.0, 1, self))
@@ -58,34 +60,33 @@ class GaussianCameraConfigTab(BaseConfigTab, Ui_GaussianCameraConfigForm):
 
         Returns
         -------
-        dict
+        `config.GaussianCameraConfig`
             The current set of configuration parameters.
         """
-        config = {}
-        config['roiSize'] = int(self.roiSizeLineEdit.text())
-        config['doSpotOscillation'] = utils.checkStateToBool(self.spotOscillationCheckBox.checkState())
-        if config['doSpotOscillation']:
+        self.config.roiSize = int(self.roiSizeLineEdit.text())
+        self.config.doSpotOscillation = utils.checkStateToBool(self.spotOscillationCheckBox.checkState())
+        if self.config.doSpotOscillation:
             xAmp = utils.defaultToNoneOrValue(self.xAmpLineEdit.text())
-            config['xAmplitude'] = utils.convertValueOrNone(xAmp)
+            self.config.xAmplitude = utils.convertValueOrNone(xAmp)
             xFreq = utils.defaultToNoneOrValue(self.xFreqLineEdit.text())
-            config['xFrequency'] = utils.convertValueOrNone(xFreq, convert=float)
+            self.config.xFrequency = utils.convertValueOrNone(xFreq, convert=float)
             yAmp = utils.defaultToNoneOrValue(self.yAmpLineEdit.text())
-            config['yAmplitude'] = utils.convertValueOrNone(yAmp)
+            self.config.yAmplitude = utils.convertValueOrNone(yAmp)
             yFreq = utils.defaultToNoneOrValue(self.yFreqLineEdit.text())
-            config['yFrequency'] = utils.convertValueOrNone(yFreq, convert=float)
-        return config
+            self.config.yFrequency = utils.convertValueOrNone(yFreq, convert=float)
+        return self.config
 
     def setConfiguration(self, config):
         """Set the configuration parameters into the tab's widgets.
 
         Parameters
         ----------
-        config : dict
+        config : `config.GaussianCameraConfig`
             The current set of configuration parameters.
         """
-        self.roiSizeLineEdit.setText(str(config['roiSize']))
-        self.spotOscillationCheckBox.setCheckState(utils.boolToCheckState(config['doSpotOscillation']))
-        self.xAmpLineEdit.setText(str(config['xAmplitude']))
-        self.xFreqLineEdit.setText(str(config['xFrequency']))
-        self.yAmpLineEdit.setText(str(config['yAmplitude']))
-        self.yFreqLineEdit.setText(str(config['yFrequency']))
+        self.roiSizeLineEdit.setText(str(config.roiSize))
+        self.spotOscillationCheckBox.setCheckState(utils.boolToCheckState(config.doSpotOscillation))
+        self.xAmpLineEdit.setText(str(config.xAmplitude))
+        self.xFreqLineEdit.setText(str(config.xFrequency))
+        self.yAmpLineEdit.setText(str(config.yAmplitude))
+        self.yFreqLineEdit.setText(str(config.yFrequency))

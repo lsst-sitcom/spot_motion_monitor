@@ -9,6 +9,7 @@ import numpy as np
 import pymba as pv
 
 from spot_motion_monitor.camera import BaseCamera
+from ..config import VimbaCameraConfig
 from spot_motion_monitor.utils import CameraNotFound, FrameCaptureFailed, getTimestamp
 
 __all__ = ['VimbaCamera']
@@ -26,6 +27,8 @@ class VimbaCamera(BaseCamera):
         Requested index in list of camera.
     cameraPtr : pymba.VimbaCamera
         Instance of the actual camera object.
+    config : `config.VimbaCameraConfig`
+        Instance of the camera configuration.
     fluxMinRoi : int
         The minimum flux allowed for an ROI frame.
     fpsFullFrame : int
@@ -74,12 +77,14 @@ class VimbaCamera(BaseCamera):
         self.fpsRoiFrame = 40
         self.roiSize = 50
         self.roiExposureTime = 8000  # microseconds
+        self.fullExposureTime = 8000  # microseconds
         self.fluxMinRoi = 2000
         self.offsetX = 0
         self.offsetY = 0
         self.image = None
         self.frameShape = None
         self.isRoiMode = False
+        self.config = VimbaCameraConfig()
 
         self.STREAM_BYTES_PER_SECOND = 124000000
 
@@ -143,14 +148,16 @@ class VimbaCamera(BaseCamera):
 
         Returns
         -------
-        dict
+        `config.VimbaCameraConfig`
             The set of current configuration parameters.
         """
-        config = {}
-        config['roiSize'] = self.roiSize
-        config['roiFluxMinimum'] = self.fluxMinRoi
-        config['roiExposureTime'] = self.roiExposureTime
-        return config
+        self.config.roiSize = self.roiSize
+        self.config.fpsRoiFrame = self.fpsRoiFrame
+        self.config.fpsFullFrame = self.fpsFullFrame
+        self.config.roiFluxMinimum = self.fluxMinRoi
+        self.config.roiExposureTime = self.roiExposureTime
+        self.config.fullExposureTime = self.fullExposureTime
+        return self.config
 
     def getFullFrame(self):
         """Get the full frame from the CCD.
@@ -232,20 +239,18 @@ class VimbaCamera(BaseCamera):
 
         Parameters
         ----------
-        config : dict
+        config : `config.VimbaCameraConfig`
             The current configuration.
         """
-        if 'cameraIndex' in config:
-            if config['cameraIndex'] is not None:
-                self.cameraIndex = config['cameraIndex']
-        if 'roiSize' in config:
-            self.roiSize = config['roiSize']
-        if 'roiFluxMinimum' in config:
-            self.fluxMinRoi = config['roiFluxMinimum']
-        if 'roiExposureTime' in config:
-            self.roiExposureTime = config['roiExposureTime']
-            if self.cameraPtr is not None:
-                self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
+        self.cameraIndex = config.cameraIndex
+        self.roiSize = config.roiSize
+        self.fpsRoiFrame = config.fpsRoiFrame
+        self.fpsFullFrame = config.fpsFullFrame
+        self.fluxMinRoi = config.roiFluxMinimum
+        self.roiExposureTime = config.roiExposureTime
+        self.fullExposureTime = config.fullExposureTime
+        if self.cameraPtr is not None:
+            self.cameraPtr.ExposureTimeAbs = self.roiExposureTime
 
     def showFrameStatus(self):
         """Show frame status from the camera.

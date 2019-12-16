@@ -1,9 +1,10 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
+# Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 import cProfile
 from datetime import datetime
+import os
 import sys
 
 from PyQt5 import QtCore
@@ -15,9 +16,11 @@ from spot_motion_monitor.controller.data_controller import DataController
 from spot_motion_monitor.controller.plot_ccd_controller import PlotCcdController
 from spot_motion_monitor.controller.plot_centroid_controller import PlotCentroidController
 from spot_motion_monitor.controller.plot_psd_controller import PlotPsdController
-from spot_motion_monitor.utils import create_parser, DEFAULT_PSD_ARRAY_SIZE, readYamlFile
+from spot_motion_monitor.utils import create_parser, CSS, DEFAULT_PSD_ARRAY_SIZE, readYamlFile, writeYamlFile
+import spot_motion_monitor.utils.constants as consts
 from spot_motion_monitor.views import CameraConfigurationDialog
-from spot_motion_monitor.views import GeneralConfigurationDialog
+from spot_motion_monitor.views import DataConfigurationDialog
+from . import GeneralConfigurationDialog
 from spot_motion_monitor.views import PlotConfigurationDialog
 from spot_motion_monitor.views.forms import Ui_MainWindow
 from spot_motion_monitor import __version__
@@ -72,6 +75,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupCameraMenu()
 
         self.setActionIcon(self.actionExit, "exit.svg", True)
+        self.setActionIcon(self.actionSaveConfiguration, "filesave.svg", True)
+        self.setActionIcon(self.actionOpenConfiguration, "folder_open.svg", True)
+        self.actionOpenConfiguration.setShortcut(QtGui.QKeySequence.Open)
+        self.actionSaveConfiguration.setShortcut(QtGui.QKeySequence.Save)
         self.actionExit.setShortcut(QtGui.QKeySequence.Quit)
 
         self.cameraController.frameTimer.timeout.connect(self.acquireFrame)
@@ -90,7 +97,70 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionAbout.triggered.connect(self.about)
         self.actionPlotsConfig.triggered.connect(self.updatePlotConfiguration)
         self.actionCameraConfig.triggered.connect(self.updateCameraConfiguration)
+        self.actionDataConfig.triggered.connect(self.updateDataConfiguration)
         self.actionGeneralConfig.triggered.connect(self.updateGeneralConfiguration)
+        self.actionSaveConfiguration.triggered.connect(self.saveConfiguration)
+        self.actionOpenConfiguration.triggered.connect(self.openConfiguration)
+
+    def _configOverrideWarning(self):
+        """Show a configuration override warning message.
+        """
+        settings = QtCore.QSettings()
+        value = settings.value("suppressOverrideWarning")
+        if value is None:
+            suppressOverrideWarning = False
+        else:
+            suppressOverrideWarning = value
+        if not suppressOverrideWarning:
+            buttons = QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+            message = ["Opening a configuration file will override any "
+                       "parameters brought in from the command line ",
+                       "at program launch if those parameters are ",
+                       "in the configuration file.",
+                       "",
+                       "To suppress this warning for future openings, "
+                       "click \"Yes\". Clicking \"No\" will mean this ",
+                       "message will be shown again when opening a ",
+                       "configuration file."]
+
+            answer = QtWidgets.QMessageBox.warning(self,
+                                                   "Configuration Parameter Override Warning",
+                                                   os.linesep.join(message),
+                                                   buttons)
+            if answer == QtWidgets.QMessageBox.Yes:
+                saveSuppressWarning = True
+            else:
+                saveSuppressWarning = False
+            settings.setValue("suppressOverrideWarning", saveSuppressWarning)
+
+    def _openFileDialog(self):
+        """Open the file opening dialog.
+
+        Returns
+        -------
+        str
+            The selected file, empty string if nothing selected.
+        """
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(caption="Open Configuration File",
+                                                            directory=os.path.expanduser("~/"),
+                                                            filter="Config Files (*.yaml *.yml)",
+                                                            options=QtWidgets.QFileDialog.DontUseNativeDialog)
+        return fileName
+
+    def _saveFileDialog(self):
+        """Open the save file dialog.
+
+        Returns
+        -------
+        str
+            The selected file, empty string if nothing selected.
+        """
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(caption="Save Configuration File",
+                                                            directory=os.path.join(os.path.expanduser("~/"),
+                                                                                   "configuration.yaml"),
+                                                            filter="Config Files (*.yaml *.yml)",
+                                                            options=QtWidgets.QFileDialog.DontUseNativeDialog)
+        return fileName
 
     def about(self):
         """This function presents the about dialog box.
@@ -157,6 +227,18 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         settings = QtCore.QSettings()
         self.lastCamera = str(settings.value('LastCamera'))
 
+    def getSaveConfigurationMask(self):
+        """Create mask for saving configuration information.
+
+        Returns
+        -------
+        int
+            The mask for saving configuration.
+        """
+        write_plot = int(self.actionWritePlotConfig.isChecked()) * consts.SaveConfigMask.PLOT
+        write_empty = int(self.actionWriteEmptyConfig.isChecked()) * consts.SaveConfigMask.EMPTY
+        return write_plot | write_empty
+
     def handleBufferSizeChanged(self, newBufferSize):
         """Update the necessary controllers when the buffer size changes.
 
@@ -197,13 +279,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         options : Namespace
             The options from command-line arguments.
         """
-        config = readYamlFile(options.config_file)
-        if config is not None:
-            config['file'] = options.config_file
-        del options.config_file
-        options.config = config
-        self.dataController.setCommandLineConfig(options)
-        self.cameraController.setCommandLineConfig(options)
+        self.setConfiguration(options.config_file, options)
 
     def handleRoiFpsChanged(self, newRoiFps):
         """Update the necessary controllers when the ROI FPS changes.
@@ -216,6 +292,36 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotCentroidController.updateRoiFps(newRoiFps)
         bufferSize = self.dataController.getBufferSize()
         self.plotPsdController.updateTimeScale(bufferSize / newRoiFps)
+
+    def openConfiguration(self):
+        """Open a configuration file and apply it.
+        """
+        self._configOverrideWarning()
+        openFile = self._openFileDialog()
+        if openFile == '':
+            return
+        self.setConfiguration(openFile)
+
+    def saveConfiguration(self):
+        """Save the configuration from the program.
+        """
+        saveFile = self._saveFileDialog()
+        if saveFile == '':
+            return
+        saveMask = self.getSaveConfigurationMask()
+        writeEmpty = saveMask & consts.SaveConfigMask.EMPTY
+        generalConf = self.dataController.getGeneralConfiguration()
+        generalConf.autorun = self.cameraController.doAutoRun
+        cameraConf = {"camera": self.cameraController.getCameraConfiguration().toDict(writeEmpty)}
+        dataConf = {"data": self.dataController.getDataConfiguration().toDict()}
+        if (saveMask & consts.SaveConfigMask.PLOT):
+            plotConfig = {"plot":
+                          {"centroid": self.plotCentroidController.getPlotConfiguration().toDict(writeEmpty),
+                           "psd": self.plotPsdController.getPlotConfiguration().toDict(writeEmpty)}}
+        else:
+            plotConfig = {}
+        config = {**generalConf.toDict(writeEmpty), **cameraConf, **dataConf, **plotConfig}
+        writeYamlFile(saveFile, config)
 
     def setActionIcon(self, action, iconName, iconInMenu=False):
         """Setup the icon for the given action.
@@ -231,6 +337,61 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         action.setIcon(QtGui.QIcon(QtGui.QPixmap(':{}'.format(iconName))))
         action.setIconVisibleInMenu(iconInMenu)
+
+    def setConfiguration(self, inputFile, options=None):
+        """Get the configuration from file and optionally CLI.
+
+        Parameters
+        ----------
+        inputFile : str
+            Configuration YAML file.
+        options : Namespace, optional
+            Command line options.
+        """
+        config = readYamlFile(inputFile)
+
+        generalConf = self.dataController.getGeneralConfiguration()
+        dataConf = self.dataController.getDataConfiguration()
+        cameraConf = self.cameraController.getCameraConfiguration()
+        centroidPlotConf = self.plotCentroidController.getPlotConfiguration()
+        psdPlotConf = self.plotPsdController.getPlotConfiguration()
+
+        if config is not None:
+            generalConf.fromDict(config)
+            dataConf.fromDict(config["data"])
+            cameraConf.fromDict(config["camera"])
+            try:
+                centroidPlotConf.fromDict(config["plot"]["centroid"])
+                psdPlotConf.fromDict(config["plot"]["psd"])
+                plotConfPresent = True
+            except KeyError:
+                plotConfPresent = False
+        else:
+            plotConfPresent = False
+
+        self.cameraController.doAutoRun = generalConf.autorun
+        self.dataController.setCameraModelName(cameraConf.modelName)
+        if inputFile is not None:
+            generalConf.configFile = inputFile
+
+        if options is not None:
+            generalConf.autorun = generalConf.autorun | options.auto_run
+            self.cameraController.doAutoRun = generalConf.autorun
+            if options.telemetry_dir is not None:
+                dataConf.fullTelemetrySavePath = os.path.expanduser(options.telemetry_dir)
+            if options.vimba_camera_index is not None:
+                cameraConf.cameraIndex = options.vimba_camera_index
+
+        self.dataController.setGeneralConfiguration(generalConf)
+        self.dataController.setDataConfiguration(dataConf)
+        self.cameraController.bufferSize(dataConf.buffer.bufferSize, updateWidget=True)
+
+        self.cameraController.setCameraConfiguration(cameraConf)
+        self.cameraController.updateRoiFps(cameraConf.fpsRoiFrame)
+
+        if plotConfPresent:
+            self.plotCentroidController.setPlotConfiguration(centroidPlotConf)
+            self.plotPsdController.setPlotConfiguration(psdPlotConf)
 
     def setupCameraMenu(self):
         """Add the available cameras to the menu.
@@ -288,19 +449,32 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         if cameraConfigDialog.exec_():
             config = cameraConfigDialog.getCameraConfiguration()
             self.cameraController.setCameraConfiguration(config)
+            self.dataController.setCameraModelName(config.modelName)
 
-    def updateGeneralConfiguration(self):
-        """This function handles general configuration.
+    def updateDataConfiguration(self):
+        """This function handles data configuration.
 
         The configuration is centered on the data structures used for the
         calculations.
         """
-        generalConfigDialog = GeneralConfigurationDialog()
+        dataConfigDialog = DataConfigurationDialog()
         currentDataConfig = self.dataController.getDataConfiguration()
-        generalConfigDialog.setConfiguration(currentDataConfig)
-        if generalConfigDialog.exec_():
-            newDataConfig = generalConfigDialog.getConfiguration()
+        dataConfigDialog.setConfiguration(currentDataConfig)
+        if dataConfigDialog.exec_():
+            newDataConfig = dataConfigDialog.getConfiguration()
             self.dataController.setDataConfiguration(newDataConfig)
+
+    def updateGeneralConfiguration(self):
+        """This function handle general configuration.
+        """
+        generalConfigDialog = GeneralConfigurationDialog(self)
+        currentGeneralConfig = self.dataController.getGeneralConfiguration()
+        currentGeneralConfig.autorun = self.cameraController.doAutoRun
+        generalConfigDialog.setConfiguration(currentGeneralConfig)
+        if generalConfigDialog.exec_():
+            newGeneralConfig = generalConfigDialog.getConfiguration()
+            self.dataController.setGeneralConfiguration(newGeneralConfig)
+            self.cameraController.doAutoRun = newGeneralConfig.autorun
 
     def updateOffset(self):
         """This function updates the camera offsets.
@@ -352,6 +526,7 @@ def launch(opts):
     app.setOrganizationName("LSST-Systems-Engineering")
     app.setOrganizationDomain("lsst.org")
     app.setApplicationName("Spot Motion Monitor")
+    app.setStyleSheet(CSS)
     form = SpotMotionMonitor()
     form.handleConfig(opts)
     form.show()
