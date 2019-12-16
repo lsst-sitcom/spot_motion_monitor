@@ -1,3 +1,5 @@
+.. include:: replacements.rst
+
 .. _configuration:
 
 =============
@@ -59,9 +61,7 @@ pixelScale
   A decimal parameter that sets the sky scale on the camera CCD in units of arcseconds per pixel. This value will vary depending on the optical path in front of the CCD camera.
 
 size
-  An integer parameter that sets the size of the buffer to store the centroid data before performing calculations on a filled buffer. To make the power spectrum distribution calculations effective, the buffer size should be a power of 2 (N^2).
-
-  .. N^2 replace:: N\ :sup:`2`
+  An integer parameter that sets the size of the buffer to store the centroid data before performing calculations on a filled buffer. To make the power spectrum distribution calculations effective, the buffer size should be a power of 2 (|2^N|).
 
 fullFrame
 ---------
@@ -88,9 +88,7 @@ fps
   An integer parameter that sets the frame rate (frames per second) for CCD full frame acquisition. Note: The Gaussian camera does not support frame rates over 40 due to the Poisson background generation. For a Vimba camera, consult the appropriate documentation to find the supported range. 
 
 exposureTime
-  This attribute only applies to Vimba cameras. An integer parameter giving the exposure time of the camera when using full frame mode in units of microseconds.
-
-  .. microseconds replace:: :math:`musec`
+  This attribute only applies to Vimba cameras. An integer parameter giving the exposure time of the camera when using full frame mode in units of |microseconds|.
 
 roi
 ---
@@ -102,9 +100,7 @@ size
   An integer parameter that sets the size of the ROI region in pixels. By the nature of the program, the ROI region is fixed to be a square.
 
 exposureTime
-  This attribute only applies to Vimba cameras. An integer parameter giving the exposure time of the camera when using ROI frame mode in units of microseconds.
-
-  .. microseconds replace:: :math:`musec`
+  This attribute only applies to Vimba cameras. An integer parameter giving the exposure time of the camera when using ROI frame mode in units of |microseconds|.
 
 fluxMin
   This attribute only applies to Vimba cameras. An integer parameter setting the minimum ADC sum of the ROI for a given frame. Frames lower than this minimum are rejected.
