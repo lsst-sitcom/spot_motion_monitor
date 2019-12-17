@@ -105,11 +105,6 @@ exposureTime
 fluxMin
   This attribute only applies to Vimba cameras. An integer parameter setting the minimum ADC sum of the ROI for a given frame. Frames lower than this minimum are rejected.
 
-modelName
----------
-
-A string parameter that defines the make and model of the camera. For the Gaussian camera, this defaults to ``Gaussian``.
-
 spotOscillation
 ---------------
 
@@ -257,7 +252,6 @@ This section will show a full example of all items that are configurable based o
   camera:
     full:
       fps: 24
-    modelName: Gaussian
     roi:
       fps: 40
       size: 50
@@ -323,7 +317,6 @@ The following shows the camera section of a Vimba camera configuration.
     full:
       exposureTime: 8000
       fps: 24
-    modelName: null
     roi:
       exposureTime: 8000
       fluxMin: 2000
