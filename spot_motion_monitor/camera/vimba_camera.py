@@ -99,7 +99,8 @@ class VimbaCamera(BaseCamera):
             The camera model name.
         """
         if self.cameraPtr is not None:
-            return self.cameraPtr.DeviceModelName
+            temp = [self.cameraPtr.DeviceVendorName, self.cameraPtr.DeviceModelName]
+            return ' '.join(temp)
         else:
             return 'Camera Stopped'
 
