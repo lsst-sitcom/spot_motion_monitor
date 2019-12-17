@@ -317,3 +317,12 @@ class TestCameraController():
 
         cc.getCameraInformation()
         assert mockGetCameraInformation.call_count == 1
+
+    def test_getCameraModelName(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+
+        assert cc.getCameraModelName() == 'Gaussian'

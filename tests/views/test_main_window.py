@@ -142,7 +142,6 @@ class TestMainWindow():
         mw.handleConfig(args)
         assert mw.dataController.getDataConfiguration().fullTelemetrySavePath == args.telemetry_dir
         assert mw.dataController.bufferModel.bufferSize == 512
-        assert mw.dataController.cameraModelName == "Gaussian"
 
         os.remove(filename)
 

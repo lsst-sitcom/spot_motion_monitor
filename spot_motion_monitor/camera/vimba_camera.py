@@ -89,6 +89,20 @@ class VimbaCamera(BaseCamera):
 
         self.STREAM_BYTES_PER_SECOND = 124000000
 
+    @property
+    def modelName(self):
+        """Return the camera model name.
+
+        Returns
+        -------
+        str
+            The camera model name.
+        """
+        if self.cameraPtr is not None:
+            return self.cameraPtr.DeviceModelName
+        else:
+            return 'Camera Stopped'
+
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
 

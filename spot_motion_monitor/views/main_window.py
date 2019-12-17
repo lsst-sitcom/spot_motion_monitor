@@ -372,7 +372,6 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
             plotConfPresent = False
 
         self.cameraController.doAutoRun = generalConf.autorun
-        self.dataController.setCameraModelName(cameraConf.modelName)
         if inputFile is not None:
             generalConf.configFile = inputFile
 
@@ -441,6 +440,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.menuCamera.setEnabled(not state)
         self.actionCameraConfig.setEnabled(not state)
         self.actionCameraInfo.setEnabled(state)
+        if state:
+            self.dataController.setCameraModelName(self.cameraController.getCameraModelName())
 
     def updateCameraConfiguration(self):
         """This function handles camera configuration.
