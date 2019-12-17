@@ -147,7 +147,7 @@ class VimbaCamera(BaseCamera):
         except pv.VimbaException:
             raise FrameCaptureFailed(f"{datetime.now()} Frame conversion failed.")
 
-    def getCameraInfo(self):
+    def getCameraInformation(self):
         """Return the current camera related information.
 
         Returns

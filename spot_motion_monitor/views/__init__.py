@@ -5,6 +5,8 @@
 from .base_config_tab import BaseConfigTab
 from .base_configuration_dialog import BaseConfigurationDialog
 
+from .camera_information_dialog import CameraInformationDialog
+
 from .data_config_tab import DataConfigTab
 from .data_configuration_dialog import DataConfigurationDialog
 

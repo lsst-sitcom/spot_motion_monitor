@@ -100,7 +100,7 @@ class GaussianCamera(BaseCamera):
         self.xPointOriginal = self.xPoint
         self.yPointOriginal = self.yPoint
 
-    def getCameraInfo(self):
+    def getCameraInformation(self):
         """Return the current camera related information.
 
         Returns

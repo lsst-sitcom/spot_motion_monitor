@@ -100,7 +100,7 @@ class TestGaussianCamera():
 
     def test_cameraInformation(self):
         camera = GaussianCamera()
-        cameraInfo = camera.getCameraInfo()
+        cameraInfo = camera.getCameraInformation()
 
         assert cameraInfo['Model'] == 'Gaussian'
         assert cameraInfo['Width'] == 640

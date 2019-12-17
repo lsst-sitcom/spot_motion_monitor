@@ -20,6 +20,7 @@ from spot_motion_monitor.utils import create_parser, CSS, DEFAULT_PSD_ARRAY_SIZE
 import spot_motion_monitor.utils.constants as consts
 from spot_motion_monitor.views import CameraConfigurationDialog
 from spot_motion_monitor.views import DataConfigurationDialog
+from . import CameraInformationDialog
 from . import GeneralConfigurationDialog
 from spot_motion_monitor.views import PlotConfigurationDialog
 from spot_motion_monitor.views.forms import Ui_MainWindow
@@ -101,6 +102,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionGeneralConfig.triggered.connect(self.updateGeneralConfiguration)
         self.actionSaveConfiguration.triggered.connect(self.saveConfiguration)
         self.actionOpenConfiguration.triggered.connect(self.openConfiguration)
+        self.actionCameraInfo.triggered.connect(self.showCameraInformation)
 
     def _configOverrideWarning(self):
         """Show a configuration override warning message.
@@ -420,6 +422,14 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         action.setChecked(True)
         action.trigger()
 
+    def showCameraInformation(self):
+        """Show the current camera information.
+        """
+        dialog = CameraInformationDialog()
+        cameraInfo = self.cameraController.getCameraInformation()
+        dialog.setCameraInformation(cameraInfo)
+        dialog.exec_()
+
     def updateApplicationForCameraState(self, state):
         """Update any application UI elements based on camera state.
 
@@ -430,6 +440,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         self.menuCamera.setEnabled(not state)
         self.actionCameraConfig.setEnabled(not state)
+        self.actionCameraInfo.setEnabled(state)
 
     def updateCameraConfiguration(self):
         """This function handles camera configuration.
