@@ -28,8 +28,6 @@ class GaussianCamera(BaseCamera):
         The Frames per Second rate in ROI frame mode.
     height : int
         The pixel height of the CCD.
-    modelName : str
-        The model name of the camera. This is the same as the name attribute.
     postageStamp : numpy.array
         The array containing the Gaussian postage stamp.
     roiSize : int
@@ -109,7 +107,7 @@ class GaussianCamera(BaseCamera):
             The set of camera information.
         """
         info = OrderedDict()
-        info['Model'] = self.modelName
+        info['Model'] = self.name
         info['Width'] = self.width
         info['Height'] = self.height
 

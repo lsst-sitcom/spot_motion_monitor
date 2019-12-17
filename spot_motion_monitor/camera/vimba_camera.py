@@ -48,8 +48,6 @@ class VimbaCamera(BaseCamera):
         The current converted CCD frame.
     isRoiMode : bool
         Whether or not the camera is in ROI mode.
-    modelVendor : str
-        The name of the camera manufacturer.
     offsetX : int
         The current offset in X for the camera.
     offsetY : int
@@ -88,7 +86,6 @@ class VimbaCamera(BaseCamera):
         self.frameShape = None
         self.isRoiMode = False
         self.config = VimbaCameraConfig()
-        self.modelVendor = None
 
         self.STREAM_BYTES_PER_SECOND = 124000000
 
@@ -156,8 +153,8 @@ class VimbaCamera(BaseCamera):
             The set of camera information.
         """
         info = OrderedDict()
-        info['Model'] = self.modelName
-        info['Vendor'] = self.modelVendor
+        info['Model'] = self.cameraPtr.DeviceModelName
+        info['Vendor'] = self.cameraPtr.DeviceVendorName
         info['Width'] = self.width
         info['Height'] = self.height
         info['Pixel Format'] = self.cameraPtr.PixelFormat
@@ -316,8 +313,6 @@ class VimbaCamera(BaseCamera):
         self.height = self.cameraPtr.HeightMax
         self.width = self.cameraPtr.WidthMax
         self.frameShape = (self.height, self.width)
-        self.modelName = self.cameraPtr.DeviceModelName
-        self.modelVendor = self.cameraPtr.DeviceVendorName
         self.cameraPtr.Height = self.height
         self.cameraPtr.Width = self.width
         self.cameraPtr.OffsetX = 0

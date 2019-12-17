@@ -17,8 +17,6 @@ class BaseCamera():
         The Frames per Second rate in ROI frame mode.
     height : int
         The height in pixels of the camera CCD
-    modelName : str
-        The model name of the camera.
     roiSize : int
         The size of a (square) ROI region in pixels.
     width : int
@@ -31,7 +29,6 @@ class BaseCamera():
     fpsRoiFrame = None
     roiSize = None
     config = None
-    modelName = None
 
     def __init__(self):
         """Initialize the class.
