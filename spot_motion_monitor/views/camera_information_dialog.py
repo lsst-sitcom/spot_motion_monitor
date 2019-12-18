@@ -48,7 +48,7 @@ class CameraInformationDialog(QDialog, Ui_CameraInformationDialog):
         scale_factor = 1.75
 
         browser_height = int(max_height * fontMetrics.lineSpacing() * scale_factor)
-        browser_width = int((max_width * fontMetrics.maxWidth()) / scale_factor)
+        browser_width = max_width * fontMetrics.averageCharWidth()
 
         self.cameraInfoTextBrowser.setHtml(os.linesep.join(lines))
 
