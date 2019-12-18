@@ -6,21 +6,40 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
-    <height>256</height>
+    <width>174</width>
+    <height>164</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Camera Information</string>
+   <string>Camera Info</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTextBrowser" name="cameraInfoTextBrowser"/>
+    <widget class="QTextBrowser" name="cameraInfoTextBrowser">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
