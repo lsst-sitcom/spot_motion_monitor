@@ -102,5 +102,5 @@ class TestGaussianCamera():
         cameraInfo = camera.getCameraInformation()
 
         assert cameraInfo['Model'] == 'Gaussian'
-        assert cameraInfo['Width'] == 640
-        assert cameraInfo['Height'] == 480
+        assert cameraInfo['CCD Width'] == 640
+        assert cameraInfo['CCD Height'] == 480
