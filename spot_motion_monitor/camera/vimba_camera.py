@@ -168,8 +168,10 @@ class VimbaCamera(BaseCamera):
             The set of camera information.
         """
         info = OrderedDict()
-        info['Model'] = self.cameraPtr.DeviceModelName
         info['Vendor'] = self.cameraPtr.DeviceVendorName
+        info['Model'] = self.cameraPtr.DeviceModelName
+        info['Part Number'] = self.cameraPtr.DevicePartNumber
+        info['Firmware Version'] = self.cameraPtr.DeviceFirmwareVersion
         info['Width'] = self.width
         info['Height'] = self.height
         info['Pixel Format'] = self.cameraPtr.PixelFormat
