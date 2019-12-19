@@ -48,7 +48,7 @@ setup(
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Michael Reuter',
     author_email='mareuter@lsst.org',
-    url='https://github.com/lsst-com/spot_motion_monitor',
+    url='https://github.com/lsst-sitcom/spot_motion_monitor',
     packages=[
         'spot_motion_monitor',
         'spot_motion_monitor.camera',

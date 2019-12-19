@@ -13,7 +13,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/lsst-com/spot_motion_monitor/issues.
+Report bugs at https://github.com/lsst-sitcom/spot_motion_monitor/issues.
 
 If you are reporting a bug, please include:
 
@@ -43,7 +43,7 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/lsst-com/spot_motion_monitor/issues.
+The best way to send feedback is to file an issue at https://github.com/lsst-sitcom/spot_motion_monitor/issues.
 
 If you are proposing a feature:
 
@@ -94,7 +94,7 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 3. The pull request should work for Python 3.6.
-   Check https://travis-ci.org/lsst-com/spot_motion_monitor 
+   Check https://travis-ci.org/lsst-sitcom/spot_motion_monitor 
    under pull requests for active pull requests or run the ``py.test`` command
    and make sure that the tests pass for all supported Python versions.
 

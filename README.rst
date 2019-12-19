@@ -10,7 +10,7 @@ Spot Motion Monitor
    :target: https://pypi.python.org/pypi/spot_motion_monitor
    :alt: Software Version
 
-.. |travis| image:: https://img.shields.io/travis/lsst-com/spot_motion_monitor/master.svg
+.. |travis| image:: https://img.shields.io/travis/lsst-sitcom/spot_motion_monitor/master.svg
   :target: https://travis-ci.org/mareuter/spot_motion_monitor
   :alt: Travis build status
 
