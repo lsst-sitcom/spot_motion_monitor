@@ -172,8 +172,8 @@ class VimbaCamera(BaseCamera):
         info['Model'] = self.cameraPtr.DeviceModelName
         info['Part Number'] = self.cameraPtr.DevicePartNumber
         info['Firmware Version'] = self.cameraPtr.DeviceFirmwareVersion
-        info['CCD Width'] = self.width
-        info['CCD Height'] = self.height
+        info['CCD Width (pixels)'] = self.width
+        info['CCD Height (pixels)'] = self.height
         info['Pixel Format'] = self.cameraPtr.PixelFormat
         info['Gain Auto'] = self.cameraPtr.GainAuto
         info['Exposure Auto'] = self.cameraPtr.ExposureAuto

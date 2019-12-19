@@ -108,8 +108,8 @@ class GaussianCamera(BaseCamera):
         """
         info = OrderedDict()
         info['Model'] = self.name
-        info['CCD Width'] = self.width
-        info['CCD Height'] = self.height
+        info['CCD Width (pixels)'] = self.width
+        info['CCD Height (pixels)'] = self.height
 
         return info
 
