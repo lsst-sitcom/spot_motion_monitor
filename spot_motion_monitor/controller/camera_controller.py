@@ -201,6 +201,26 @@ class CameraController():
         """
         return self.camera.getConfiguration()
 
+    def getCameraInformation(self):
+        """Return the current camera information.
+
+        Returns
+        -------
+        OrderDict
+            The current camera information.
+        """
+        return self.camera.getCameraInformation()
+
+    def getCameraModelName(self):
+        """Get the current model of the camera.
+
+        Returns
+        -------
+        str
+            The camera model.
+        """
+        return self.camera.modelName
+
     def getFrame(self):
         """Get the frame from the camera.
 

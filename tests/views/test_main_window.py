@@ -116,11 +116,13 @@ class TestMainWindow():
         assert mw.actionPlotsConfig.isEnabled() is True
         assert mw.actionDataConfig.isEnabled() is True
         assert mw.actionGeneralConfig.isEnabled() is True
+        assert mw.actionCameraInfo.isEnabled() is False
         qtbot.mouseClick(mw.cameraControl.startStopButton, Qt.LeftButton)
         assert mw.actionCameraConfig.isEnabled() is False
         assert mw.actionPlotsConfig.isEnabled() is True
         assert mw.actionDataConfig.isEnabled() is True
         assert mw.actionGeneralConfig.isEnabled() is True
+        assert mw.actionCameraInfo.isEnabled() is True
 
     def test_commandLineConfiguration(self, qtbot, mocker):
         mw = SpotMotionMonitor()
@@ -140,7 +142,6 @@ class TestMainWindow():
         mw.handleConfig(args)
         assert mw.dataController.getDataConfiguration().fullTelemetrySavePath == args.telemetry_dir
         assert mw.dataController.bufferModel.bufferSize == 512
-        assert mw.dataController.cameraModelName == "Gaussian"
 
         os.remove(filename)
 

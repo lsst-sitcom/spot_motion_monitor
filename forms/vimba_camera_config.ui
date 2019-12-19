@@ -15,23 +15,6 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <widget class="QLabel" name="modelNameLabel">
-       <property name="text">
-        <string>Model Name:</string>
-       </property>
-       <property name="buddy">
-        <cstring>modelNameLineEdit</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="modelNameLineEdit"/>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="fullFrameExposureTimeLabel">
@@ -55,7 +38,7 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0">
+   <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="roiSizeLabel">
@@ -89,7 +72,7 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QLabel" name="roiFluxMinLabel">
@@ -123,7 +106,7 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="0">
+   <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="roiExposureTimeLabel">
@@ -154,7 +137,7 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="0">
+   <item row="4" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

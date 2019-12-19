@@ -38,14 +38,12 @@ class TestVimbaCameraConfigTab:
         qtbot.addWidget(vcConfigTab)
 
         truthConfig = VimbaCameraConfig()
-        truthConfig.modelName = "Prosilica GC-650"
         truthConfig.roiSize = 20
         truthConfig.roiFluxMinimum = 1000
         truthConfig.roiExposureTime = 5000
         truthConfig.fullExposureTime = 8000
         vcConfigTab.setConfiguration(truthConfig)
 
-        assert vcConfigTab.modelNameLineEdit.text() == truthConfig.modelName
         assert int(vcConfigTab.roiSizeLineEdit.text()) == truthConfig.roiSize
         assert int(vcConfigTab.roiFluxMinLineEdit.text()) == truthConfig.roiFluxMinimum
         assert int(vcConfigTab.roiExposureTimeLineEdit.text()) == truthConfig.roiExposureTime

@@ -2,6 +2,8 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from collections import OrderedDict
+
 import numpy as np
 
 from spot_motion_monitor.camera import BaseCamera
@@ -80,6 +82,7 @@ class GaussianCamera(BaseCamera):
         self.xPointOriginal = None
         self.yPointOriginal = None
         self.config = GaussianCameraConfig()
+        self.modelName = self.name
 
     def findInsertionPoint(self):
         """Determine the Gaussian spot insertion point.
@@ -94,6 +97,21 @@ class GaussianCamera(BaseCamera):
         self.yPoint = np.random.randint(yHalfwidth - yRange, yHalfwidth + yRange + 1)
         self.xPointOriginal = self.xPoint
         self.yPointOriginal = self.yPoint
+
+    def getCameraInformation(self):
+        """Return the current camera related information.
+
+        Returns
+        -------
+        OrderedDict
+            The set of camera information.
+        """
+        info = OrderedDict()
+        info['Model'] = self.name
+        info['CCD Width (pixels)'] = self.width
+        info['CCD Height (pixels)'] = self.height
+
+        return info
 
     def getConfiguration(self):
         """Get the current camera configuration.

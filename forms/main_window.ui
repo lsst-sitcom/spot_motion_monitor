@@ -221,6 +221,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionCameraInfo"/>
    </widget>
    <widget class="QMenu" name="menuCamera">
     <property name="title">
@@ -330,6 +331,17 @@
   <action name="actionOpenConfiguration">
    <property name="text">
     <string>Open Configuration</string>
+   </property>
+  </action>
+  <action name="actionCameraInfo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Camera</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Shift+I</string>
    </property>
   </action>
  </widget>

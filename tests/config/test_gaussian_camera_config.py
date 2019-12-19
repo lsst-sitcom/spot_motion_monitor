@@ -16,7 +16,6 @@ class TestGaussianCameraConfig:
         assert self.config.xFrequency == 5.0
         assert self.config.yAmplitude == 5
         assert self.config.yFrequency == 10.0
-        assert self.config.modelName == "Gaussian"
 
     def test_toDict(self):
         config_dict = self.config.toDict()
@@ -26,7 +25,6 @@ class TestGaussianCameraConfig:
         assert config_dict["spotOscillation"]["x"]["frequency"] == 5.0
         assert config_dict["spotOscillation"]["y"]["amplitude"] == 5
         assert config_dict["spotOscillation"]["y"]["frequency"] == 10.0
-        assert config_dict["modelName"] == "Gaussian"
 
         # Check to make sure function accepts argument.
         config_dict = self.config.toDict(True)
@@ -49,4 +47,3 @@ class TestGaussianCameraConfig:
         assert self.config.xFrequency == config_dict["spotOscillation"]["x"]["frequency"]
         assert self.config.yAmplitude == config_dict["spotOscillation"]["y"]["amplitude"]
         assert self.config.yFrequency == config_dict["spotOscillation"]["y"]["frequency"]
-        assert self.config.modelName == "Gaussian"

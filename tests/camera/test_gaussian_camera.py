@@ -96,3 +96,11 @@ class TestGaussianCamera():
         assert camera.xFreq == truthConfig.xFrequency
         assert camera.yAmp == truthConfig.yAmplitude
         assert camera.yFreq == truthConfig.yFrequency
+
+    def test_cameraInformation(self):
+        camera = GaussianCamera()
+        cameraInfo = camera.getCameraInformation()
+
+        assert cameraInfo['Model'] == 'Gaussian'
+        assert cameraInfo['CCD Width (pixels)'] == 640
+        assert cameraInfo['CCD Height (pixels)'] == 480

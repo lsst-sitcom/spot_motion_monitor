@@ -2,6 +2,7 @@
 # Copyright (c) 2018-2019 LSST Systems Engineering
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
+from collections import OrderedDict
 from datetime import datetime
 import time
 
@@ -88,6 +89,21 @@ class VimbaCamera(BaseCamera):
 
         self.STREAM_BYTES_PER_SECOND = 124000000
 
+    @property
+    def modelName(self):
+        """Return the camera model name.
+
+        Returns
+        -------
+        str
+            The camera model name.
+        """
+        if self.cameraPtr is not None:
+            temp = [self.cameraPtr.DeviceVendorName, self.cameraPtr.DeviceModelName]
+            return ' '.join(temp)
+        else:
+            return 'Camera Stopped'
+
     def checkFullFrame(self, flux, maxAdc, comX, comY):
         """Use the provided quantities to check frame validity.
 
@@ -142,6 +158,27 @@ class VimbaCamera(BaseCamera):
             self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=self.frameShape)
         except pv.VimbaException:
             raise FrameCaptureFailed(f"{datetime.now()} Frame conversion failed.")
+
+    def getCameraInformation(self):
+        """Return the current camera related information.
+
+        Returns
+        -------
+        OrderedDict
+            The set of camera information.
+        """
+        info = OrderedDict()
+        info['Vendor'] = self.cameraPtr.DeviceVendorName
+        info['Model'] = self.cameraPtr.DeviceModelName
+        info['Part Number'] = self.cameraPtr.DevicePartNumber
+        info['Firmware Version'] = self.cameraPtr.DeviceFirmwareVersion
+        info['CCD Width (pixels)'] = self.width
+        info['CCD Height (pixels)'] = self.height
+        info['Pixel Format'] = self.cameraPtr.PixelFormat
+        info['Gain Auto'] = self.cameraPtr.GainAuto
+        info['Exposure Auto'] = self.cameraPtr.ExposureAuto
+
+        return info
 
     def getConfiguration(self):
         """Get the current camera configuration.

@@ -305,3 +305,24 @@ class TestCameraController():
         assert cc.isRoiMode() is False
         assert cc.currentCameraFps() == 24
         assert ccWidget.acquireFramesButton.isChecked() is False
+
+    def test_getCameraInformation(self, qtbot, mocker):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+
+        mockGetCameraInformation = mocker.patch.object(cc.camera, 'getCameraInformation')
+
+        cc.getCameraInformation()
+        assert mockGetCameraInformation.call_count == 1
+
+    def test_getCameraModelName(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+
+        assert cc.getCameraModelName() == 'Gaussian'

@@ -13,8 +13,6 @@ class GaussianCameraConfig(CameraConfig):
     ----------
     doSpotOscillation : bool
         Flag tp make the generated spot oscillate.
-    modelName : str
-        Fixed model name of Gaussian.
     xAmplitude : int
         The amplitude of the x component of the spot oscillation.
     xFrequency : float
@@ -34,7 +32,6 @@ class GaussianCameraConfig(CameraConfig):
         self.xFrequency = 5.0
         self.yAmplitude = 5
         self.yFrequency = 10.0
-        self.modelName = "Gaussian"
 
     def fromDict(self, config):
         """Translate config to class attributes.

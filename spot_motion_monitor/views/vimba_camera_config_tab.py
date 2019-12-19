@@ -5,7 +5,6 @@
 from PyQt5.QtGui import QIntValidator
 
 from ..config import VimbaCameraConfig
-from ..utils import defaultToNoneOrValue, noneToDefaultOrValue
 from spot_motion_monitor.views import BaseConfigTab
 from spot_motion_monitor.views.forms.ui_vimba_camera_config import Ui_VimbaCameraConfigForm
 
@@ -51,7 +50,6 @@ class VimbaCameraConfigTab(BaseConfigTab, Ui_VimbaCameraConfigForm):
         `config.VimbaCameraConfig`
             The current set of configuration parameters.
         """
-        self.config.modelName = defaultToNoneOrValue(self.modelNameLineEdit.text())
         self.config.roiSize = int(self.roiSizeLineEdit.text())
         self.config.roiFluxMinimum = int(self.roiFluxMinLineEdit.text())
         self.config.roiExposureTime = int(self.roiExposureTimeLineEdit.text())
@@ -66,7 +64,6 @@ class VimbaCameraConfigTab(BaseConfigTab, Ui_VimbaCameraConfigForm):
         config : `config.VimbaCameraConfig`
             The current set of configuration parameters.
         """
-        self.modelNameLineEdit.setText(noneToDefaultOrValue(config.modelName))
         self.roiSizeLineEdit.setText(str(config.roiSize))
         self.roiFluxMinLineEdit.setText(str(config.roiFluxMinimum))
         self.roiExposureTimeLineEdit.setText(str(config.roiExposureTime))
