@@ -2,9 +2,9 @@
 Spot Motion Monitor
 =============================
 
-.. |license| image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: http://opensource.org/licenses/MIT
-   :alt: MIT License
+.. |license| image:: https://img.shields.io/pypi/l/spot_motion_monitor.svg
+   :target: http://opensource.org/licenses/BSD
+   :alt: BSD License
 
 .. |version| image:: http://img.shields.io/pypi/v/spot_motion_monitor.svg
    :target: https://pypi.python.org/pypi/spot_motion_monitor
