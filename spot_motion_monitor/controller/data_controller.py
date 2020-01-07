@@ -94,6 +94,8 @@ class DataController():
         self.dataConfig = DataConfig()
         self.generalConfig = GeneralConfig()
         self.timeHandler = TimeHandler()
+        self.fullFrameModel.timeHandler = self.timeHandler
+        self.roiFrameModel.timeHandler = self.timeHandler
         self.cameraModelName = None
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)

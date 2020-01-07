@@ -6,18 +6,20 @@ import pytest
 
 from spot_motion_monitor.camera.gaussian_camera import GaussianCamera
 from spot_motion_monitor.models.roi_frame_model import RoiFrameModel
-from spot_motion_monitor.utils import FrameRejected
+from spot_motion_monitor.utils import FrameRejected, TimeHandler
 
 class TestRoiFrameModel():
 
     def setup_class(cls):
         cls.model = RoiFrameModel()
+        cls.model.timeHandler = TimeHandler()
 
     def checkFrame(self, flux):
         return flux > 3000
 
     def test_parametersAfterConstruction(self):
         assert self.model.thresholdFactor == 0.3
+        assert self.model.timeHandler is not None
 
     def test_frameCalculations(self):
         # This test requires the generation of a CCD frame which will be

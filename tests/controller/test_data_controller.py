@@ -47,6 +47,8 @@ class TestDataController():
         assert dc.generalConfig is not None
         assert dc.timeHandler is not None
         assert dc.cameraModelName is None
+        assert dc.roiFrameModel.timeHandler is not None
+        assert dc.fullFrameModel.timeHandler is not None
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
@@ -388,6 +390,8 @@ class TestDataController():
         assert dc.removeTelemetryDir == truthConfig.removeTelemetryDir
         assert dc.configVersion == truthConfig.configVersion
         assert dc.timeHandler.timezone == truthConfig.timezone
+        assert dc.fullFrameModel.timeHandler.timezone == truthConfig.timezone
+        assert dc.roiFrameModel.timeHandler.timezone == truthConfig.timezone
 
     def test_setCameraModelName(self, qtbot):
         cdw = CameraDataWidget()
