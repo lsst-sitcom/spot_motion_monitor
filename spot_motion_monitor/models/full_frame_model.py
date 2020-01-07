@@ -5,7 +5,7 @@
 import numpy as np
 from scipy import ndimage
 
-from spot_motion_monitor.utils import GenericFrameInformation, FrameRejected, getTimestamp, passFrame
+from spot_motion_monitor.utils import GenericFrameInformation, FrameRejected, passFrame
 from spot_motion_monitor.utils import fwhm_calculator
 
 __all__ = ["FullFrameModel"]
@@ -21,10 +21,14 @@ class FullFrameModel():
 
     Attributes
     ----------
+    frameCheck : function
+        The function providing the frame selection criteria.
     minimumNumPixels : int
         The minimum number of pixels that must be in an object.
     sigmaScale : float
-        Multiplier for the frame standard deviation
+        Multiplier for the frame standard deviation.
+    timeHandler : `utils.TimeHandler`
+        The instance of the TimeHandler.
     """
 
     def __init__(self):
@@ -33,6 +37,7 @@ class FullFrameModel():
         self.sigmaScale = 5.0
         self.minimumNumPixels = 10
         self.frameCheck = None
+        self.timeHandler = None
 
     def calculateCentroid(self, fullFrame):
         """This function performs calculations for the full CCD frame.
@@ -87,7 +92,7 @@ class FullFrameModel():
                 fwhm = fwhm_calculator(objectFrame, int(comX), int(comY))
                 centerX = comX + xSlice.start
                 centerY = comY + ySlice.start
-                return GenericFrameInformation(getTimestamp(), centerX, centerY,
+                return GenericFrameInformation(self.timeHandler.getTime(), centerX, centerY,
                                                flux, maxAdc, fwhm, objectSize, None)
             else:
                 msg = 'Full frame rejected: flux = {}, maxAdc = {}, centroid = ({}, {})'.format(flux,

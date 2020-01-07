@@ -3,7 +3,6 @@
 # Distributed under the MIT License. See LICENSE for more information.
 #------------------------------------------------------------------------------
 from collections import OrderedDict
-from datetime import datetime
 import time
 
 import numpy as np
@@ -157,7 +156,7 @@ class VimbaCamera(BaseCamera):
             frameData = frame.buffer_data()
             self.image = np.ndarray(buffer=frameData, dtype=np.uint16, shape=self.frameShape)
         except pv.VimbaException:
-            raise FrameCaptureFailed(f"{datetime.now()} Frame conversion failed.")
+            raise FrameCaptureFailed(f"{getTimestamp()} Frame conversion failed.")
 
     def getCameraInformation(self):
         """Return the current camera related information.
@@ -217,7 +216,7 @@ class VimbaCamera(BaseCamera):
         try:
             self.cameraPtr.start_frame_acquisition()
         except pv.VimbaException as err:
-            raise FrameCaptureFailed("{} Full frame capture failed: {}".format(datetime.now(), str(err)))
+            raise FrameCaptureFailed("{} Full frame capture failed: {}".format(getTimestamp(), str(err)))
 
         return self.image
 
@@ -296,7 +295,7 @@ class VimbaCamera(BaseCamera):
         system.
         """
         if self.badFrames:
-            print("{} {}, {}, {}".format(datetime.now(), self.goodFrames, self.badFrames, self.totalFrames))
+            print("{} {}, {}, {}".format(getTimestamp(), self.goodFrames, self.badFrames, self.totalFrames))
 
     def startup(self):
         """Handle the startup of the camera.

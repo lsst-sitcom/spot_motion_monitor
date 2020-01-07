@@ -5,7 +5,7 @@
 import numpy as np
 from scipy import ndimage
 
-from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, getTimestamp, passFrame
+from spot_motion_monitor.utils import FrameRejected, GenericFrameInformation, passFrame
 from spot_motion_monitor.utils import fwhm_calculator
 
 __all__ = ['RoiFrameModel']
@@ -24,6 +24,8 @@ class RoiFrameModel():
     thresholdFactor : float
         The scale factor multiplied by the frame max and then subtracted from
         the frame.
+    timeHandler : `utils.TimeHandler`
+        The instance of the TimeHandler.
     """
 
     def __init__(self):
@@ -31,6 +33,7 @@ class RoiFrameModel():
         """
         self.thresholdFactor = 0.3
         self.frameCheck = None
+        self.timeHandler = None
 
     def calculateCentroid(self, roiFrame):
         """This function performs calculations for the ROI CCD frame.
@@ -66,6 +69,7 @@ class RoiFrameModel():
             # Removing this for speed improvement. MAR 2018/10/05
             # maxStd = np.std(np.ma.masked_array(roiFrame, mask=newFrame))
             maxStd = -999
-            return GenericFrameInformation(getTimestamp(), comX, comY, flux, maxAdc, fwhm, objectSize, maxStd)
+            return GenericFrameInformation(self.timeHandler.getTime(), comX, comY,
+                                           flux, maxAdc, fwhm, objectSize, maxStd)
         else:
             raise FrameRejected('ROI frame rejected due to low flux')

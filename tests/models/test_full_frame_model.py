@@ -7,12 +7,13 @@ import pytest
 
 from spot_motion_monitor.camera.gaussian_camera import GaussianCamera
 from spot_motion_monitor.models import FullFrameModel
-from spot_motion_monitor.utils import FrameRejected
+from spot_motion_monitor.utils import FrameRejected, TimeHandler
 
 class TestFullFrameModel():
 
     def setup_class(cls):
         cls.model = FullFrameModel()
+        cls.model.timeHandler = TimeHandler()
 
     def checkFrame(self, flux, maxAdc, comX, comY):
         return flux > 4000 and maxAdc > 130 and comX > 0 and comY > 0
@@ -20,6 +21,7 @@ class TestFullFrameModel():
     def test_parametersAfterConstruction(self):
         assert self.model.sigmaScale == 5.0
         assert self.model.minimumNumPixels == 10
+        assert self.model.timeHandler is not None
 
     def test_frameCalculations(self):
         # This test requires the generation of a CCD frame which will be
