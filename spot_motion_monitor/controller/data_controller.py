@@ -438,7 +438,9 @@ class DataController():
         output = [currentTimestamp.isoformat(),
                   self.bufferModel.timestamp[0].isoformat(),
                   self.bufferModel.timestamp[-1].isoformat(),
-                  roiInfo.rmsX, roiInfo.rmsY]
+                  roiInfo.rmsX, roiInfo.rmsY,
+                  roiInfo.centerX, roiInfo.centerY,
+                  roiInfo.flux, roiInfo.maxAdc, roiInfo.fwhm]
 
         with open(os.path.join(self.fullTelemetrySavePath, telemetryFile), 'w') as csvFile:
             writer = csv.writer(csvFile)

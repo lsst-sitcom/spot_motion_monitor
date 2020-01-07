@@ -214,5 +214,10 @@ the file was created. The default program timezone is UTC. The file contains a c
   #. The timezone aware time when the last value of the buffer was filled in ISO format
   #. The RMS of the centroid in the X direction on the camera in units of arcseconds
   #. The RMS of the centroid in the Y direction on the camera in units of arcseconds
+  #. The average value of the centroid coordinate in the X direction on the camera
+  #. The average value of the centroid coordinate in the Y direction on the camera
+  #. The average of each centroid frame's total flux
+  #. The average of each centroid frame's maximum ADC value
+  #. The average of each centroid spot's full-width, half-maximum
 
 Each time a buffer is filled, a new file is generated.
