@@ -1,8 +1,15 @@
 #!/usr/bin/env python
-#------------------------------------------------------------------------------
-# Copyright (c) 2018 LSST Systems Engineering
-# Distributed under the MIT License. See LICENSE for more information.
-#------------------------------------------------------------------------------
+
+# This file is part of spot_motion_monitor.
+#
+# Developed for LSST System Integration, Test and Commissioning.
+#
+# See the LICENSE file at the top-level directory of this distribution
+# for details of code ownership.
+#
+# Use of this source code is governed by a 3-clause BSD-style
+# license that can be found in the LICENSE file.
+
 import os
 import sys
 
@@ -67,13 +74,13 @@ setup(
                  'spot_motion_monitor.views.forms': 'spot_motion_monitor/views/forms'},
     include_package_data=True,
     install_requires=requirements,
-    license='MIT',
+    license='BSD 3-Clause License',
     zip_safe=False,
     keywords='spot_motion_monitor',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',

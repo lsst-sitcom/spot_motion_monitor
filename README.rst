@@ -2,9 +2,9 @@
 Spot Motion Monitor
 =============================
 
-.. |license| image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: http://opensource.org/licenses/MIT
-   :alt: MIT License
+.. |license| image:: https://img.shields.io/pypi/l/spot_motion_monitor.svg
+   :target: http://opensource.org/licenses/BSD
+   :alt: BSD License
 
 .. |version| image:: http://img.shields.io/pypi/v/spot_motion_monitor.svg
    :target: https://pypi.python.org/pypi/spot_motion_monitor
@@ -21,5 +21,7 @@ Spot Motion Monitor
 |license| |python| |version| |travis|
 
 User interface for a Dome Seeing Monitor.
+
+Development of this product evolved from the Blanco Dome Seeing Monitor Probe.
 
 **NOTE**: This package only supports Python 3 and PyQt5.
