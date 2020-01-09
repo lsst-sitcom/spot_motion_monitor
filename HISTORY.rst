@@ -3,6 +3,13 @@
 History
 -------
 
+2.0.0 (2020-01-09)
+~~~~~~~~~~~~~~~~~~
+
+* Rewrite of program configuration system
+* Add more information to telemetry files
+* Change to BSD 3-clause license
+
 1.5.1 (2019-12-11)
 ~~~~~~~~~~~~~~~~~~
 
