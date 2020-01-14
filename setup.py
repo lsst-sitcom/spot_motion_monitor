@@ -59,6 +59,7 @@ setup(
     packages=[
         'spot_motion_monitor',
         'spot_motion_monitor.camera',
+        'spot_motion_monitor.config',
         'spot_motion_monitor.controller',
         'spot_motion_monitor.models',
         'spot_motion_monitor.utils',
@@ -67,6 +68,7 @@ setup(
     ],
     package_dir={'spot_motion_monitor': 'spot_motion_monitor',
                  'spot_motion_monitor.camera': 'spot_motion_monitor/camera',
+                 'spot_motion_monitor.config': 'spot_motion_monitor/config',
                  'spot_motion_monitor.controller': 'spot_motion_monitor/controller',
                  'spot_motion_monitor.models': 'spot_motion_monitor/models',
                  'spot_motion_monitor.utils': 'spot_motion_monitor/utils',
