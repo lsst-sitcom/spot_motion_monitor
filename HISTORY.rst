@@ -3,6 +3,12 @@
 History
 -------
 
+2.0.1 (2020-01-14)
+~~~~~~~~~~~~~~~~~~
+
+* Fix deployment for missing package
+* Fix copyright in About dialog
+
 2.0.0 (2020-01-09)
 ~~~~~~~~~~~~~~~~~~
 
