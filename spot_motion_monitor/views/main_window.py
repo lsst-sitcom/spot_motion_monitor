@@ -30,7 +30,7 @@ from . import CameraInformationDialog
 from . import GeneralConfigurationDialog
 from spot_motion_monitor.views import PlotConfigurationDialog
 from spot_motion_monitor.views.forms import Ui_MainWindow
-from spot_motion_monitor import __version__
+from spot_motion_monitor import __version__, APP_COPYRIGHT
 
 __all__ = ['main']
 
@@ -184,8 +184,8 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
                                  monitors seeing within a telescope dome.
                                  </p>
                                  <br><br>
-                                 Copyright 2018 LSST Systems Engineering
-                                 '''.format(__version__))
+                                 {}
+                                 '''.format(__version__, APP_COPYRIGHT))
         about.exec_()
 
     def acquireFrame(self):

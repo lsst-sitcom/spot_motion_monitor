@@ -11,6 +11,7 @@
 __author__ = 'Michael Reuter'
 __email__ = 'mareuter@lsst.org'
 __version__ = '2.0.0'
+APP_COPYRIGHT = "Copyright 2018-2020 Association of Universities for Research in Astronomy"
 
 __all__ = ['views']
 
