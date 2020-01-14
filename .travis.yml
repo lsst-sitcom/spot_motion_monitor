@@ -11,34 +11,34 @@ deploy:
   user: mareuter
   password:
     secure: !!binary |
-      Z2NwMVo4WU15Y1dCY2ZSMFdrbGl6VHlGSzN4Qm5sbG8vWU1GVjVxYU91cHdWUFIzOG9hMjJ5YitH
-      MGxoTHI0aGZ0V2hNU2NOVmJkRFI2eUhTcTdsUmRud2FUc2xtczQwei9GaHgwakl5UXliMGxMbkJI
-      a08rbmJLc2lkODRKUE9McHNBUmxNT3NibU1tN09vazJFbWRyRmI3YlNFWklBVzdiYVNKdEp6Q1VY
-      YWtyNVFqdmZwWFlxaGttNS9GdDRHWWY2VFFJSjNqaFgvN3lGWk9BSmNldng1QUs5d1dKUkJ1eUtJ
-      TFNmeS9idENIV3M1Vk5rd2tZelVQdk9DMDZJMldselZvMEdaamxIWG5jZEdWSXhmWUM0UlhldDNj
-      OUEvcjg0NHVISU1YZXZPa0xMaXJFVVVkZ1pJd0lBb3luaW5pdDlzV3ViVkJFQWJxQUNJTWV3VmJp
-      VmJLcTF1OGJRa0ZJWk1FbFoxaGV6d21kUWt3c2ZGUDRiQnpNY1dCWkdwVU1uZWJ6d0lXb21sYVNa
-      eWhLU0RKWUxZYTBVNUJOL2hlc3NSVlZOcTdzcW16ejkrSWhCS2dLTGU3MjB5dmtQSi9maFZUNS85
-      ZnV3c21JdEs2WU9XYUtocGdDczFHd3lOYktDaWFneEQrMlk0YURPUi9pMEhDZzhXSGs1KzU5SlBE
-      NHVEYjJYOW5nN0h2Qm1oWGxrV3FTd0pzYTE0eTR4S3JDM0drUDdpdmwwWEZGN1ZRakhlQ3RnSVBK
-      T0JsN3lNM0pFa0pSZXROSUF0VTlCRlI1WUdxaHJaRWhvVzI4ZTcrQXFxSmhIYmZPWXBLN0NxTUhP
-      a2IxWXZTUVdXbEU0MFhyZW5yTDk4cXg1d3I1aEFTdU9zYWJBTFErYVpiY1ppUTBaMTBBQW1uRGs9
+      Vzk4bWVYcmptRVVmL1dDVmJEa20rbmxQRGwzWDhwZ0hVaEJvUWpwSWtjUFluVGhHWGtkSzJBWmhU
+      MUNlRTRwOXo2RFhkVU9laDdSZWVMc2dyc2RvMU9Td0NTYnF2SVhZYndkdzE2cUF1UElUK1JiRTlQ
+      YUNCV1VES2VLbkRGNHRjd1BIeDZaenZWalNvRFd0L3U0aEZ2WnBnVUt3VFNFT0RlNFhRTFFheG5w
+      K1c2RHVzejA1c0xEWGlrY0tNTXo5VTBoU3NDeEYzUEUzTHlteXBoQW10K0x1RXlYL3YxL3F4bi9D
+      UTJSd1hjazRSVUJ6dnZQMUYzTWJpNktmLzVLYmwzNk5EL1BpZVpJeVRFY3BPcEFQZzJ1S1N0cFhj
+      OUJoV1I3Tzd0dURtSkoyRU5KS2VvaWxzZTZMZUY3YWRFYnA3dEVqYTZidlpLd015eTdJZFBJRkh4
+      OEhGUWZONXlsM3Z3YWJkRnQvY3NFQ2xDNjh3ZmhiOHg0T1BGVGhUNDRJbUhmejh3YUVrM2l5eHFB
+      UzVzZWcxM2RYaGlWanVLaWcxYkpjdHVXdlAyZlJJbVBBWWM2VjZ1OGEyREVraFQvWWRhWDJBN04w
+      Y3UwU1B2T1M5cmd5VVR6R25SQjVLWkxOWDQyczZVZUh0TkZmYW1udE9IMjJLVHNNNXhxZjc3bUpU
+      dFF0bVl0NEhqRTlXeXdlNDZ5ZjExeHo4UjZDMGtnRFEyaGhWSk80aWdVZzhsaUs5RkhVMVE1Wmtk
+      MDgvRi92OFVxNWVzMm16NWMvWGVOc3JPUzZXK0pYdkM2MGVMZ1ZBN1N4L1IrQUllem9KR2lCZzYx
+      L3J0TnBlS1JITk0wSlZPQWN3QjRGSW9YYXFpVHFwRGpqanNReHVldjdXZlkxOHVqRU9NOGRreVU9
   true:
     branch: master
     python: '3.7'
     repo: lsst-sitcom/spot_motion_monitor
     tags: true
-install:
-  - pip install -U pip
-  - pip install -r requirements.txt
-  - pip install -r requirements/test.txt
-  - pip install -U pytest
-  - python setup.py build_ui
-  - python setup.py install
 dist: bionic
+install:
+- pip install -U pip
+- pip install -r requirements.txt
+- pip install -r requirements/test.txt
+- pip install -U pytest
+- python setup.py build_ui
+- python setup.py install
 language: python
 python:
-  - '3.6'
-  - '3.7'
+- '3.6'
+- '3.7'
 script: xvfb-run pytest
 sudo: false
