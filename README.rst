@@ -14,11 +14,15 @@ Spot Motion Monitor
   :target: https://travis-ci.org/mareuter/spot_motion_monitor
   :alt: Travis build status
 
+.. |github| image:: https://img.shields.io/github/workflow/status/lsst-sitcom/spot_motion_monitor/Python%20package
+  :target: https://github.com/lsst-sitcom/spot_motion_monitor
+  :alt: Github Workflow Status
+
 .. |python| image:: https://img.shields.io/pypi/pyversions/spot_motion_monitor.svg
   :target: https://pypi.python.org/pypi/spot_motion_monitor
   :alt: Supported Python
 
-|license| |python| |version| |travis|
+|license| |python| |version| |travis| |github|
 
 User interface for a Dome Seeing Monitor.
 
