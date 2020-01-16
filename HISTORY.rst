@@ -3,6 +3,12 @@
 History
 -------
 
+2.0.2 (2020-01-16)
+~~~~~~~~~~~~~~~~~~
+
+* Fix startup issues when using minimal configuration file
+* Remove timezone reference in telemetry file timestamps
+
 2.0.1 (2020-01-14)
 ~~~~~~~~~~~~~~~~~~
 
