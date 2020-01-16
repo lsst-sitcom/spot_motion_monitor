@@ -367,7 +367,10 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         if config is not None:
             generalConf.fromDict(config)
             dataConf.fromDict(config["data"])
-            cameraConf.fromDict(config["camera"])
+            try:
+                cameraConf.fromDict(config["camera"])
+            except KeyError:
+                pass
             try:
                 centroidPlotConf.fromDict(config["plot"]["centroid"])
                 psdPlotConf.fromDict(config["plot"]["psd"])
