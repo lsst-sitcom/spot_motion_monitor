@@ -430,7 +430,7 @@ class DataController():
             if not os.path.exists(self.fullTelemetrySavePath):
                 os.makedirs(self.fullTelemetrySavePath)
 
-            content = {'timestamp': self.timeHandler.getFormattedTimeStamp(format="iso"),
+            content = {'timestamp': self.timeHandler.getFormattedTimeStamp(format="iso-fixed"),
                        'ui_versions': {'code': version, 'config': self.configVersion,
                                        'config_file': self.configFile},
                        'camera': {'name': currentStatus.name,
@@ -443,9 +443,9 @@ class DataController():
 
         currentTimestamp = self.timeHandler.getTime()
         telemetryFile = 'dsm_{}.dat'.format(currentTimestamp.strftime('%Y%m%d_%H%M%S'))
-        output = [currentTimestamp.isoformat(),
-                  self.bufferModel.timestamp[0].isoformat(),
-                  self.bufferModel.timestamp[-1].isoformat(),
+        output = [self.timeHandler.getFixedFormattedTime(currentTimestamp.isoformat()),
+                  self.timeHandler.getFixedFormattedTime(self.bufferModel.timestamp[0].isoformat()),
+                  self.timeHandler.getFixedFormattedTime(self.bufferModel.timestamp[-1].isoformat()),
                   roiInfo.rmsX, roiInfo.rmsY,
                   roiInfo.centerX, roiInfo.centerY,
                   roiInfo.flux, roiInfo.maxAdc, roiInfo.fwhm]
