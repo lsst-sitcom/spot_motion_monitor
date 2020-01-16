@@ -38,8 +38,11 @@ class FullFrameModelConfig(BaseConfig):
         config : dict
             The configuration to translate.
         """
-        self.check("sigmaScale", config["fullFrame"], "sigmaScale")
-        self.check("minimumNumPixels", config["fullFrame"], "minimumNumPixels")
+        try:
+            self.check("sigmaScale", config["fullFrame"], "sigmaScale")
+            self.check("minimumNumPixels", config["fullFrame"], "minimumNumPixels")
+        except KeyError:
+            pass
 
     def toDict(self):
         """Translate class attributes to configuration dict.
