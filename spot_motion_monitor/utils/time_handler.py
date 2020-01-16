@@ -8,6 +8,8 @@
 # Use of this source code is governed by a 3-clause BSD-style
 # license that can be found in the LICENSE file.
 
+import re
+
 from astropy.time import Time
 import pytz
 
@@ -49,6 +51,22 @@ class TimeHandler():
             return now.datetime.replace(tzinfo=pytz.utc)
 
     @classmethod
+    def getFixedFormattedTime(self, timestring):
+        """Clip the +HH:MM from a timestamp string
+
+        Parameters
+        ----------
+        timestring : str
+            The input timestamp string.
+
+        Returns
+        -------
+        str
+            The fixed timestamp string.
+        """
+        return re.split(r'[+-]\d{2}:', timestring)[0]
+
+    @classmethod
     def getTimezones(cls):
         """Get the list of timezones
 
@@ -79,8 +97,12 @@ class TimeHandler():
             return %Y%m%d_%H%M%S.
         """
         if format is not None:
-            if format == "iso":
-                return self.getTime().isoformat()
+            if "iso" in format:
+                iso_time = self.getTime().isoformat()
+                if "fixed" in format:
+                    return self.getFixedFormattedTime(iso_time)
+                else:
+                    return iso_time
         else:
             return self.getTime().strftime(self.standard_format)
 
