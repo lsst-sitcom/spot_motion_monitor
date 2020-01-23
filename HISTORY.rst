@@ -3,6 +3,12 @@
 History
 -------
 
+2.0.3 (2020-01-23)
+~~~~~~~~~~~~~~~~~~
+
+* Fix crash on telemetry cleanup if ROI mode is cycled before buffer fill
+* Fix saved data to not keep using same file
+
 2.0.2 (2020-01-16)
 ~~~~~~~~~~~~~~~~~~
 
