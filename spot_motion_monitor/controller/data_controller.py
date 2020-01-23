@@ -110,6 +110,8 @@ class DataController():
         """Remove all saved telemetry files and save directory.
         """
         if self.fullTelemetrySavePath is not None:
+            if not os.path.exists(self.fullTelemetrySavePath):
+                return
             for tfile in os.listdir(self.fullTelemetrySavePath):
                 os.remove(os.path.join(self.fullTelemetrySavePath, tfile))
             if self.removeTelemetryDir:
