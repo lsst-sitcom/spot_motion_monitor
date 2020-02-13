@@ -95,6 +95,7 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cameraController.updater.roiFpsChanged.connect(self.handleRoiFpsChanged)
         self.cameraController.updater.cameraState.connect(self.updateApplicationForCameraState)
         self.cameraController.updater.acquireRoiState.connect(self.dataController.handleAcquireRoiStateChange)
+        self.cameraController.updater.takeScreenshotState.connect(self.handleTakeScreenshot)
         ccUpdArs = self.cameraController.updater.acquireRoiState.connect
         ccUpdArs(self.plotCentroidController.handleAcquireRoiStateChange)
         ccUpdArs(self.plotPsdController.handleAcquireRoiStateChange)
@@ -300,6 +301,11 @@ class SpotMotionMonitor(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plotCentroidController.updateRoiFps(newRoiFps)
         bufferSize = self.dataController.getBufferSize()
         self.plotPsdController.updateTimeScale(bufferSize / newRoiFps)
+
+    def handleTakeScreenshot(self):
+        """Set flag on data controller to take a screenshot.
+        """
+        self.dataController.takeScreenshot = True
 
     def openConfiguration(self):
         """Open a configuration file and apply it.
