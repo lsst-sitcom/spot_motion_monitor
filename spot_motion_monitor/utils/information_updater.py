@@ -29,6 +29,8 @@ class InformationUpdater(QObject):
         Signal used for updating the main application status bar.
     roiFpsChanged : pyqtSignal
         Signal used to update controllers with a new ROI FPS.
+    takeScreenshotState : pyqtSignal
+        Signal used to take a screenshot of the CCD plot.
     """
 
     acquireRoiState = pyqtSignal(bool)
@@ -36,3 +38,4 @@ class InformationUpdater(QObject):
     cameraState = pyqtSignal(bool)
     roiFpsChanged = pyqtSignal(int)
     displayStatus = pyqtSignal(str, int)
+    takeScreenshotState = pyqtSignal()

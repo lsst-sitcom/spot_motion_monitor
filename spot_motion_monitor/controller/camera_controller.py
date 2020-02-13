@@ -56,6 +56,7 @@ class CameraController():
         self.cameraControlWidget.acquireRoiState.connect(self.acquireRoiFrame)
         self.cameraControlWidget.bufferSizeValue.connect(self.bufferSize)
         self.cameraControlWidget.roiFpsSpinBox.valueChanged.connect(self.setRoiFps)
+        self.cameraControlWidget.takeScreenshotState.connect(self.takeScreenshot)
 
     def acquireFrame(self, state):
         """Start or stop the timer for full frame acquisition.
@@ -348,6 +349,11 @@ class CameraController():
             self.updater.displayStatus.emit('Camera Stopped Successfully',
                                             smmUtils.ONE_SECOND_IN_MILLISECONDS)
             self.updater.cameraState.emit(state)
+
+    def takeScreenshot(self):
+        """Pass along request to take screenshot.
+        """
+        self.updater.takeScreenshotState.emit()
 
     def updateCameraOffset(self, centroidX, centroidY):
         """Pass along the current centroid values to update camera offset.
