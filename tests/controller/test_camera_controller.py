@@ -332,3 +332,14 @@ class TestCameraController():
         cc.setupCamera("GaussianCamera")
 
         assert cc.getCameraModelName() == 'Gaussian'
+
+    def test_takeScreenshot(self, qtbot):
+        ccWidget = CameraControlWidget()
+        ccWidget.show()
+        qtbot.addWidget(ccWidget)
+        cc = CameraController(ccWidget)
+        cc.setupCamera("GaussianCamera")
+        qtbot.mouseClick(ccWidget.startStopButton, Qt.LeftButton)
+        qtbot.mouseClick(ccWidget.acquireFramesButton, Qt.LeftButton)
+        with qtbot.waitSignal(cc.updater.takeScreenshotState, timeout=250):
+            qtbot.mouseClick(ccWidget.takeScreenshotButton, Qt.LeftButton)

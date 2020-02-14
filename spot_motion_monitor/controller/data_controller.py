@@ -11,6 +11,7 @@
 import csv
 import os
 
+from astropy.io import fits
 import numpy as np
 import pandas as pd
 import tables
@@ -58,6 +59,8 @@ class DataController():
         An instance of the ROI frame calculation model.
     roiResetDone : bool
         Reset the camera data widget to no information based on flag.
+    takeScreenshot : bool
+        Whether or not to save a CCD frame to a file.
     TELEMETRY_SAVEDIR : str
         The default name for the directory to save telemetry files in.
     telemetrySavePath : str
@@ -103,6 +106,7 @@ class DataController():
         self.fullFrameModel.timeHandler = self.timeHandler
         self.roiFrameModel.timeHandler = self.timeHandler
         self.cameraModelName = None
+        self.takeScreenshot = False
 
         self.cameraDataWidget.saveDataCheckBox.toggled.connect(self.handleSaveData)
 
@@ -246,6 +250,10 @@ class DataController():
         """
         if frame is None:
             return
+
+        if self.takeScreenshot:
+            self.writeScreenshot(frame)
+
         try:
             if currentStatus.isRoiMode:
                 if not self.roiResetDone:
@@ -411,6 +419,20 @@ class DataController():
 
         centDf.to_hdf(self.centroidFilename, key=dateKey)
         psdDf.to_hdf(self.psdFilename, key=dateKey)
+
+    def writeScreenshot(self, frame):
+        """Summary
+
+        Parameters
+        ----------
+        frame : numpy.array
+            A frame from a camera CCD.
+        """
+        dateTag = self.timeHandler.getFormattedTimeStamp()
+        fitsFilename = f'ccd_{dateTag}.fits'
+        hdu = fits.PrimaryHDU(frame)
+        hdu.writeto(fitsFilename)
+        self.takeScreenshot = False
 
     def writeTelemetryFile(self, roiInfo, currentStatus):
         """Write the current info to a telemetry file.

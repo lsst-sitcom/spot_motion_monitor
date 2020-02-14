@@ -21,6 +21,7 @@ class TestCameraControl():
         return not state
 
     def stateIsTrue(self, state):
+        print("A:", state)
         return state
 
     def test_startStopCameraButton(self, qtbot):
@@ -115,3 +116,14 @@ class TestCameraControl():
         assert cc.showFramesCheckBox.isChecked()
         qtbot.mouseClick(cc.showFramesCheckBox, Qt.LeftButton)
         assert not cc.showFramesCheckBox.isChecked()
+
+    def test_takeScreenshotButton(self, qtbot):
+        cc = CameraControlWidget()
+        cc.show()
+        qtbot.addWidget(cc)
+        assert cc.takeScreenshotButton.isEnabled() is False
+        qtbot.mouseClick(cc.startStopButton, Qt.LeftButton)
+        qtbot.mouseClick(cc.acquireFramesButton, Qt.LeftButton)
+        assert cc.takeScreenshotButton.isEnabled() is True
+        with qtbot.waitSignal(cc.takeScreenshotState, timeout=self.fast_timeout):
+            qtbot.mouseClick(cc.takeScreenshotButton, Qt.LeftButton)

@@ -32,12 +32,15 @@ class CameraControlWidget(QWidget, Ui_CameraControl):
         Signal state of camera.
     currentBufferSize : int
         The current buffer size.
+    takeScreenshotState : pyqtSignal
+        Signal the taking of a screenshot.
     """
 
     acquireFramesState = pyqtSignal(bool)
     acquireRoiState = pyqtSignal(bool)
     bufferSizeValue = pyqtSignal(int)
     cameraState = pyqtSignal(bool)
+    takeScreenshotState = pyqtSignal()
 
     def __init__(self, parent=None):
         """Initialze the class.
@@ -55,6 +58,7 @@ class CameraControlWidget(QWidget, Ui_CameraControl):
         self.acquireFramesButton.toggled.connect(self.handleAcquireFrames)
         self.acquireRoiCheckBox.toggled.connect(self.handleAcquireRoi)
         self.bufferSizeSpinBox.valueChanged.connect(self.handleBufferSize)
+        self.takeScreenshotButton.clicked.connect(self.handleTakeScreenshot)
 
     def handleAcquireFrames(self, checked):
         """Perform actions related to acquiring frames.
@@ -69,6 +73,7 @@ class CameraControlWidget(QWidget, Ui_CameraControl):
         else:
             self.acquireFramesButton.setText("Start Acquire Frames")
         self.startStopButton.setEnabled(not checked)
+        self.takeScreenshotButton.setEnabled(checked)
         self.acquireFramesState.emit(checked)
 
     def handleAcquireRoi(self, checked):
@@ -116,3 +121,13 @@ class CameraControlWidget(QWidget, Ui_CameraControl):
         self.acquireFramesButton.setEnabled(checked)
         self.acquireRoiCheckBox.setEnabled(checked)
         self.cameraState.emit(checked)
+
+    def handleTakeScreenshot(self, checked):
+        """Pass on request for taking a screenshot of CCD plot.
+
+        Parameters
+        ----------
+        checked : bool
+            State of the toggle button. This is ignored.
+        """
+        self.takeScreenshotState.emit()

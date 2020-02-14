@@ -55,12 +55,14 @@ class TestDataController():
         assert dc.cameraModelName is None
         assert dc.roiFrameModel.timeHandler is not None
         assert dc.fullFrameModel.timeHandler is not None
+        assert dc.takeScreenshot is False
 
     def test_updateFullFrameData(self, qtbot, mocker):
         cdw = CameraDataWidget()
         qtbot.addWidget(cdw)
         dc = DataController(cdw)
         mockCameraDataWidgetReset = mocker.patch.object(cdw, 'reset')
+        mockTakeScreenshot = mocker.patch.object(dc, 'writeScreenshot')
         mocker.patch('spot_motion_monitor.views.camera_data_widget.CameraDataWidget.updateFullFrameData')
         dc.fullFrameModel.calculateCentroid = mocker.Mock(return_value=GenericFrameInformation(self.timestamp,
                                                                                                300.3,
@@ -70,9 +72,11 @@ class TestDataController():
                                                                                                17.525,
                                                                                                70,
                                                                                                None))
+        dc.takeScreenshot = True
         dc.passFrame(self.frame, self.fullFrameStatus)
         assert dc.cameraDataWidget.updateFullFrameData.call_count == 1
         assert mockCameraDataWidgetReset.call_count == 0
+        assert mockTakeScreenshot.call_count == 1
         assert dc.roiResetDone is False
         dc.roiResetDone = True
         dc.passFrame(self.frame, self.fullFrameStatus)
@@ -409,3 +413,19 @@ class TestDataController():
         modelName = "ProSilice GT-650"
         dc.setCameraModelName(modelName)
         assert dc.cameraModelName == modelName
+
+    @freeze_time('2018-10-30 22:30:15')
+    def test_writeScreenshot(self, qtbot):
+        cdw = CameraDataWidget()
+        qtbot.addWidget(cdw)
+        dc = DataController(cdw)
+
+        dc.takeScreenshot = True
+        output_file = "ccd_20181030_223015.fits"
+
+        dc.writeScreenshot(self.frame)
+
+        assert os.path.exists(output_file) is True
+        assert dc.takeScreenshot is False
+
+        os.remove(output_file)
