@@ -69,7 +69,7 @@ class TestTimeHandler():
 
     def test_timezone_list(self):
         timezones = TimeHandler.getTimezones()
-        assert len(timezones) == 593
+        assert len(timezones) > 2
         assert timezones.count("UTC") == 1
         assert timezones[0] == "UTC"
         assert timezones[1] == "TAI"
