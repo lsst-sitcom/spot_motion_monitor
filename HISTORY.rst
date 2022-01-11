@@ -3,6 +3,13 @@
 History
 -------
 
+2.0.4 (2022-01-11)
+~~~~~~~~~~~~~~~~~~
+
+* Update to newer python versions
+* Fix warnings in code base (no externally visible changes)
+* Switched to GitHub actions and removed Travis build
+
 2.0.3 (2020-01-23)
 ~~~~~~~~~~~~~~~~~~
 
@@ -64,7 +71,7 @@ History
 1.2.0 (2019-06-20)
 ~~~~~~~~~~~~~~~~~~
 
-* Added input validation to configuration dialog system 
+* Added input validation to configuration dialog system
 * Added tooltips on Data Information section
 * Added units to Gaussian camera configuration tab
 * Added safe camera shutdown on program quit
@@ -161,7 +168,7 @@ History
 ~~~~~~~~~~~~~~~~~~
 
 * Create full frame processing
-* Added camera status widget 
+* Added camera status widget
 
 0.2.0 (2018-06-29)
 ~~~~~~~~~~~~~~~~~~
