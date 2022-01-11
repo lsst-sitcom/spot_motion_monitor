@@ -73,7 +73,7 @@ class CameraController():
                 self.frameTimer.stop()
             current_fps = self.currentCameraFps()
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
-            self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
+            self.frameTimer.start(int(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps))
         else:
             if self.cameraControlWidget.acquireRoiCheckBox.isChecked():
                 self.cameraControlWidget.acquireRoiCheckBox.setChecked(Qt.Unchecked)
@@ -102,7 +102,7 @@ class CameraController():
             time.sleep(0.3)
             current_fps = self.currentCameraFps()
             fps = current_fps if current_fps is not None else smmUtils.DEFAULT_FPS
-            self.frameTimer.start(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps)
+            self.frameTimer.start(int(smmUtils.ONE_SECOND_IN_MILLISECONDS / fps))
         else:
             self.frameTimer.stop()
             self.updater.displayStatus.emit('Stopping ROI Frame Acquistion',

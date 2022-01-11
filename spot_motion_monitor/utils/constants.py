@@ -43,7 +43,7 @@ DEFAULT_PSD_ARRAY_SIZE = 25
 COLORMAPS = ('viridis', 'plasma', 'inferno', 'magma', 'cividis')
 TIMEFMT = '%Y-%m-%d %H:%M:%S'
 HTML_NU = '&#957;'
-LARGE_VALUE_FOR_VALIDATOR = 1e9
+LARGE_VALUE_FOR_VALIDATOR = 1000000000
 LARGE_FLOAT_VALUE_FOR_VALIDATOR = 1.0e200
 
 class AutoscaleState(enum.Enum):

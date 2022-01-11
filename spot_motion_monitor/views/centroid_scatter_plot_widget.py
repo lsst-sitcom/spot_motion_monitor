@@ -169,7 +169,7 @@ class CentroidScatterPlotWidget(QWidget, Ui_ScatterPlot):
         self.makeBrushes()
         p1 = self.yHistogram.addPlot()
         self.yHistogramItem = p1.plot(self.yData, self.yData)
-        self.yHistogramItem.rotate(90)
+        self.yHistogramItem.setRotation(90)
         p2 = self.xHistogram.addPlot()
         self.xHistogramItem = p2.plot(self.xData, self.xData)
 

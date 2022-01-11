@@ -103,8 +103,9 @@ class CameraControlWidget(QWidget, Ui_CameraControl):
             self.currentBufferSize /= 2
         else:
             return
-        self.bufferSizeSpinBox.setValue(self.currentBufferSize)
-        self.bufferSizeValue.emit(self.currentBufferSize)
+        intvalue = int(self.currentBufferSize)
+        self.bufferSizeSpinBox.setValue(intvalue)
+        self.bufferSizeValue.emit(intvalue)
 
     def handleStartStop(self, checked):
         """Perform actions related to startup/shutdown of the camera.
