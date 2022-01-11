@@ -14,7 +14,11 @@ Spot Motion Monitor
   :target: https://pypi.python.org/pypi/spot_motion_monitor
   :alt: Supported Python
 
-|license| |python| |version|
+.. |github| image:: https://github.com/lsst-sitcom/spot_motion_monitor/actions/workflows/pythonpackage.yml/badge.svg
+   :target: https://github.com/lsst-sitcom/spot_motion_monitor
+   :alt: Package Building
+
+|license| |python| |version| |github|
 
 User interface for a Dome Seeing Monitor.
 
